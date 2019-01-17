@@ -1,0 +1,18 @@
+# Dependency directory
+node_modules/
+
+# Environment variables
+.env
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Test log
+coverage/
+
+# Temp file storage
+tmp/
+
+# Docker volume
+volumes/*
