@@ -7,6 +7,11 @@ services:
     restart: always
     volumes: 
       - ./backend:/server
+    environment: 
+      MYSQL_SERVER: http://db
+      MYSQL_USER:
+      MYSQL_PASSWORD:
+      MYSQL_DATABASE:
   db:
     image: mysql:5.7
     restart: always
@@ -27,4 +32,3 @@ services:
     volumes: 
       - ./config/nginx.conf:/etc/nginx/nginx.conf
       - ./config/sites-enabled/server.conf:/etc/nginx/sites-enabled/server.conf
-    
