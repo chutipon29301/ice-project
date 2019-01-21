@@ -13,9 +13,16 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      const appController = app.get<AppController>(AppController);
-      expect(appController.getHello()).toBe('Hello World!');
+
+    let appController: AppController;
+
+    beforeAll(() => {
+      appController = app.get<AppController>(AppController);
     });
+
+    it('should return "pong"', () => {
+      expect(appController.getPong()).toHaveProperty('msg', 'pong');
+    });
+
   });
 });
