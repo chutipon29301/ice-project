@@ -1,5 +1,4 @@
 import { Sequelize } from 'sequelize-typescript';
-import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
 import { SequelizeToken } from './config';
 
