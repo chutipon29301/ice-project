@@ -5,8 +5,8 @@ import { ConfigModule } from './config/config.module';
 import { UserModule } from './user/user.module';
 
 @Module({
+  imports: [ConfigModule, UserModule],
   controllers: [AppController],
   providers: [AppService],
-  imports: [ConfigModule, UserModule],
 })
-export class AppModule {}
+export class AppModule { }
