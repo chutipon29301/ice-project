@@ -8,10 +8,12 @@ services:
     volumes: 
       - ./backend:/server
     environment: 
-      MYSQL_SERVER: http://db
+      MYSQL_SERVER: db
       MYSQL_USER:
       MYSQL_PASSWORD:
       MYSQL_DATABASE:
+    depends_on: 
+      - db
   db:
     image: mysql:5.7
     restart: always
