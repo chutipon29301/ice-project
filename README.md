@@ -43,3 +43,14 @@ bash run-prod.sh
 * **Jatuwat Sa-ngiampak** 5931216621 - User Researcher / Hardware - [Jatuwatsag](https://github.com/Jatuwatsag)
 * **Nicha Rojsrikul** 5931259621 - DevOps - [NichaRoj](https://github.com/NichaRoj)
 
+* **Jatuwat Sa-ngiampak** 		    5931216621 		(0832777553) 	User Researcher / Hardware
+* **Nicha Rojsrikul** 			    5931259621 		(0819161060)	Development and Operation
+* **Chutipon Hirankanokkul** 	    5931239021 		(0814953366)	Project Manager / Backend
+* **Yanisa Sunthornyotin**		    5931243521 		(0945561771)	Backend
+* **Jakpat Mingmongkolmitr**	    5931217221 		(0989192919)	Frontend
+* **Kachamas Techapichetvanich** 	5931201121 		(0830157988)	Hardware
+* **Thanakorn Prayoonkittikul** 	5931265321 		(0955158371)	Hardware
+* **Sojirath Thunprateep** 			5931365421 		(0813832535)	Backend
+* **Ukrit Wattanakulchart** 		5931391721 		(0933283445)	Hardware
+* **Anon Pongsawang** 			    5931389521 		(0863537983)	Frontend
+* **Tai Tantipiwatanaskul** 		5931264721 		(0880055571)	Frontend
