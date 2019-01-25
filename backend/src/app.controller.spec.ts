@@ -13,7 +13,6 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-
     let appController: AppController;
 
     beforeAll(() => {
@@ -23,6 +22,5 @@ describe('AppController', () => {
     it('should return "pong"', () => {
       expect(appController.getPong()).toHaveProperty('msg', 'pong');
     });
-
   });
 });

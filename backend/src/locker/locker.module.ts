@@ -4,6 +4,6 @@ import { LockerService } from './locker.service';
 
 @Module({
   controllers: [LockerController],
-  providers: [LockerService]
+  providers: [LockerService],
 })
 export class LockerModule {}

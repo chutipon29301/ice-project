@@ -5,8 +5,73 @@ jobs:
       - image: circleci/node:10
     steps:
       - checkout
+      - restore_cache:
+          key: build-cache-{{ checksum "backend/package.json" }}
+      - run:
+          name: Install dependencies
+          command: cd backend && yarn
+      - save_cache:
+          key: build-cache-{{ checksum "backend/package.json" }}
+          paths:
+            - ./backend/node_modules
+      - run:
+          name: Run build
+          command: cd backend && yarn build
+  lint_backend:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          key: lint-cache-{{ checksum "backend/package.json" }}
+      - run:
+          name: Install dependencies
+          command: cd backend && yarn
+      - save_cache:
+          key: lint-cache-{{ checksum "backend/package.json" }}
+          paths:
+            - ./backend/node_modules
+      - run:
+          name: Lint
+          command: cd backend && yarn lint
+  test_backend_e2e:
+    docker:
+      - image: circleci/node:10
+        environment:
+          MYSQL_SERVER: db
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: db
+      - image: mysql:5.7
+        environment:
+          MYSQL_DATABASE: db
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: password
+        name: db
+    steps:
+      - checkout
+      - restore_cache:
+          key: test-cache-{{ checksum "backend/package.json" }}
+      - run:
+          name: Install dependencies
+          command: cd backend && yarn
+      - save_cache:
+          key: test-cache-{{ checksum "backend/package.json" }}
+          paths:
+            - ./backend/node_modules
+      - run:
+          name: Test e2e
+          command: cd backend && yarn test:e2e
+
 workflows:
   version: 2
-  build_and_deploy:
+  build-test-and-deploy:
     jobs:
       - build_backend
+      - lint_backend:
+          requires:
+            - build_backend
+      - test_backend_e2e:
+          requires:
+            - lint_backend

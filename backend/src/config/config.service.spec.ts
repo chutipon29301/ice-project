@@ -34,5 +34,4 @@ describe('ConfigService', () => {
   it('should return database name', () => {
     expect(service.mySQLDatabaseName).toBeDefined();
   });
-
 });

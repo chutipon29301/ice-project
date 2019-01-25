@@ -3,8 +3,8 @@ import { databaseProviders } from './database.providers';
 import { ConfigModule } from './config/config.module';
 
 @Module({
-    imports: [ConfigModule],
-    providers: [...databaseProviders],
-    exports: [...databaseProviders],
+  imports: [ConfigModule],
+  providers: [...databaseProviders],
+  exports: [...databaseProviders],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}
