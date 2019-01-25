@@ -37,12 +37,6 @@ bash run-prod.sh
 
 ## Authors
 
-* **Chutipon Hirankanokkul** 5931239021 - Back-end developer - [Chutipon29301](https://github.com/chutipon29301)
-* **Jakpat Mingmonkolmitr** 5931217221 - DevOps - [WhatTheFar](https://github.com/WhatTheFar)
-* **Yanisa Sunthornyotin** 5931243521- Back-end developer - [mingyanisa](https://github.com/mingyanisa)
-* **Jatuwat Sa-ngiampak** 5931216621 - User Researcher / Hardware - [Jatuwatsag](https://github.com/Jatuwatsag)
-* **Nicha Rojsrikul** 5931259621 - DevOps - [NichaRoj](https://github.com/NichaRoj)
-
 * **Jatuwat Sa-ngiampak** 		    5931216621 		(0832777553) 	User Researcher / Hardware
 * **Nicha Rojsrikul** 			    5931259621 		(0819161060)	Development and Operation
 * **Chutipon Hirankanokkul** 	    5931239021 		(0814953366)	Project Manager / Backend
