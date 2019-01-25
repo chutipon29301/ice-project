@@ -45,6 +45,6 @@ bash run-prod.sh
 * **Kachamas Techapichetvanich** 	5931201121 		(0830157988)	Hardware
 * **Thanakorn Prayoonkittikul** 	5931265321 		(0955158371)	Hardware
 * **Sojirath Thunprateep** 			5931365421 		(0813832535)	Backend
-* **Ukrit Wattanakulchart** 		5931391721 		(0933283445)	Hardware
+* **Ukrit Wattanakulchart** 		5931391721 		(0933283445)	Frontend
 * **Anon Pongsawang** 			    5931389521 		(0863537983)	Frontend
 * **Tai Tantipiwatanaskul** 		5931264721 		(0880055571)	Frontend
