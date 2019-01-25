@@ -1,10 +1,10 @@
 import { Table, Model, Column, PrimaryKey, NotNull, AutoIncrement, ForeignKey } from 'sequelize-typescript';
-import Location from './Locations.model';
+import Location from './Location.model';
 
 @Table({
   timestamps: true,
 })
-export default class Lockers extends Model<Lockers> {
+export default class Locker extends Model<Locker> {
 
   @NotNull
   @Column

@@ -1,5 +1,5 @@
 import { UsersRepository } from '../config';
-import Users from '../models/Users.model';
+import Users from '../models/User.model';
 
 export const userProviders = [
   {

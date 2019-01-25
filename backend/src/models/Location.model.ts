@@ -3,9 +3,8 @@ import { Table, Model, Column, PrimaryKey, NotNull, AutoIncrement, ForeignKey } 
 @Table({
   timestamps: true,
 })
-export default class Locations extends Model<Locations> {
+export default class Location extends Model<Location> {
 
-  @NotNull
   @Column
   name: string;
 

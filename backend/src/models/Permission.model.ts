@@ -1,11 +1,11 @@
 import { Table, Model, Column, PrimaryKey, NotNull, AutoIncrement, ForeignKey } from 'sequelize-typescript';
-import Users from './Users.model';
-import Lockers from './Lockers.model';
+import Users from './User.model';
+import Lockers from './Locker.model';
 
 @Table({
     timestamps: true,
 })
-export default class Permissions extends Model<Permissions> {
+export default class Permission extends Model<Permission> {
 
     @NotNull
     @Column
