@@ -13,16 +13,16 @@
     "prestart:prod": "rimraf dist && tsc",
     "start:prod": "node dist/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
-    "test": "jest",
+    "test": "jest --forceExit",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
+    "test:cov": "jest --coverage --forceExit",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:local": "env-cmd ./test.env jest",
+    "test:e2e": "jest --config --forceExit ./test/jest-e2e.json",
+    "test:local": "env-cmd ./test.env jest --forceExit",
     "test:local:watch": "env-cmd ./test.env jest --watch",
-    "test:local:cov": "env-cmd ./test.env jest --coverage",
+    "test:local:cov": "env-cmd ./test.env jest --coverage --forceExit",
     "test:local:debug": "env-cmd ./test.env node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:local:e2e": "env-cmd ./test.env jest --config ./test/jest-e2e.json"
+    "test:local:e2e": "env-cmd ./test.env jest --config --forceExit ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^5.4.0",
