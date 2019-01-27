@@ -5,7 +5,7 @@ import {
     NotNull,
     ForeignKey,
 } from 'sequelize-typescript';
-import Users from './User.model';
+import Users from './Users.model';
 import Lockers from './Locker.model';
 
 @Table({
@@ -14,15 +14,15 @@ import Lockers from './Locker.model';
 export default class Permission extends Model<Permission> {
     @NotNull
     @Column
-    expired: string;
+    public expiredDate: Date;
 
     @NotNull
     @ForeignKey(() => Users)
     @Column
-    userID: string;
+    public userID: string;
 
     @NotNull
     @ForeignKey(() => Lockers)
     @Column
-    lockerID: string;
+    public lockerID: string;
 }

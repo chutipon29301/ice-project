@@ -5,7 +5,7 @@ import {
     NotNull,
     ForeignKey,
 } from 'sequelize-typescript';
-import Users from './User.model';
+import Users from './Users.model';
 import Lockers from './Locker.model';
 
 @Table({
@@ -14,15 +14,15 @@ import Lockers from './Locker.model';
 export default class LockerStat extends Model<LockerStat> {
     @NotNull
     @Column
-    status: string;
+    public status: string;
 
     @NotNull
     @Column
     @ForeignKey(() => Users)
-    userID: string;
+    public userID: string;
 
     @NotNull
     @Column
     @ForeignKey(() => Lockers)
-    lockerID: string;
+    public lockerID: string;
 }

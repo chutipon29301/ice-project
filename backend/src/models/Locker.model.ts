@@ -4,6 +4,7 @@ import {
     Column,
     NotNull,
     ForeignKey,
+    BelongsTo,
 } from 'sequelize-typescript';
 import Location from './Location.model';
 
@@ -22,4 +23,7 @@ export default class Locker extends Model<Locker> {
 
     @Column
     number: number;
+
+    @BelongsTo(() => Location)
+    location: Location;
 }
