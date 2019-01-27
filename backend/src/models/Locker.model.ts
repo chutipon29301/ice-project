@@ -1,4 +1,4 @@
-import { Table, Model, Column, PrimaryKey, NotNull, AutoIncrement, ForeignKey } from 'sequelize-typescript';
+import { Table, Model, Column, NotNull, ForeignKey } from 'sequelize-typescript';
 import Location from './Location.model';
 
 @Table({
@@ -16,7 +16,6 @@ export default class Locker extends Model<Locker> {
   locationID: string;
 
   @Column
-  number: number
-
+  number: number;
 
 }

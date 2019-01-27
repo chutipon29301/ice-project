@@ -1,4 +1,4 @@
-import { Table, Model, Column, PrimaryKey, NotNull, AutoIncrement, ForeignKey } from 'sequelize-typescript';
+import { Table, Model, Column, NotNull, ForeignKey } from 'sequelize-typescript';
 import Users from './User.model';
 import Lockers from './Locker.model';
 
@@ -20,6 +20,5 @@ export default class Permission extends Model<Permission> {
     @ForeignKey(() => Lockers)
     @Column
     lockerID: string;
-
 
 }
