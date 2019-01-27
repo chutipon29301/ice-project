@@ -29,8 +29,6 @@ services:
     restart: always
     ports:
       - "80:80"
-    depends_on: 
-      - backend
     volumes: 
       - ./config/nginx.conf:/etc/nginx/nginx.conf
       - ./config/sites-enabled/server.conf:/etc/nginx/sites-enabled/server.conf
