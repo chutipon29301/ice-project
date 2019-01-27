@@ -7,6 +7,7 @@ import { LockerModule } from './locker/locker.module';
 import { LocationModule } from './location/location.module';
 import { LineModule } from './line/line.module';
 import { LineTokenDecoderModule } from './line-token-decoder/line-token-decoder.module';
+import { CryptoModule } from './crypto/crypto.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { LineTokenDecoderModule } from './line-token-decoder/line-token-decoder.
         LocationModule,
         LineModule,
         LineTokenDecoderModule,
+        CryptoModule,
     ],
     controllers: [AppController],
     providers: [AppService],
