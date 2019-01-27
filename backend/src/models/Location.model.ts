@@ -1,11 +1,9 @@
 import { Table, Model, Column } from 'sequelize-typescript';
 
 @Table({
-  timestamps: true,
+    timestamps: true,
 })
 export default class Location extends Model<Location> {
-
-  @Column
-  name: string;
-
+    @Column
+    name: string;
 }

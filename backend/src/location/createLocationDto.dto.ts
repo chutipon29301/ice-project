@@ -1,7 +1,6 @@
-import { isString } from "util";
+import { isString } from 'util';
 
-export class createLocationDto{
+export class createLocationDto {
     @isString
-    name:string
-    
+    name: string;
 }

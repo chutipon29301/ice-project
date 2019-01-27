@@ -3,6 +3,5 @@ import { createLocationDto } from './createLocationDto.dto';
 
 @Controller('location')
 export class LocationController {
-    constructor(private readonly createLocationDto:createLocationDto){}
-    
+    constructor(private readonly createLocationDto: createLocationDto) {}
 }

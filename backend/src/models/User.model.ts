@@ -1,9 +1,9 @@
 import { Table, Model, Column } from 'sequelize-typescript';
 
 @Table({
-  timestamps: true,
+    timestamps: true,
 })
 export default class User extends Model<User> {
-  @Column
-  name: string;
+    @Column
+    name: string;
 }
