@@ -8,10 +8,13 @@ services:
     volumes: 
       - ./backend:/server
     environment: 
+      SERVER_URL:
       MYSQL_SERVER: db
       MYSQL_USER:
       MYSQL_PASSWORD:
       MYSQL_DATABASE:
+      CHANNEL_ID:
+      CHANNEL_SECRET:
     depends_on: 
       - db
   db:

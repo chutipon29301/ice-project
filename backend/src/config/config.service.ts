@@ -37,4 +37,31 @@ export class ConfigService {
             throw Error('Unable to read "MYSQL_DATABASE" environment');
         }
     }
+
+    get serverURL(): string {
+        const url = process.env.SERVER_URL;
+        if (url) {
+            return url;
+        } else {
+            throw Error(`Unable to read "SERVER_URL" environment`);
+        }
+    }
+
+    get lineChannelID(): string {
+        const id = process.env.CHANNEL_ID;
+        if (id) {
+            return id;
+        } else {
+            throw Error(`Unable to read "CHANNEL_ID" environment`);
+        }
+    }
+
+    get lineChannelSecret(): string {
+        const secret = process.env.CHANNEL_SECRET;
+        if (secret) {
+            return secret;
+        } else {
+            throw Error(`Unable to read "CHANNEL_SECRET" environment`);
+        }
+    }
 }
