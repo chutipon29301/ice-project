@@ -3,22 +3,16 @@ import {
     LibWordArray,
     WordArray,
     CipherOption,
-    DecryptedMessage,
+    enc,
 } from 'crypto-js';
 
 export class AES {
     encrypt(
-        message: string | LibWordArray | object,
+        message: string | LibWordArray,
         secretPassphrase: string | WordArray,
         option?: CipherOption,
     ): string {
-        if (typeof message === 'object') {
-            return aes
-                .encrypt(JSON.stringify(message), secretPassphrase, option)
-                .toString();
-        } else {
-            return aes.encrypt(message, secretPassphrase, option).toString();
-        }
+        return aes.encrypt(message, secretPassphrase, option).toString();
     }
     decrypt<T>(
         encryptedMessage: string | WordArray,
@@ -27,7 +21,7 @@ export class AES {
     ): T | string {
         const decodedMessage = aes
             .decrypt(encryptedMessage, secretPassphrase, option)
-            .toString();
+            .toString(enc.Utf8);
         try {
             const decodedObject = JSON.parse(decodedMessage);
             return decodedObject as T;
