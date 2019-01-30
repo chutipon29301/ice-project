@@ -17,7 +17,8 @@ export const databaseProviders = [
                 modelPaths: [__dirname + '/models'],
             });
             await sequelize.sync({
-                alter: false,
+                // alter: true,
+                force: true,
             });
             return sequelize;
         },
