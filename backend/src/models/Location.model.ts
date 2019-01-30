@@ -8,6 +8,6 @@ export default class Location extends Model<Location> {
     @Column
     name: string;
 
-    @HasMany(() => Locker)
-    lockers: Locker[];
+    // @HasMany(() => Locker)
+    // lockers: Locker[];
 }

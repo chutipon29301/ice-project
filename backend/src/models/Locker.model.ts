@@ -24,6 +24,6 @@ export default class Locker extends Model<Locker> {
     @Column
     number: number;
 
-    @BelongsTo(() => Location)
-    location: Location;
+    // @BelongsTo(() => Location)
+    // location: Location;
 }
