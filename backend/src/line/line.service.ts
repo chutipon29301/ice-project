@@ -28,14 +28,16 @@ export class LineService {
             this.configService.lineChannelID
             }&redirect_uri=${encodeURIComponent(
                 this.redirectURL,
-            )}&state=${this.cryptoService.AES.encrypt(
-                state.toString(),
-                this.configService.lineChannelSecret,
+            )}&state=${encodeURIComponent(
+                this.cryptoService.AES.encrypt(
+                    state.toString(),
+                    this.configService.lineChannelSecret,
+                ),
             )}&scope=${scope.join('%20')}`;
     }
 
     async getAccessToken(code: string, encryptedState: string): Promise<LineAccessToken> {
-        const state = State.from(this.cryptoService.AES.decrypt(encryptedState, this.configService.lineChannelSecret));
+        const state = State.from(this.cryptoService.AES.decrypt(decodeURIComponent(encryptedState), this.configService.lineChannelSecret));
         if (!state.compareTo(this.passPhase)) {
             throw new UnauthorizedException('Line authenticate wrong callback state');
         }

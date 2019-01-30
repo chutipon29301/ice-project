@@ -18,15 +18,9 @@ export class AES {
         encryptedMessage: string | WordArray,
         secretPassphrase: string | WordArray,
         option?: CipherOption,
-    ): T | string {
-        const decodedMessage = aes
+    ): string {
+        return aes
             .decrypt(encryptedMessage, secretPassphrase, option)
             .toString(enc.Utf8);
-        try {
-            const decodedObject = JSON.parse(decodedMessage);
-            return decodedObject as T;
-        } catch (_) {
-            return decodedMessage;
-        }
     }
 }

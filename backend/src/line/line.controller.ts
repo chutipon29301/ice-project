@@ -19,13 +19,13 @@ export class LineController {
         @Query('error') error: string,
         @Query('errorCode') errorCode: string,
         @Query('errorMessage') errorMessage: string,
-        @Res() res: Response,
+        // @Res() res: Response,
     ) {
         if (error != null || errorCode != null || errorMessage != null) {
             throw new UnauthorizedException(errorMessage);
         }
-
         const token = await this.lineService.getAccessToken(code, state);
+        // TODO: Redirect page to frontend
         return token;
     }
 }
