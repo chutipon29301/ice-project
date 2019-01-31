@@ -16,3 +16,5 @@ tmp/
 
 # Docker volume
 volumes/*
+.vscode/c_cpp_properties.json
+.vscode/arduino.json
