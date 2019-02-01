@@ -1,8 +1,9 @@
 import { IsString } from 'class-validator';
 
-export class CreateLocationDto {
+export class EditLocationDto {
     @IsString()
     name: string;
+
     @IsString()
     detail: string;
 }
