@@ -15,7 +15,7 @@ export default class Location extends Model<Location> {
     public locations: SubLocation[];
 
     get subLocations(): Location[] {
-        return this.locations.map((location) => location.child);
+        return this.locations.map(location => location.child);
     }
 
     @HasOne(() => SubLocation, 'childID')

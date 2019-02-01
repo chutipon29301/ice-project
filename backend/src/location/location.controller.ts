@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+} from '@nestjs/common';
 import { LocationService } from './location.service';
 import Location from '../models/Location.model';
 import { CreateLocationDto } from './dto/create-location.dto';
@@ -17,12 +25,15 @@ export class LocationController {
     registerLocation(@Body() createLocationDto: CreateLocationDto) {
         return this.locationService.create(
             createLocationDto.name,
-            createLocationDto.detail
-            );
+            createLocationDto.detail,
+        );
     }
 
     @Patch(':id')
-    async edit(@Param('id') id: string, @Body() editLocationDto: EditLocationDto) {
+    async edit(
+        @Param('id') id: string,
+        @Body() editLocationDto: EditLocationDto,
+    ) {
         await this.locationService.edit(parseInt(id, 10), editLocationDto);
     }
 

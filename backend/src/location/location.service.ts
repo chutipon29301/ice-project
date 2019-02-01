@@ -8,25 +8,28 @@ import { partialOf } from 'src/util/ObjectMapper';
 @Injectable()
 export class LocationService {
     constructor(
-        @Inject(LocationRepository) private readonly locationRepo: typeof Location,
-    ) { }
+        @Inject(LocationRepository)
+        private readonly locationRepo: typeof Location,
+    ) {}
     async listAll(): Promise<Location[]> {
         return await this.locationRepo.findAll({ raw: true });
     }
 
     async create(name: string, detail: string) {
         try {
-            await this.locationRepo.create({ name, detail })
+            await this.locationRepo.create({ name, detail });
         } catch (error) {
             throw new ConflictException(error);
         }
     }
 
     async edit(id: number, value: Partial<Location>) {
-        await this.locationRepo.update(partialOf<Location>(value), { where: { id } })
+        await this.locationRepo.update(partialOf<Location>(value), {
+            where: { id },
+        });
     }
-    
+
     async delete(id: number) {
-        await this.locationRepo.destroy({ where: { id } })
+        await this.locationRepo.destroy({ where: { id } });
     }
 }
