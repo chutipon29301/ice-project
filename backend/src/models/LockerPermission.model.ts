@@ -4,28 +4,19 @@ import {
     Column,
     NotNull,
     ForeignKey,
-    DataType,
 } from 'sequelize-typescript';
 import Users from './Users.model';
 import Lockers from './Locker.model';
-
-
-export enum CurrentStatus {
-    LOCK = 'LOCK',
-    UNLOCK = 'UNLOCK',
-}
+import Role from './Role.model';
 
 @Table({
     timestamps: true,
 })
-export default class LockerStat extends Model<LockerStat> {
+export default class LockerPermission extends Model<LockerPermission> {
     
-    @Column(DataType.ENUM(Object.keys(CurrentStatus)))
-    public status: CurrentStatus;
-
-    @ForeignKey(() => Users)
+    @ForeignKey(() => Role)
     @Column
-    public userID: number;
+    public roleID: number;
 
     @ForeignKey(() => Lockers)
     @Column

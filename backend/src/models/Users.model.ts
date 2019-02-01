@@ -1,16 +1,18 @@
-import { Table, Model, Column, Unique } from 'sequelize-typescript';
+import { Table, Model, Column, Unique, ForeignKey } from 'sequelize-typescript';
+import Role from './Role.model';
 
 @Table({
     timestamps: true,
 })
 export default class Users extends Model<Users> {
-    @Unique
+    @ForeignKey(()=>Role)
     @Column
-    public lineID: string;
+    public roleID: number;
 
     @Column
-    public firstName: string;
-
+    public name: string;
+    
     @Column
-    public lastName: string;
+    public oAuthID: string;
+
 }

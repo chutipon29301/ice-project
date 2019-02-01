@@ -5,25 +5,32 @@ import {
     NotNull,
     ForeignKey,
     BelongsTo,
+    DataType,
 } from 'sequelize-typescript';
 import Location from './Location.model';
+
+export enum LockerStatus {
+    AVAILABLE = 'AVAILABLE',
+    MAINTENANCE = 'MAINTENANCE',
+}
 
 @Table({
     timestamps: true,
 })
 export default class Locker extends Model<Locker> {
-    @NotNull
+
     @Column
     name: string;
 
-    @NotNull
     @ForeignKey(() => Location)
     @Column
-    locationID: string;
+    locationID: number;
+
 
     @Column
-    number: number;
+    number: string;
 
-    // @BelongsTo(() => Location)
-    // location: Location;
+
+    @Column(DataType.ENUM(Object.keys(LockerStatus)))
+    status: LockerStatus;
 }

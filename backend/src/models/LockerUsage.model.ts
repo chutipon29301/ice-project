@@ -2,31 +2,30 @@ import {
     Table,
     Model,
     Column,
-    NotNull,
+    
     ForeignKey,
-    DataType,
+    AllowNull,
 } from 'sequelize-typescript';
 import Users from './Users.model';
 import Lockers from './Locker.model';
 
-
-export enum CurrentStatus {
-    LOCK = 'LOCK',
-    UNLOCK = 'UNLOCK',
-}
-
 @Table({
     timestamps: true,
 })
-export default class LockerStat extends Model<LockerStat> {
+export default class LockerUsage extends Model<LockerUsage> {
     
-    @Column(DataType.ENUM(Object.keys(CurrentStatus)))
-    public status: CurrentStatus;
+    @Column
+    public start: Date;
+
+    @AllowNull(true)
+    @Column
+    public end: Date;
 
     @ForeignKey(() => Users)
     @Column
     public userID: number;
 
+    
     @ForeignKey(() => Lockers)
     @Column
     public lockerID: number;
