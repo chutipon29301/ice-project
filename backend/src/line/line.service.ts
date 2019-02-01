@@ -26,20 +26,30 @@ export class LineService {
         const state = new State(this.passPhase);
         return `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${
             this.configService.lineChannelID
-            }&redirect_uri=${encodeURIComponent(
-                this.redirectURL,
-            )}&state=${encodeURIComponent(
-                this.cryptoService.AES.encrypt(
-                    state.toString(),
-                    this.configService.lineChannelSecret,
-                ),
-            )}&scope=${scope.join('%20')}`;
+        }&redirect_uri=${encodeURIComponent(
+            this.redirectURL,
+        )}&state=${encodeURIComponent(
+            this.cryptoService.AES.encrypt(
+                state.toString(),
+                this.configService.lineChannelSecret,
+            ),
+        )}&scope=${scope.join('%20')}`;
     }
 
-    async getAccessToken(code: string, encryptedState: string): Promise<LineAccessToken> {
-        const state = State.from(this.cryptoService.AES.decrypt(decodeURIComponent(encryptedState), this.configService.lineChannelSecret));
+    async getAccessToken(
+        code: string,
+        encryptedState: string,
+    ): Promise<LineAccessToken> {
+        const state = State.from(
+            this.cryptoService.AES.decrypt(
+                decodeURIComponent(encryptedState),
+                this.configService.lineChannelSecret,
+            ),
+        );
         if (!state.compareTo(this.passPhase)) {
-            throw new UnauthorizedException('Line authenticate wrong callback state');
+            throw new UnauthorizedException(
+                'Line authenticate wrong callback state',
+            );
         }
         const body = {
             grant_type: 'authorization_code',
@@ -49,12 +59,16 @@ export class LineService {
             client_secret: this.configService.lineChannelSecret,
         };
         try {
-            const result = await this.httpService.request<LineAccessTokenRequestResponse>({
-                method: 'POST',
-                headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                data: stringify(body),
-                url: 'https://api.line.me/oauth2/v2.1/token',
-            }).toPromise();
+            const result = await this.httpService
+                .request<LineAccessTokenRequestResponse>({
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded',
+                    },
+                    data: stringify(body),
+                    url: 'https://api.line.me/oauth2/v2.1/token',
+                })
+                .toPromise();
             return {
                 accessToken: result.data.access_token,
                 refreshToken: result.data.refresh_token,

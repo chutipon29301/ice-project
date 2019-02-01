@@ -14,9 +14,7 @@ describe('User Controller', () => {
             controllers: [UserController],
             providers: [UserService, ...userProviders],
         }).compile();
-        controller = module.get<UserController>(
-            UserController,
-        );
+        controller = module.get<UserController>(UserController);
     });
 
     // beforeEach(async() => {

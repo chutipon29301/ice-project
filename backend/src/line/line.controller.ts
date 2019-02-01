@@ -1,11 +1,16 @@
-import { Controller, Get, Res, Query, UnauthorizedException } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Res,
+    Query,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { LineService } from './line.service';
 
 @Controller('line')
 export class LineController {
-
-    constructor(private readonly lineService: LineService) { }
+    constructor(private readonly lineService: LineService) {}
 
     @Get()
     async redirect(@Res() res: Response) {

@@ -1,7 +1,6 @@
 import { UnauthorizedException } from '@nestjs/common';
 
 export class State {
-
     public static from(jsonString: string): State {
         try {
             const parsingResult: { passPhase: string } = JSON.parse(jsonString);
@@ -11,7 +10,7 @@ export class State {
         }
     }
 
-    constructor(private passPhase: string) { }
+    constructor(private passPhase: string) {}
 
     compareTo(correctPassPhase): boolean {
         return this.passPhase === correctPassPhase;

@@ -7,7 +7,7 @@ import { partialOf } from '../util/ObjectMapper';
 export class UserService {
     constructor(
         @Inject(UsersRepository) private readonly usersRepository: typeof Users,
-    ) { }
+    ) {}
 
     async create(lineID: string, firstName: string, lastName: string) {
         try {
