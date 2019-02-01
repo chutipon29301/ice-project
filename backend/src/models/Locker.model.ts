@@ -18,7 +18,6 @@ export enum LockerStatus {
     timestamps: true,
 })
 export default class Locker extends Model<Locker> {
-
     @Column
     name: string;
 
@@ -26,10 +25,8 @@ export default class Locker extends Model<Locker> {
     @Column
     locationID: number;
 
-
     @Column
     number: string;
-
 
     @Column(DataType.ENUM(Object.keys(LockerStatus)))
     status: LockerStatus;

@@ -5,7 +5,6 @@ import SubLocation from './SubLocation.model';
     timestamps: true,
 })
 export default class Location extends Model<Location> {
-
     @Column
     name: string;
 
@@ -21,5 +20,4 @@ export default class Location extends Model<Location> {
 
     // @HasOne(()=>SubLocation, 'childID')
     // public parentSubLocations: SubLocation;
-
 }

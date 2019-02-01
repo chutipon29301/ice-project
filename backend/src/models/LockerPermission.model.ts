@@ -13,7 +13,6 @@ import Role from './Role.model';
     timestamps: true,
 })
 export default class LockerPermission extends Model<LockerPermission> {
-    
     @ForeignKey(() => Role)
     @Column
     public roleID: number;

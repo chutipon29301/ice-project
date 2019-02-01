@@ -2,7 +2,6 @@ import {
     Table,
     Model,
     Column,
-    
     ForeignKey,
     AllowNull,
 } from 'sequelize-typescript';
@@ -13,7 +12,6 @@ import Lockers from './Locker.model';
     timestamps: true,
 })
 export default class LockerUsage extends Model<LockerUsage> {
-    
     @Column
     public start: Date;
 
@@ -25,7 +23,6 @@ export default class LockerUsage extends Model<LockerUsage> {
     @Column
     public userID: number;
 
-    
     @ForeignKey(() => Lockers)
     @Column
     public lockerID: number;

@@ -9,7 +9,6 @@ import {
 import Users from './Users.model';
 import Lockers from './Locker.model';
 
-
 export enum CurrentStatus {
     LOCK = 'LOCK',
     UNLOCK = 'UNLOCK',
@@ -19,7 +18,6 @@ export enum CurrentStatus {
     timestamps: true,
 })
 export default class LockerStat extends Model<LockerStat> {
-    
     @Column(DataType.ENUM(Object.keys(CurrentStatus)))
     public status: CurrentStatus;
 

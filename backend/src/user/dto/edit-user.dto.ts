@@ -4,5 +4,4 @@ export class EditUserDto {
     @IsOptional()
     @IsString()
     name: string;
-
 }

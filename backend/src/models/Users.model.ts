@@ -5,14 +5,13 @@ import Role from './Role.model';
     timestamps: true,
 })
 export default class Users extends Model<Users> {
-    @ForeignKey(()=>Role)
+    @ForeignKey(() => Role)
     @Column
     public roleID: number;
 
     @Column
     public name: string;
-    
+
     @Column
     public oAuthID: string;
-
 }
