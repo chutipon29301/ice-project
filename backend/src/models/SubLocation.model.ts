@@ -20,9 +20,11 @@ export default class SubLocation extends Model<SubLocation> {
     @Column
     public childID: number;
 
+    @BelongsTo(() => Location, { foreignKey: 'childID' })
+    public child: Location;
     // @HasOne(() => Location, { foreignKey: 'childID' })
     // public child: Location;
 
-    // @BelongsTo(() => Location, { foreignKey: 'parentID' })
-    // public parent: Location;
+    @BelongsTo(() => Location, { foreignKey: 'parentID' })
+    public parent: Location;
 }

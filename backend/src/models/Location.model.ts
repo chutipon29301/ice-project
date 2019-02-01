@@ -11,13 +11,13 @@ export default class Location extends Model<Location> {
     @Column
     detail: string;
 
-    // @HasMany(() => SubLocation, 'parentID')
-    // public locations: SubLocation[];
+    @HasMany(() => SubLocation, 'parentID')
+    public locations: SubLocation[];
 
-    // get subLocations(): Location[] {
-    //     return this.locations.map((location) => location.child);
-    // }
+    get subLocations(): Location[] {
+        return this.locations.map((location) => location.child);
+    }
 
-    // @HasOne(()=>SubLocation, 'childID')
-    // public parentSubLocations: SubLocation;
+    @HasOne(() => SubLocation, 'childID')
+    public parentSubLocations: SubLocation;
 }
