@@ -17,19 +17,19 @@ export class LocationController {
     constructor(private readonly locationService: LocationService) {}
 
     @Get()
-    async listAllLocation(): Promise<Location[]> {
-        return await this.locationService.listAll();
+    async listLocations(): Promise<Location[]> {
+        return await this.locationService.list();
     }
 
     @Post()
-    registerLocation(@Body() createLocationDto: CreateLocationDto) {
+    addLocation(@Body() createLocationDto: CreateLocationDto) {
         return this.locationService.create(
             createLocationDto.name,
             createLocationDto.detail,
         );
     }
 
-    @Patch(':id')
+    @Patch('/:id')
     async edit(
         @Param('id') id: string,
         @Body() editLocationDto: EditLocationDto,

@@ -1,9 +1,6 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import Location from '../models/Location.model';
-import { CreateLocationDto } from './dto/create-location.dto';
 import { LocationRepository } from 'src/config';
-import { EditLocationDto } from './dto/edit-location.dto';
-import { partialOf } from 'src/util/ObjectMapper';
 
 @Injectable()
 export class LocationService {
@@ -11,7 +8,8 @@ export class LocationService {
         @Inject(LocationRepository)
         private readonly locationRepo: typeof Location,
     ) {}
-    async listAll(): Promise<Location[]> {
+
+    async list(): Promise<Location[]> {
         return await this.locationRepo.findAll({ raw: true });
     }
 
@@ -24,7 +22,7 @@ export class LocationService {
     }
 
     async edit(id: number, value: Partial<Location>) {
-        await this.locationRepo.update(partialOf<Location>(value), {
+        await this.locationRepo.update(value, {
             where: { id },
         });
     }
