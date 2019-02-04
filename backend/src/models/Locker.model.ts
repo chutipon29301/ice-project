@@ -4,6 +4,7 @@ import {
     Column,
     ForeignKey,
     DataType,
+    Default,
 } from 'sequelize-typescript';
 import Location from './Location.model';
 
@@ -26,6 +27,7 @@ export default class Locker extends Model<Locker> {
     @Column
     number: string;
 
+    @Default(LockerStatus.AVAILABLE)
     @Column(DataType.ENUM(Object.keys(LockerStatus)))
     status: LockerStatus;
 }
