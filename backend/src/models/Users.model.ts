@@ -1,4 +1,4 @@
-import { Table, Model, Column, Unique, ForeignKey } from 'sequelize-typescript';
+import { Table, Model, Column, ForeignKey } from 'sequelize-typescript';
 import Role from './Role.model';
 
 @Table({

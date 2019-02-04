@@ -1,11 +1,11 @@
-import { Table, Model, Column, NotNull } from 'sequelize-typescript';
+import { Table, Model, Column } from 'sequelize-typescript';
 
 @Table({
     timestamps: true,
 })
 export default class Role extends Model<Role> {
     @Column
-    public name: String;
+    public name: string;
 
     @Column
     public maxHours: number;

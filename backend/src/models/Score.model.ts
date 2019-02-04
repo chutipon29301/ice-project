@@ -7,7 +7,7 @@ import Users from './Users.model';
 export default class Score extends Model<Score> {
     @Column
     @ForeignKey(() => Users)
-    public userID: String;
+    public userID: string;
 
     @Column
     public totalHours: number;

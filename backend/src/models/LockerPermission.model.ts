@@ -1,11 +1,4 @@
-import {
-    Table,
-    Model,
-    Column,
-    NotNull,
-    ForeignKey,
-} from 'sequelize-typescript';
-import Users from './Users.model';
+import { Table, Model, Column, ForeignKey } from 'sequelize-typescript';
 import Lockers from './Locker.model';
 import Role from './Role.model';
 

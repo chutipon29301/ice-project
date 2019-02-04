@@ -2,9 +2,7 @@ import {
     Table,
     Model,
     Column,
-    NotNull,
     ForeignKey,
-    BelongsTo,
     DataType,
 } from 'sequelize-typescript';
 import Location from './Location.model';
