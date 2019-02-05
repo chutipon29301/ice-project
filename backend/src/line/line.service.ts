@@ -16,6 +16,6 @@ export class LineService {
         code: string,
         encryptedState: string,
     ): Promise<LineAccessToken> {
-        return this.lineAuthService.getAccessToken(code, encryptedState);
+        return await this.lineAuthService.getAccessToken(code, encryptedState);
     }
 }

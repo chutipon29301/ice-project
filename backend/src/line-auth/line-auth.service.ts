@@ -25,13 +25,13 @@ export class LineAuthService {
         return `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${
             this.configService.lineChannelID
         }&redirect_uri=${encodeURIComponent(
-            `${this.configService.serverURL}/${redirectURL}`,
+            `${this.configService.serverURL}${redirectURL}`,
         )}&state=${encodeURIComponent(
             this.cryptoService.AES.encrypt(
                 state.toString(),
                 this.configService.lineChannelSecret,
             ),
-        )}&scope=${scope.join('%20')}`;
+        )}&scope=${scope.join('%20')}&bot_prompt=aggressive`;
     }
 
     async getAccessToken(
@@ -52,7 +52,7 @@ export class LineAuthService {
         const body = {
             grant_type: 'authorization_code',
             code,
-            redirect_uri: state.redirectURLString,
+            redirect_uri: `${this.configService.serverURL}${state.redirectURLString}`,
             client_id: this.configService.lineChannelID,
             client_secret: this.configService.lineChannelSecret,
         };
