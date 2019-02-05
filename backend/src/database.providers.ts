@@ -14,10 +14,10 @@ export const databaseProviders = [
                 database: configService.mySQLDatabaseName,
                 port: 3306,
                 logging: false,
-                modelPaths: [__dirname + '/models'],
+                modelPaths: [__dirname + '/models/'],
             });
             await sequelize.sync({
-                alter: true,
+                // alter: true,
                 // force: true,
             });
             return sequelize;

@@ -1,7 +1,15 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsInt } from 'class-validator';
 
 export class EditUserDto {
     @IsOptional()
+    @IsInt()
+    public roleID: number;
+
+    @IsOptional()
     @IsString()
-    name: string;
+    public name: string;
+
+    @IsOptional()
+    @IsString()
+    public oAuthID: string;
 }
