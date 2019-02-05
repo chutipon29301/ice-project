@@ -5,9 +5,9 @@ services:
     build: ./backend
     image: iceprojectbackend
     restart: always
-    volumes: 
+    volumes:
       - ./backend:/server
-    environment: 
+    environment:
       SERVER_URL:
       MYSQL_SERVER: db
       MYSQL_USER:
@@ -15,11 +15,13 @@ services:
       MYSQL_DATABASE:
       CHANNEL_ID:
       CHANNEL_SECRET:
-    depends_on: 
+    depends_on:
       - db
   db:
     image: mysql:5.7
     restart: always
+    ports:
+      - 3306:3306
     environment:
       MYSQL_DATABASE:
       MYSQL_USER:
@@ -32,6 +34,6 @@ services:
     restart: always
     ports:
       - "80:80"
-    volumes: 
+    volumes:
       - ./config/nginx.conf:/etc/nginx/nginx.conf
       - ./config/sites-enabled/server.conf:/etc/nginx/sites-enabled/server.conf
