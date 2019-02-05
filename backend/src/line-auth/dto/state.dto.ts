@@ -18,7 +18,11 @@ export class State {
         }
     }
 
-    constructor(private passPhase: string, private redirectURL: string, private state: string = '') {}
+    constructor(
+        private passPhase: string,
+        private redirectURL: string,
+        private state: string = '',
+    ) {}
 
     get redirectURLString(): string {
         return this.redirectURL;

@@ -52,7 +52,9 @@ export class LineAuthService {
         const body = {
             grant_type: 'authorization_code',
             code,
-            redirect_uri: `${this.configService.serverURL}${state.redirectURLString}`,
+            redirect_uri: `${this.configService.serverURL}${
+                state.redirectURLString
+            }`,
             client_id: this.configService.lineChannelID,
             client_secret: this.configService.lineChannelSecret,
         };
