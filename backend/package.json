@@ -13,6 +13,8 @@
     "prestart:prod": "rimraf dist && tsc",
     "start:prod": "node -r ./tsconfig-paths-bootstrap.js dist/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
+    "clear": "bash scripts/clear-container.sh",
+    "setup-test": "bash scripts/setup-test.sh",
     "test": "jest --forceExit",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --forceExit",

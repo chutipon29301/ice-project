@@ -26,6 +26,20 @@ git clone https://github.com/chutipon29301/ice-project.git
 docker-compose up
 ```
 
+## Testing
+
+### Backend
+- Create `test.env` file at root of backend directory using variable name from `test.example.env`
+- Run these following commands
+
+    ```sh
+    $ cd backend
+    # To setup test environment
+    $ yarn setup-test
+    # To run a test
+    $ yarn test:local
+    ```
+
 ## Deployment
 
 ```sh
