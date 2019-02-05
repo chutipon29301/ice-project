@@ -8,10 +8,12 @@ import {
     Delete,
 } from '@nestjs/common';
 import { LocationService } from './location.service';
-import Location from '../models/Location.model';
+import Location from '../models/location.model';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { EditLocationDto } from './dto/edit-location.dto';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('location')
 @Controller('location')
 export class LocationController {
     constructor(private readonly locationService: LocationService) {}

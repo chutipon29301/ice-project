@@ -6,7 +6,7 @@ import {
     DataType,
     Default,
 } from 'sequelize-typescript';
-import Location from './Location.model';
+import Location from './location.model';
 
 export enum LockerStatus {
     AVAILABLE = 'AVAILABLE',

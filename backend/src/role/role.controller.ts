@@ -8,10 +8,12 @@ import {
     Body,
 } from '@nestjs/common';
 import { RoleService } from './role.service';
-import Role from '../models/Role.model';
+import Role from '../models/role.model';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { EditRoleDto } from './dto/edit-role.dto';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('role')
 @Controller('role')
 export class RoleController {
     constructor(private readonly roleService: RoleService) {}

@@ -1,5 +1,5 @@
 import { RoleRepository } from '../config';
-import Role from '../models/Role.model';
+import Role from '../models/role.model';
 
 export const roleProviders = [
     {

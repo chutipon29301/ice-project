@@ -1,5 +1,5 @@
 import { LockerRepository } from '../config';
-import Locker from '../models/Locker.model';
+import Locker from '../models/locker.model';
 
 export const lockerProviders = [
     {

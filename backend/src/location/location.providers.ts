@@ -1,4 +1,4 @@
-import Location from 'src/models/Location.model';
+import Location from 'src/models/location.model';
 import { LocationRepository } from 'src/config';
 
 export const locationProviders = [

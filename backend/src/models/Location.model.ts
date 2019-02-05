@@ -1,4 +1,5 @@
 import { Table, Model, Column } from 'sequelize-typescript';
+
 @Table({
     timestamps: true,
 })

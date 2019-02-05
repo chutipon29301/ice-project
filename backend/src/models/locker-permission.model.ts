@@ -1,6 +1,6 @@
 import { Table, Model, Column, ForeignKey } from 'sequelize-typescript';
-import Lockers from './Locker.model';
-import Role from './Role.model';
+import Lockers from './locker.model';
+import Role from './role.model';
 
 @Table({
     timestamps: true,

@@ -1,6 +1,6 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import { UsersRepository } from '../config';
-import Users from '../models/Users.model';
+import Users from '../models/users.model';
 import { partialOf } from '../util/ObjectMapper';
 
 @Injectable()

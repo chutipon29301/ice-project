@@ -1,5 +1,5 @@
 import { Table, Model, Column, ForeignKey } from 'sequelize-typescript';
-import Role from './Role.model';
+import Role from './role.model';
 
 @Table({
     timestamps: true,

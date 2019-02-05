@@ -1,5 +1,5 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
-import Locker from '../models/Locker.model';
+import Locker from '../models/locker.model';
 import { LockerRepository } from '../config';
 
 @Injectable()
