@@ -3,6 +3,7 @@ import { UserController } from './user.controller';
 import { DatabaseModule } from '../database.module';
 import { UserService } from './user.service';
 import { userProviders } from './user.providers';
+import { UserModule } from './user.module';
 
 describe('User Controller', () => {
     let module: TestingModule;
@@ -10,20 +11,12 @@ describe('User Controller', () => {
 
     beforeAll(async () => {
         module = await Test.createTestingModule({
-            imports: [DatabaseModule],
-            controllers: [UserController],
-            providers: [UserService, ...userProviders],
+            imports: [UserModule],
+            // controllers: [UserController],
+            // providers: [UserService, ...userProviders],
         }).compile();
         controller = module.get<UserController>(UserController);
     });
-
-    // beforeEach(async() => {
-    //     for(let i)
-    // });
-
-    // afterEach(async() => {
-
-    // });
 
     it('should be defined', () => {
         expect(controller).toBeDefined();
