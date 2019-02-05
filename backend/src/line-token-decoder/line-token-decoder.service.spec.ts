@@ -1,3 +1,4 @@
+import { LineTokenDecoderModule } from './line-token-decoder.module';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LineTokenDecoderService } from './line-token-decoder.service';
 
@@ -6,7 +7,7 @@ describe('LineTokenDecoderService', () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [LineTokenDecoderService],
+            imports: [LineTokenDecoderModule],
         }).compile();
         service = module.get<LineTokenDecoderService>(LineTokenDecoderService);
     });

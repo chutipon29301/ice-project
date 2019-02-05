@@ -1,3 +1,4 @@
+import { LineModule } from './line.module';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LineService } from './line.service';
 
@@ -6,7 +7,8 @@ describe('LineService', () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [LineService],
+            // providers: [LineService],
+            imports: [LineModule],
         }).compile();
         service = module.get<LineService>(LineService);
     });
