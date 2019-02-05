@@ -1,3 +1,4 @@
+import { RoleModule } from './role.module';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoleController } from './role.controller';
 
@@ -6,7 +7,8 @@ describe('Role Controller', () => {
 
     beforeAll(async () => {
         module = await Test.createTestingModule({
-            controllers: [RoleController],
+            // controllers: [RoleController],
+            imports: [RoleModule],
         }).compile();
     });
     it('should be defined', () => {

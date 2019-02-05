@@ -1,3 +1,4 @@
+import { RoleModule } from './role.module';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoleService } from './role.service';
 
@@ -6,7 +7,8 @@ describe('RoleService', () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [RoleService],
+            // providers: [RoleService],
+            imports: [RoleModule],
         }).compile();
         service = module.get<RoleService>(RoleService);
     });

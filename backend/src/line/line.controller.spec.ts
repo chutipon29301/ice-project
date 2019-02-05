@@ -1,3 +1,4 @@
+import { LineModule } from './line.module';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LineController } from './line.controller';
 
@@ -6,7 +7,8 @@ describe('Line Controller', () => {
 
     beforeAll(async () => {
         module = await Test.createTestingModule({
-            controllers: [LineController],
+            // controllers: [LineController],
+            imports: [LineModule],
         }).compile();
     });
     it('should be defined', () => {
