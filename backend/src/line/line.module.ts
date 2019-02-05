@@ -1,12 +1,10 @@
-import { Module, HttpModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { LineService } from './line.service';
 import { LineController } from './line.controller';
-import { ConfigModule } from '../config/config.module';
-import { LineTokenDecoderModule } from '../line-token-decoder/line-token-decoder.module';
-import { CryptoModule } from '../crypto/crypto.module';
+import { LineAuthModule } from 'src/line-auth/line-auth.module';
 
 @Module({
-    imports: [LineTokenDecoderModule, ConfigModule, HttpModule, CryptoModule],
+    imports: [LineAuthModule],
     providers: [LineService],
     controllers: [LineController],
 })

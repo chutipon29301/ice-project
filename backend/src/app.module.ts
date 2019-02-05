@@ -10,6 +10,7 @@ import { LineTokenDecoderModule } from './line-token-decoder/line-token-decoder.
 import { CryptoModule } from './crypto/crypto.module';
 import { RoleModule } from './role/role.module';
 import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
+import { LineAuthModule } from './line-auth/line-auth.module';
 import * as helmet from 'helmet';
 
 @Module({
@@ -22,6 +23,7 @@ import * as helmet from 'helmet';
         LineTokenDecoderModule,
         CryptoModule,
         RoleModule,
+        LineAuthModule,
     ],
     controllers: [AppController],
     providers: [AppService],
