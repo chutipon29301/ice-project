@@ -12,6 +12,7 @@ import { RoleModule } from './role/role.module';
 import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { LineAuthModule } from './line-auth/line-auth.module';
 import * as helmet from 'helmet';
+import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.middleware';
 
 @Module({
     imports: [
@@ -30,6 +31,8 @@ import * as helmet from 'helmet';
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(helmet(), SanitizerMiddleware).forRoutes('*');
+        consumer
+            .apply(helmet(), SanitizerMiddleware, AuthHeaderParserMiddleware)
+            .forRoutes('*');
     }
 }
