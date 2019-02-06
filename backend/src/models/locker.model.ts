@@ -1,15 +1,15 @@
 import {
-    Table,
-    Model,
+    BelongsToMany,
     Column,
-    ForeignKey,
     DataType,
     Default,
-    BelongsToMany,
+    ForeignKey,
+    Model,
+    Table,
 } from 'sequelize-typescript';
+import Group from './group.model';
 import Location from './location.model';
 import LockerPermission from './locker-permission.model';
-import Group from './group.model';
 
 export enum LockerStatus {
     AVAILABLE = 'AVAILABLE',

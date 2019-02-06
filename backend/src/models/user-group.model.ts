@@ -1,13 +1,6 @@
-import {
-    Table,
-    Model,
-    Column,
-    ForeignKey,
-    HasMany,
-    BelongsToMany,
-} from 'sequelize-typescript';
-import Users from './users.model';
+import { Column, ForeignKey, Model, Table } from 'sequelize-typescript';
 import Group from './group.model';
+import Users from './users.model';
 
 @Table({
     timestamps: true,

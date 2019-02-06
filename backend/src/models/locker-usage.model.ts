@@ -1,12 +1,12 @@
 import {
-    Table,
-    Model,
+    AllowNull,
     Column,
     ForeignKey,
-    AllowNull,
+    Model,
+    Table,
 } from 'sequelize-typescript';
-import Users from './users.model';
 import Lockers from './locker.model';
+import Users from './users.model';
 
 @Table({
     timestamps: true,

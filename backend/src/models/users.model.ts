@@ -1,10 +1,10 @@
 import {
-    Table,
-    Model,
-    Column,
     BelongsToMany,
+    Column,
     DataType,
     Default,
+    Model,
+    Table,
 } from 'sequelize-typescript';
 import Group from './group.model';
 import UserGroup from './user-group.model';
@@ -18,7 +18,6 @@ export enum Role {
     timestamps: true,
 })
 export default class Users extends Model<Users> {
-
     @Column
     public name: string;
 

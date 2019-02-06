@@ -1,14 +1,8 @@
-import {
-    Table,
-    Model,
-    Column,
-    HasMany,
-    BelongsToMany,
-} from 'sequelize-typescript';
-import Users from './users.model';
-import UserGroup from './user-group.model';
-import Locker from './locker.model';
+import { BelongsToMany, Column, Model, Table } from 'sequelize-typescript';
 import LockerPermission from './locker-permission.model';
+import Locker from './locker.model';
+import UserGroup from './user-group.model';
+import Users from './users.model';
 
 @Table({
     timestamps: true,
