@@ -1,19 +1,21 @@
-import { Module, MiddlewareConsumer } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
+import * as helmet from 'helmet';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
-import { UserModule } from './user/user.module';
-import { LockerModule } from './locker/locker.module';
-import { LocationModule } from './location/location.module';
-import { LineModule } from './line/line.module';
-import { LineTokenDecoderModule } from './line-token-decoder/line-token-decoder.module';
 import { CryptoModule } from './crypto/crypto.module';
-import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { LineAuthModule } from './line-auth/line-auth.module';
+import { LineTokenDecoderModule } from './line-token-decoder/line-token-decoder.module';
+import { LineModule } from './line/line.module';
+import { LocationModule } from './location/location.module';
+import { LockerModule } from './locker/locker.module';
 import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.middleware';
-import { TokenModule } from './token/token.module';
+import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { RoleModule } from './role/role.module';
-import * as helmet from 'helmet';
+import { TokenModule } from './token/token.module';
+import { UserModule } from './user/user.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RoleGuard } from './guard/role.guard';
 
 @Module({
     imports: [
@@ -29,7 +31,13 @@ import * as helmet from 'helmet';
         RoleModule,
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [
+        AppService,
+        {
+            provide: APP_GUARD,
+            useClass: RoleGuard,
+        },
+    ],
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
