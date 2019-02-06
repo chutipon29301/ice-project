@@ -6,7 +6,7 @@ import { State } from './dto/state.dto';
 import { LineAccessToken } from './dto/line-access-token.dto';
 import { LineAccessTokenRequestResponse } from './dto/line-access-token-request-response.dto';
 import { stringify } from 'qs';
-import { LineToken } from 'src/line-token-decoder/dto/line-token.dto';
+import { LineToken } from '../line-token-decoder/dto/line-token.dto';
 
 @Injectable()
 export class LineAuthService {

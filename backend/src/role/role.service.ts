@@ -1,7 +1,7 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import { RoleRepository } from '../config';
 import Role from '../models/role.model';
-import { partialOf } from 'src/util/ObjectMapper';
+import { partialOf } from '../util/ObjectMapper';
 
 @Injectable()
 export class RoleService {

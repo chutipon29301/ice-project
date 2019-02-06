@@ -1,6 +1,6 @@
 import { IsString, IsNumber } from 'class-validator';
 import { ToInt } from 'class-sanitizer';
-import { LockerStatus } from 'src/models/locker.model';
+import { LockerStatus } from '../../models/locker.model';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class EditLockerDto {

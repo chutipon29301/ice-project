@@ -1,6 +1,6 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import Location from '../models/location.model';
-import { LocationRepository } from 'src/config';
+import { LocationRepository } from '../config';
 
 @Injectable()
 export class LocationService {

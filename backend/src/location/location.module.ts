@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { LocationService } from './location.service';
 import { LocationController } from './location.controller';
 import { locationProviders } from './location.providers';
-import { DatabaseModule } from 'src/database.module';
+import { DatabaseModule } from '../database.module';
 
 @Module({
     controllers: [LocationController],
