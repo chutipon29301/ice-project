@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { Button } from "antd-mobile";
-
+import TestHook from "./TestHook";
 const liff = window.liff;
 
 class App extends Component {
@@ -30,7 +29,7 @@ class App extends Component {
           >
             Learn React
           </a>
-          <Button> Test AntdMobile</Button>
+          <TestHook />
         </header>
       </div>
     );
