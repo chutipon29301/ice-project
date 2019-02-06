@@ -1,6 +1,6 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import { UsersRepository } from '../config';
-import Users from '../models/users.model';
+import Users, { Role } from '../models/users.model';
 import { partialOf } from '../util/ObjectMapper';
 import { LineAuthService } from '../line-auth/line-auth.service';
 
@@ -13,10 +13,9 @@ export class UserService {
         private readonly lineAuthService: LineAuthService,
     ) {}
 
-    async create(roleID: number, name: string, oAuthID: string) {
+    async create(name: string, oAuthID: string) {
         try {
             await this.usersRepository.create({
-                roleID,
                 name,
                 oAuthID,
             });
@@ -40,13 +39,32 @@ export class UserService {
         await this.usersRepository.destroy({ where: { id } });
     }
 
-    get redirectLink(): string {
-        return this.lineAuthService.lineAuthPageURL(this.callbackURL);
+    redirectLink(name: string, role: Role): string {
+        const state = { name, role };
+        return this.lineAuthService.lineAuthPageURL(
+            this.callbackURL,
+            JSON.stringify(state),
+        );
     }
 
     async register(code: string, state: string) {
         const token = await this.lineAuthService.getAccessToken(code, state);
-        return await this.lineAuthService.decode(token.idToken);
-        // TODO: Add user to database
+        const registerState = JSON.parse(token.state) as {
+            name: string;
+            role: Role;
+        };
+        const decodeToken = await this.lineAuthService.decode(token.idToken);
+        const user = await this.usersRepository.getUserFromLineID(
+            decodeToken.sub,
+        );
+        if (!user) {
+            await this.usersRepository.create({
+                oAuthID: decodeToken.sub,
+                name: registerState.name,
+                role: registerState.role,
+            });
+        } else {
+            throw new ConflictException('User already registered');
+        }
     }
 }
