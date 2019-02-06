@@ -8,11 +8,15 @@ describe('LineAuthService', () => {
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [LineAuthModule],
-            // providers: [LineAuthService],
         }).compile();
         service = module.get<LineAuthService>(LineAuthService);
     });
+
     it('should be defined', () => {
         expect(service).toBeDefined();
+    });
+
+    it('should return line redirect url', () => {
+        expect(typeof service.lineAuthPageURL('a')).toEqual('string');
     });
 });
