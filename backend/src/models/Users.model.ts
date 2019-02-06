@@ -14,4 +14,9 @@ export default class Users extends Model<Users> {
 
     @Column
     public oAuthID: string;
+
+    public static async checkExistUsersID(userID: number): Promise<boolean> {
+        const user = await this.findById(userID);
+        return user != null;
+    }
 }
