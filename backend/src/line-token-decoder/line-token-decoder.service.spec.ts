@@ -11,6 +11,7 @@ describe('LineTokenDecoderService', () => {
         }).compile();
         service = module.get<LineTokenDecoderService>(LineTokenDecoderService);
     });
+
     it('should be defined', () => {
         expect(service).toBeDefined();
     });
