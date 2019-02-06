@@ -14,7 +14,7 @@ import { TokenModule } from '../token/token.module';
         LineTokenDecoderModule,
         TokenModule,
     ],
-    providers: [LineService, ...lineProviders],
     controllers: [LineController],
+    providers: [LineService, ...lineProviders],
 })
 export class LineModule {}
