@@ -16,5 +16,7 @@ tmp/
 
 # Docker volume
 volumes/*
+volumes-test/*
+
 .vscode/c_cpp_properties.json
 .vscode/arduino.json
