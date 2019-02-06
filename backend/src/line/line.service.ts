@@ -1,5 +1,5 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import moment from 'moment';
+import * as moment from 'moment';
 import { UsersRepository } from '../config';
 import { LineAuthService } from '../line-auth/line-auth.service';
 import { LineTokenDecoderService } from '../line-token-decoder/line-token-decoder.service';
@@ -15,7 +15,7 @@ export class LineService {
         private readonly lineAuthService: LineAuthService,
         private readonly lineTokenDecoderService: LineTokenDecoderService,
         private readonly tokenService: TokenService,
-        @Inject(UsersRepository) private readonly userRepository: typeof Users,
+        @Inject(UsersRepository) private readonly usersRepository: typeof Users,
     ) {}
 
     get lineAuthPageURL(): string {
@@ -31,7 +31,7 @@ export class LineService {
             encryptedState,
         );
         const decodedToken = this.lineTokenDecoderService.decode(token.idToken);
-        const user = await this.userRepository.getUserFromLineID(
+        const user = await this.usersRepository.getUserFromLineID(
             decodedToken.sub,
         );
         if (user) {
