@@ -12,6 +12,7 @@ import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { LineAuthModule } from './line-auth/line-auth.module';
 import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.middleware';
 import { TokenModule } from './token/token.module';
+import { RoleModule } from './role/role.module';
 import * as helmet from 'helmet';
 
 @Module({
@@ -25,6 +26,7 @@ import * as helmet from 'helmet';
         CryptoModule,
         LineAuthModule,
         TokenModule,
+        RoleModule,
     ],
     controllers: [AppController],
     providers: [AppService],

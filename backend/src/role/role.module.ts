@@ -8,4 +8,4 @@ import { roleProviders } from './role.providers';
     providers: [RoleService, ...roleProviders],
     exports: [RoleService],
 })
-export class RoleModule { }
+export class RoleModule {}
