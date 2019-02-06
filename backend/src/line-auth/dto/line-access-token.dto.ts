@@ -3,4 +3,5 @@ export class LineAccessToken {
     refreshToken: string;
     idToken: string;
     expireIn: number;
+    state: string;
 }

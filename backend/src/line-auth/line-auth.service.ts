@@ -19,9 +19,9 @@ export class LineAuthService {
         private readonly cryptoService: CryptoService,
     ) {}
 
-    lineAuthPageURL(redirectURL: string): string {
+    lineAuthPageURL(redirectURL: string, optionalState: string = ''): string {
         const scope = ['openid', 'profile', 'email'];
-        const state = new State(this.passPhase, redirectURL);
+        const state = new State(this.passPhase, redirectURL, optionalState);
         return `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${
             this.configService.lineChannelID
         }&redirect_uri=${encodeURIComponent(
@@ -74,6 +74,7 @@ export class LineAuthService {
                 refreshToken: result.data.refresh_token,
                 expireIn: result.data.expires_in,
                 idToken: result.data.id_token,
+                state: state.stateString,
             };
         } catch (error) {
             throw new UnauthorizedException(error);
