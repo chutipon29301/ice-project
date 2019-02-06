@@ -5,8 +5,11 @@ import {
     ForeignKey,
     DataType,
     Default,
+    BelongsToMany,
 } from 'sequelize-typescript';
 import Location from './location.model';
+import LockerPermission from './locker-permission.model';
+import Group from './group.model';
 
 export enum LockerStatus {
     AVAILABLE = 'AVAILABLE',
@@ -23,6 +26,9 @@ export default class Locker extends Model<Locker> {
     @ForeignKey(() => Location)
     @Column
     locationID: number;
+
+    @BelongsToMany(() => Group, () => LockerPermission)
+    public groups: Group[];
 
     @Column
     number: string;

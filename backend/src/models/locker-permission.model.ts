@@ -1,14 +1,14 @@
 import { Table, Model, Column, ForeignKey } from 'sequelize-typescript';
 import Lockers from './locker.model';
-import Role from './role.model';
+import Group from './group.model';
 
 @Table({
     timestamps: true,
 })
 export default class LockerPermission extends Model<LockerPermission> {
-    @ForeignKey(() => Role)
+    @ForeignKey(() => Group)
     @Column
-    public roleID: number;
+    public groupID: number;
 
     @ForeignKey(() => Lockers)
     @Column
