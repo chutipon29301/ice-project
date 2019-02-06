@@ -1,11 +1,12 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
+import { Token } from '../token/dto/token.dto';
 
 declare global {
     namespace Express {
         interface Request {
-            user?: any;
+            user?: Token;
         }
     }
 }
