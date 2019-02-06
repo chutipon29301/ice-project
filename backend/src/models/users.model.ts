@@ -40,7 +40,7 @@ export default class Users extends Model<Users> {
     public groups: Group[];
 
     public static async checkExistUsersID(userID: number): Promise<boolean> {
-        const user = await this.findById(userID);
+        const user = await this.findByPk(userID);
         return user != null;
     }
 
@@ -57,5 +57,13 @@ export default class Users extends Model<Users> {
     public static async checkExistLineID(lineID: string): Promise<boolean> {
         const user = await this.getUserFromLineID(lineID);
         return user != null;
+    }
+
+    public static async canActivate(
+        userID: number,
+        ...roles: Role[]
+    ): Promise<boolean> {
+        const user = await this.findById(userID);
+        return roles.indexOf(user.role) !== -1;
     }
 }
