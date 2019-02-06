@@ -14,6 +14,10 @@ export enum Role {
     USER = 'USER',
 }
 
+export enum TokenType {
+    LINE = 'LINE',
+}
+
 @Table({
     timestamps: true,
 })
@@ -28,11 +32,30 @@ export default class Users extends Model<Users> {
     @Column(DataType.ENUM(Object.keys(Role)))
     public role: Role;
 
+    @Default(TokenType.LINE)
+    @Column(DataType.ENUM(Object.keys(TokenType)))
+    public tokenType: TokenType;
+
     @BelongsToMany(() => Group, () => UserGroup)
     public groups: Group[];
 
     public static async checkExistUsersID(userID: number): Promise<boolean> {
         const user = await this.findById(userID);
+        return user != null;
+    }
+
+    public static async getUserFromLineID(lineID: string): Promise<Users> {
+        const user = await this.findOne({
+            where: {
+                oAuthID: lineID,
+                tokenType: TokenType.LINE,
+            },
+        });
+        return user;
+    }
+
+    public static async checkExistLineID(lineID: string): Promise<boolean> {
+        const user = await this.getUserFromLineID(lineID);
         return user != null;
     }
 }
