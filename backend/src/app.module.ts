@@ -11,8 +11,9 @@ import { CryptoModule } from './crypto/crypto.module';
 import { RoleModule } from './role/role.module';
 import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { LineAuthModule } from './line-auth/line-auth.module';
-import * as helmet from 'helmet';
 import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.middleware';
+import { TokenModule } from './token/token.module';
+import * as helmet from 'helmet';
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.midd
         CryptoModule,
         RoleModule,
         LineAuthModule,
+        TokenModule,
     ],
     controllers: [AppController],
     providers: [AppService],
