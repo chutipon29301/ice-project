@@ -7,12 +7,12 @@ else
     exit 1
 fi
 bash scripts/clear-container.sh
-if [ ! "$(docker ps -q -f name=$PRISMA_CONTAINER_NAME)" ]; then
-    echo "# Setting up environment"
-    # run container
-    docker-compose up -d db
-    echo "# Wating for database"
-    sleep 10
-    cd ..
-fi
+rm -rf ../volumes-test
+
+echo "# Setting up environment"
+# run container
+cd ..
+docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d db
+echo "# Wating for database"
+sleep 5
 echo "# Everything is already up"
