@@ -1,0 +1,8 @@
+version: "3.2"
+
+services:
+  db:
+    ports:
+      - 3306:3306
+    volumes:
+      - ./volumes-test/database:/var/lib/mysql
