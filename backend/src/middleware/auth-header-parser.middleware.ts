@@ -17,16 +17,21 @@ export class AuthHeaderParserMiddleware implements NestMiddleware {
 
     resolve(...args: any[]): MiddlewareFunction {
         return (req: Request, res: Response, next: NextFunction) => {
-            this.tokenService
-                .decode(req.headers.authorization.split(' ')[1])
-                .then(token => {
-                    req.user = token;
-                    next();
-                })
-                .catch(error => {
-                    req.user = null;
-                    next();
-                });
+            try {
+                this.tokenService
+                    .decode(req.headers.authorization.split(' ')[1])
+                    .then(token => {
+                        req.user = token;
+                        next();
+                    })
+                    .catch(error => {
+                        req.user = null;
+                        next();
+                    });
+            } catch (error) {
+                req.user = null;
+                next();
+            }
         };
     }
 }
