@@ -10,7 +10,7 @@ import {
     Res,
     UnauthorizedException,
 } from '@nestjs/common';
-import { ApiUseTags, ApiOkResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { ApiUseTags, ApiOkResponse, ApiBadRequestResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { Roles } from '../guard/role.decorator';
 import Users, { Role } from '../models/users.model';
@@ -24,7 +24,6 @@ import { UserService } from './user.service';
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
-    @ApiOkResponse({ description: 'Successfully list all user information' })
     @ApiBadRequestResponse({ description: 'fail to query all user information' })
     @Roles(Role.ADMIN)
     @Get()
@@ -58,7 +57,7 @@ export class UserController {
         res.redirect('https://www.google.com');
     }
 
-    @ApiOkResponse({ description: 'user successfully registered to the system' })
+    @ApiCreatedResponse({ description: 'user successfully registered to the system' })
     @ApiBadRequestResponse({ description: 'fail to registered' })
     @Roles(Role.ADMIN)
     @Post()
