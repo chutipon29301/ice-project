@@ -10,7 +10,7 @@ export class GroupService {
         @Inject(GroupRepository) private readonly groupRepository: typeof Group,
         @Inject(UserGroupRepository)
         private readonly userGroupRepository: typeof UserGroup,
-    ) { }
+    ) {}
 
     async list(): Promise<Group[]> {
         return await this.groupRepository.findAll({
@@ -44,11 +44,15 @@ export class GroupService {
         await this.userGroupRepository.destroy({ where: { userID, groupID } });
     }
 
+    async detailOfGroupID(id: number): Promise<Group> {
+        const group = await this.groupRepository.findByPk(id);
+        return group;
+    }
+
     async listUserInGroup(groupID: number): Promise<Users[]> {
         const group = await this.groupRepository.findByPk(groupID, {
             include: [Users],
         });
         return group.users;
     }
-
 }
