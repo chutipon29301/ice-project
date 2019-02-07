@@ -68,7 +68,7 @@ export default class Users extends Model<Users> {
         userID: number,
         ...roles: Role[]
     ): Promise<boolean> {
-        const user = await this.findById(userID);
+        const user = await this.findByPk(userID);
         return roles.indexOf(user.role) !== -1;
     }
 }
