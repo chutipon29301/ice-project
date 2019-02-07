@@ -7,7 +7,7 @@ describe('RoleService', () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports:[RoleModule],
+            imports: [RoleModule],
             // providers: [RoleService],
         }).compile();
         service = module.get<RoleService>(RoleService);
