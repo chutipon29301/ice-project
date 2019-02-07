@@ -24,6 +24,8 @@ import { UserService } from './user.service';
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
+    @ApiOkResponse({ description: 'Successfully list all user information' })
+    @ApiBadRequestResponse({ description: 'fail to query all user information' })
     @Roles(Role.ADMIN)
     @Get()
     async listAllUsers(): Promise<Users[]> {
