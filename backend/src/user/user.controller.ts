@@ -10,7 +10,7 @@ import {
     Res,
     UnauthorizedException,
 } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiUseTags, ApiOkResponse, ApiBadRequestResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { Roles } from '../guard/role.decorator';
 import Users, { Role } from '../models/users.model';
@@ -22,7 +22,7 @@ import { UserService } from './user.service';
 @ApiUseTags('user')
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) { }
 
     @Roles(Role.ADMIN)
     @Get()
@@ -30,11 +30,15 @@ export class UserController {
         return await this.userService.listAll();
     }
 
+    @ApiOkResponse({ description: 'user successfully redirected' })
+    @ApiBadRequestResponse({ description: 'fail to redirect' })
     @Get('register')
     async register(@Res() res: Response, @Query() query: RegisterUserDto) {
         res.redirect(this.userService.redirectLink(query.name, query.role));
     }
 
+    @ApiOkResponse({ description: 'successfully get callback from Line' })
+    @ApiBadRequestResponse({ description: 'fail to request callback from Line' })
     @Get('register/callback')
     async callback(
         @Query('code') code: string,
@@ -52,6 +56,8 @@ export class UserController {
         res.redirect('https://www.google.com');
     }
 
+    @ApiOkResponse({ description: 'user successfully registered to the system' })
+    @ApiBadRequestResponse({ description: 'fail to registered' })
     @Roles(Role.ADMIN)
     @Post()
     async registerUser(@Body() createUserDto: CreateUserDto) {
@@ -61,12 +67,16 @@ export class UserController {
         );
     }
 
+    @ApiOkResponse({ description: 'Successfully edit user information' })
+    @ApiBadRequestResponse({ description: 'fail to edit user information' })
     @Roles(Role.ADMIN)
     @Patch(':id')
     async edit(@Param('id') id: string, @Body() editUserDto: EditUserDto) {
         await this.userService.edit(parseInt(id, 10), editUserDto);
     }
 
+    @ApiOkResponse({ description: 'Successfully delete user information' })
+    @ApiBadRequestResponse({ description: 'fail to delete user information' })
     @Roles(Role.ADMIN)
     @Delete(':id')
     async delete(@Param('id') id: string) {
