@@ -5,9 +5,11 @@ import { sanitize } from 'class-sanitizer';
 @Injectable()
 export class SanitizerMiddleware implements NestMiddleware {
     resolve(...args: any[]): MiddlewareFunction {
-        return async (req: Request, res: Response, next: NextFunction) => {
+        return (req: Request, res: Response, next: NextFunction) => {
             sanitize(req.body);
-            await next();
+            sanitize(req.params);
+            sanitize(req.query);
+            next();
         };
     }
 }
