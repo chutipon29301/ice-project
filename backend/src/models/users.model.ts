@@ -8,6 +8,8 @@ import {
 } from 'sequelize-typescript';
 import Group from './group.model';
 import UserGroup from './user-group.model';
+import Locker from './locker.model';
+import UserPermission from './user-permission.model';
 
 export enum Role {
     ADMIN = 'ADMIN',
@@ -38,6 +40,9 @@ export default class Users extends Model<Users> {
 
     @BelongsToMany(() => Group, () => UserGroup)
     public groups: Group[];
+
+    @BelongsToMany(() => Locker, () => UserPermission)
+    public accessibleLockers: Locker[];
 
     public static async checkExistUsersID(userID: number): Promise<boolean> {
         const user = await this.findByPk(userID);
