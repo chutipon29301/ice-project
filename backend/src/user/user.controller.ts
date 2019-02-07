@@ -10,7 +10,12 @@ import {
     Res,
     UnauthorizedException,
 } from '@nestjs/common';
-import { ApiUseTags, ApiOkResponse, ApiBadRequestResponse, ApiCreatedResponse } from '@nestjs/swagger';
+import {
+    ApiUseTags,
+    ApiOkResponse,
+    ApiBadRequestResponse,
+    ApiCreatedResponse,
+} from '@nestjs/swagger';
 import { Response } from 'express';
 import { Roles } from '../guard/role.decorator';
 import Users, { Role } from '../models/users.model';
@@ -22,9 +27,11 @@ import { UserService } from './user.service';
 @ApiUseTags('user')
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+    constructor(private readonly userService: UserService) {}
 
-    @ApiBadRequestResponse({ description: 'fail to query all user information' })
+    @ApiBadRequestResponse({
+        description: 'fail to query all user information',
+    })
     @Roles(Role.ADMIN)
     @Get()
     async listAllUsers(): Promise<Users[]> {
@@ -39,7 +46,9 @@ export class UserController {
     }
 
     @ApiOkResponse({ description: 'successfully get callback from Line' })
-    @ApiBadRequestResponse({ description: 'fail to request callback from Line' })
+    @ApiBadRequestResponse({
+        description: 'fail to request callback from Line',
+    })
     @Get('register/callback')
     async callback(
         @Query('code') code: string,
@@ -57,7 +66,9 @@ export class UserController {
         res.redirect('https://www.google.com');
     }
 
-    @ApiCreatedResponse({ description: 'user successfully registered to the system' })
+    @ApiCreatedResponse({
+        description: 'user successfully registered to the system',
+    })
     @ApiBadRequestResponse({ description: 'fail to registered' })
     @Roles(Role.ADMIN)
     @Post()
