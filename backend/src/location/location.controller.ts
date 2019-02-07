@@ -49,7 +49,7 @@ export class LocationController {
     }
 
     @ApiOkResponse({ description: 'locker is deleted' })
-    @ApiBadRequestResponse({ description: 'cannot delete the locker' })
+    @ApiBadRequestResponse({ description: 'cannot delete the location' })
     @Delete(':id')
     async delete(@Param('id') id: string) {
         await this.locationService.delete(parseInt(id, 10));
