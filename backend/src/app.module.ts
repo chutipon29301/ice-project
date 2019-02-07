@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import * as helmet from 'helmet';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
@@ -16,6 +15,8 @@ import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RoleGuard } from './guard/role.guard';
+import { GroupModule } from './group/group.module';
+import * as helmet from 'helmet';
 
 @Module({
     imports: [
@@ -29,6 +30,7 @@ import { RoleGuard } from './guard/role.guard';
         LineAuthModule,
         TokenModule,
         RoleModule,
+        GroupModule,
     ],
     controllers: [AppController],
     providers: [
