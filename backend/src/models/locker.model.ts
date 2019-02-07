@@ -10,6 +10,8 @@ import {
 import Group from './group.model';
 import Location from './location.model';
 import LockerPermission from './locker-permission.model';
+import Users from './users.model';
+import UserPermission from './user-permission.model';
 
 export enum LockerStatus {
     AVAILABLE = 'AVAILABLE',
@@ -29,6 +31,9 @@ export default class Locker extends Model<Locker> {
 
     @BelongsToMany(() => Group, () => LockerPermission)
     public groups: Group[];
+
+    @BelongsToMany(() => Users, () => UserPermission)
+    public accessibleUsers: Users[];
 
     @Column
     number: string;
