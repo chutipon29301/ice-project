@@ -5,10 +5,15 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import Locker, { LockerStatus } from '../models/locker.model';
-import { LockerRepository, LockerOwnerRepository } from '../config';
+import {
+    LockerRepository,
+    LockerOwnerRepository,
+    LockerStatRepository,
+} from '../config';
 import LockerOwner from '../models/locker-owner.model';
-import LockerStat from '../models/locker-stat.model';
+import LockerStat, { CurrentStatus } from '../models/locker-stat.model';
 import { ConfigService } from '../config/config.service';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class LockerService {
@@ -18,6 +23,8 @@ export class LockerService {
         private readonly lockerRepository: typeof Locker,
         @Inject(LockerOwnerRepository)
         private readonly lockerOwnerRepository: typeof LockerOwner,
+        @Inject(LockerStatRepository)
+        private readonly lockerStatRepository: typeof LockerStat,
     ) {}
 
     async list(...status: LockerStatus[]): Promise<Locker[]> {
@@ -34,7 +41,8 @@ export class LockerService {
             throw new UnauthorizedException('Wrong secret');
         }
         try {
-            return await this.lockerRepository.create({});
+            const uuid = v4();
+            return await this.lockerRepository.create({ serial: uuid });
         } catch (error) {
             throw new ConflictException(error);
         }
