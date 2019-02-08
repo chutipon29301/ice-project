@@ -14,6 +14,7 @@ import LockerPermission from './locker-permission.model';
 import Users from './users.model';
 import UserPermission from './user-permission.model';
 import LockerOwner from './locker-owner.model';
+import LockerStat from './locker-stat.model';
 
 export enum LockerStatus {
     AVAILABLE = 'AVAILABLE',
@@ -36,6 +37,9 @@ export default class Locker extends Model<Locker> {
 
     @BelongsToMany(() => Users, () => LockerOwner)
     public owners: Users[];
+
+    @BelongsToMany(() => Users, () => LockerStat)
+    public usedBy: Users[];
 
     @Column
     number: string;

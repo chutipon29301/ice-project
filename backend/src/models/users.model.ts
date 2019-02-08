@@ -12,6 +12,8 @@ import LockerPermission from './locker-permission.model';
 import Locker from './locker.model';
 import UserGroup from './user-group.model';
 import UserPermission from './user-permission.model';
+import { UnauthorizedException } from '@nestjs/common';
+import LockerStat from './locker-stat.model';
 
 export enum Role {
     ADMIN = 'ADMIN',
@@ -49,6 +51,9 @@ export default class Users extends Model<Users> {
     @BelongsToMany(() => Locker, () => LockerOwner)
     public ownedLockers: Locker[];
 
+    @BelongsToMany(() => Locker, () => LockerStat)
+    public histories: Locker[];
+
     public static async checkExistUsersID(userID: number): Promise<boolean> {
         const user = await this.findByPk(userID);
         return user != null;
@@ -74,6 +79,10 @@ export default class Users extends Model<Users> {
         ...roles: Role[]
     ): Promise<boolean> {
         const user = await this.findByPk(userID);
-        return roles.indexOf(user.role) !== -1;
+        if (user) {
+            return roles.indexOf(user.role) !== -1;
+        } else {
+            throw new UnauthorizedException('User not registered');
+        }
     }
 }
