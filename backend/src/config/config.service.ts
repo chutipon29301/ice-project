@@ -64,4 +64,13 @@ export class ConfigService {
             throw Error(`Unable to read "CHANNEL_SECRET" environment`);
         }
     }
+
+    get iotDeviceSecret(): string {
+        const secret = process.env.IOT_DEVICE_SECRET;
+        if (secret) {
+            return secret;
+        } else {
+            throw Error(`Unable to read "IOT_DEVICE_SECRET" environment`);
+        }
+    }
 }
