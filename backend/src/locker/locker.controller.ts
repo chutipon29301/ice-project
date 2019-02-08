@@ -26,7 +26,7 @@ import { Token } from '../token/dto/token.dto';
 @ApiUseTags('locker')
 @Controller('locker')
 export class LockerController {
-    constructor(private readonly lockerService: LockerService) { }
+    constructor(private readonly lockerService: LockerService) {}
 
     @ApiBadRequestResponse({ description: 'cannot get list of lockers' })
     @Roles(Role.USER, Role.ADMIN)
@@ -65,13 +65,19 @@ export class LockerController {
 
     @Roles(Role.USER)
     @Post('reserve/:id')
-    async reserveLocker(@User() user: Token, @Param('id', new ParseIntPipe()) id: number) {
+    async reserveLocker(
+        @User() user: Token,
+        @Param('id', new ParseIntPipe()) id: number,
+    ) {
         await this.lockerService.reserve(user.userID, id);
     }
 
     @Roles(Role.USER)
     @Post('checkout/:id')
-    async checkoutLocker(@User() user: Token, @Param('id', new ParseIntPipe()) id: number) {
+    async checkoutLocker(
+        @User() user: Token,
+        @Param('id', new ParseIntPipe()) id: number,
+    ) {
         await this.lockerService.checkout(user.userID, id);
     }
 }

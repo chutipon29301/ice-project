@@ -6,8 +6,9 @@ export const lockerProviders = [
     {
         provide: LockerRepository,
         useValue: Locker,
-    }, {
+    },
+    {
         provide: LockerOwnerRepository,
         useValue: LockerOwner,
-    }
+    },
 ];
