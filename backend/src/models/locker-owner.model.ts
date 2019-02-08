@@ -5,14 +5,17 @@ import {
     Model,
     Table,
     Default,
+    HasOne,
+    BelongsToMany,
 } from 'sequelize-typescript';
-import Lockers from './locker.model';
+import Locker from './locker.model';
 import Users from './users.model';
+import UserPermission from './user-permission.model';
 
 @Table({
     timestamps: true,
 })
-export default class LockerUsage extends Model<LockerUsage> {
+export default class LockerOwner extends Model<LockerOwner> {
     @Column
     public start: Date;
 
@@ -25,7 +28,10 @@ export default class LockerUsage extends Model<LockerUsage> {
     @Column
     public userID: number;
 
-    @ForeignKey(() => Lockers)
+    @ForeignKey(() => Locker)
     @Column
     public lockerID: number;
+
+    @BelongsToMany(() => Users, () => UserPermission)
+    public owners: Users[];
 }
