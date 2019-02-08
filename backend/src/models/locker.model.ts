@@ -8,6 +8,7 @@ import {
     Table,
     BelongsTo,
     AllowNull,
+    Unique,
 } from 'sequelize-typescript';
 import Group from './group.model';
 import Location from './location.model';
@@ -37,8 +38,13 @@ export default class Locker extends Model<Locker> {
     locationID: number;
 
     @AllowNull(true)
+    @Unique
     @Column
     number: string;
+
+    @AllowNull(true)
+    @Column
+    serial: string;
 
     @Default(LockerStatus.AVAILABLE)
     @Column(DataType.ENUM(Object.keys(LockerStatus)))

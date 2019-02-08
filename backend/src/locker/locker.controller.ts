@@ -51,7 +51,7 @@ export class LockerController {
         @Body() body: LockerSecretDto,
     ): Promise<AddLockerResponseDto> {
         const locker = await this.lockerService.create(body.secret);
-        return { id: locker.id };
+        return { id: locker.id, serial: locker.serial };
     }
 
     @ApiOkResponse({ description: 'editing data is successful' })
