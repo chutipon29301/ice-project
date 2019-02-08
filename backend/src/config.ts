@@ -5,3 +5,4 @@ export const RoleRepository = 'RoleRepository';
 export const LockerRepository = 'LockerRepository';
 export const GroupRepository = 'GroupRepository';
 export const UserGroupRepository = 'UserGroupRepository';
+export const LockerOwnerRepository = 'LockerOwnerRepository';
