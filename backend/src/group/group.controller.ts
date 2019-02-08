@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Post,
+} from '@nestjs/common';
 import { Roles } from '../guard/role.decorator';
 import Group from '../models/group.model';
 import Users, { Role } from '../models/users.model';
@@ -9,7 +18,7 @@ import { GroupService } from './group.service';
 
 @Controller('group')
 export class GroupController {
-    constructor(private readonly groupService: GroupService) { }
+    constructor(private readonly groupService: GroupService) {}
 
     @Roles(Role.ADMIN)
     @Get()
@@ -25,7 +34,10 @@ export class GroupController {
 
     @Roles(Role.ADMIN)
     @Patch(':id')
-    async edit(@Param('id', new ParseIntPipe()) id: number, @Body() body: EditGroupDto) {
+    async edit(
+        @Param('id', new ParseIntPipe()) id: number,
+        @Body() body: EditGroupDto,
+    ) {
         await this.groupService.edit(id, body);
     }
 
@@ -49,11 +61,14 @@ export class GroupController {
 
     @Roles(Role.ADMIN)
     @Get('detail/:id')
-    async detail(@Param('id', new ParseIntPipe()) id: number): Promise<{ group: Group, users: Users[] }> {
+    async detail(
+        @Param('id', new ParseIntPipe()) id: number,
+    ): Promise<{ group: Group; users: Users[] }> {
         const group = await this.groupService.detailOfGroupID(id);
         const users = await this.groupService.listUserInGroup(id);
         return {
-            group, users,
+            group,
+            users,
         };
     }
 }
