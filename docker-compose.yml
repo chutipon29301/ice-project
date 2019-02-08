@@ -15,6 +15,7 @@ services:
       MYSQL_DATABASE:
       CHANNEL_ID:
       CHANNEL_SECRET:
+      IOT_DEVICE_SECRET:
     depends_on:
       - db
   db:
