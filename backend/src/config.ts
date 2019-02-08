@@ -6,3 +6,4 @@ export const LockerRepository = 'LockerRepository';
 export const GroupRepository = 'GroupRepository';
 export const UserGroupRepository = 'UserGroupRepository';
 export const LockerOwnerRepository = 'LockerOwnerRepository';
+export const LockerStatRepository = 'LockerStatRepository';
