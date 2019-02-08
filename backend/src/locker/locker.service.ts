@@ -4,30 +4,37 @@ import {
     ConflictException,
     UnauthorizedException,
 } from '@nestjs/common';
-import Locker from '../models/locker.model';
+import Locker, { LockerStatus } from '../models/locker.model';
 import { LockerRepository, LockerOwnerRepository } from '../config';
 import LockerOwner from '../models/locker-owner.model';
+import LockerStat from '../models/locker-stat.model';
+import { ConfigService } from '../config/config.service';
 
 @Injectable()
 export class LockerService {
     constructor(
+        private readonly configService: ConfigService,
         @Inject(LockerRepository)
         private readonly lockerRepository: typeof Locker,
         @Inject(LockerOwnerRepository)
         private readonly lockerOwnerRepository: typeof LockerOwner,
     ) {}
 
-    async list(): Promise<Locker[]> {
-        return await this.lockerRepository.findAll({ raw: true });
+    async list(...status: LockerStatus[]): Promise<Locker[]> {
+        return await this.lockerRepository.findAll({
+            where: {
+                status: { $in: status },
+            },
+            raw: true,
+        });
     }
 
-    async create(name: string, locationID: number, lockerNumber: string) {
+    async create(secret: string): Promise<Locker> {
+        if (this.configService.iotDeviceSecret !== secret) {
+            throw new UnauthorizedException('Wrong secret');
+        }
         try {
-            await this.lockerRepository.create({
-                name,
-                locationID,
-                number: lockerNumber,
-            });
+            return await this.lockerRepository.create({});
         } catch (error) {
             throw new ConflictException(error);
         }
@@ -68,5 +75,12 @@ export class LockerService {
             lockerOwner.end = new Date();
             await lockerOwner.save();
         }
+    }
+
+    async status(lockerID: number) {
+        const locker = this.lockerRepository.findByPk(lockerID, {
+            include: [LockerStat],
+        });
+        return locker;
     }
 }

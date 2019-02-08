@@ -7,10 +7,10 @@ import {
     Param,
     Delete,
     ParseIntPipe,
+    Query,
 } from '@nestjs/common';
 import { LockerService } from './locker.service';
-import Locker from '../models/locker.model';
-import { CreateLockerDto } from './dto/create-locker.dto';
+import Locker, { LockerStatus } from '../models/locker.model';
 import { EditLockerDto } from './dto/edit-locker.dto';
 import {
     ApiCreatedResponse,
@@ -22,6 +22,9 @@ import { Roles } from '../guard/role.decorator';
 import { Role } from '../models/users.model';
 import { User } from '../decorator/user.decorator';
 import { Token } from '../token/dto/token.dto';
+import { LockerSecretDto } from './dto/locker-secret.dto';
+import { AddLockerResponseDto } from './dto/add-locker-response.dto';
+import { LockerStatusQueryDto } from './dto/locker-status-query.dto';
 
 @ApiUseTags('locker')
 @Controller('locker')
@@ -32,19 +35,23 @@ export class LockerController {
     @Roles(Role.USER, Role.ADMIN)
     @Get()
     async listLocker(): Promise<Locker[]> {
-        return await this.lockerService.list();
+        return await this.lockerService.list(LockerStatus.AVAILABLE);
+    }
+
+    @Roles(Role.ADMIN)
+    @Get('list')
+    async list(@Query() query: LockerStatusQueryDto): Promise<Locker[]> {
+        return await this.lockerService.list(...query.status);
     }
 
     @ApiCreatedResponse({ description: 'new locker is created successfully' })
     @ApiBadRequestResponse({ description: 'cannot create locker' })
-    @Roles(Role.ADMIN)
     @Post()
-    async addLocker(@Body() createLockerDto: CreateLockerDto) {
-        await this.lockerService.create(
-            createLockerDto.name,
-            createLockerDto.locationID,
-            createLockerDto.number,
-        );
+    async addLocker(
+        @Body() body: LockerSecretDto,
+    ): Promise<AddLockerResponseDto> {
+        const locker = await this.lockerService.create(body.secret);
+        return { id: locker.id };
     }
 
     @ApiOkResponse({ description: 'editing data is successful' })
@@ -79,5 +86,10 @@ export class LockerController {
         @Param('id', new ParseIntPipe()) id: number,
     ) {
         await this.lockerService.checkout(user.userID, id);
+    }
+
+    @Get('status/:id')
+    async status(@Param('id', new ParseIntPipe()) id: number) {
+        return await this.lockerService.status(id);
     }
 }

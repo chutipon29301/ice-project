@@ -7,7 +7,6 @@ describe('Locker Controller', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            // controllers: [LockerController],
             imports: [LockerModule],
         }).compile();
 

@@ -7,7 +7,6 @@ describe('LockerService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            // providers: [LockerService],
             imports: [LockerModule],
         }).compile();
 
