@@ -1,4 +1,9 @@
-import { Injectable, Inject } from '@nestjs/common';
+import {
+    Injectable,
+    Inject,
+    ConflictException,
+    NotFoundException,
+} from '@nestjs/common';
 import { GroupRepository, UserGroupRepository } from 'src/config';
 import Group from '../models/group.model';
 import UserGroup from '../models/user-group.model';
@@ -34,14 +39,28 @@ export class GroupService {
     }
 
     async add(userID: number, groupID: number) {
-        await this.userGroupRepository.create({
-            userID,
-            groupID,
+        const userGroup = await this.userGroupRepository.findOne({
+            where: { userID, groupID },
         });
+        if (userGroup) {
+            throw new ConflictException('User already in group');
+        } else {
+            await this.userGroupRepository.create({
+                userID,
+                groupID,
+            });
+        }
     }
 
     async remove(userID: number, groupID: number) {
-        await this.userGroupRepository.destroy({ where: { userID, groupID } });
+        const userGroup = await this.userGroupRepository.findOne({
+            where: { userID, groupID },
+        });
+        if (userGroup) {
+            await userGroup.destroy();
+        } else {
+            throw new NotFoundException('UserGroup not exist');
+        }
     }
 
     async detailOfGroupID(id: number): Promise<Group> {
