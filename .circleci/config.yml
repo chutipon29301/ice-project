@@ -63,15 +63,42 @@ jobs:
       - run:
           name: Test e2e
           command: cd backend && yarn test:e2e
+  test_frontend:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "frontend/package.json" }}
+      - run:
+          name: Install dependencies
+          command: cd frontend && npm Install
+      - save_cache:
+          key: dependency-cache-{{ checksum "frontend/package.json "}}
+      - run:
+          name: Run tests
+          command: cd frontend && npm test
+  build_frontend:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "frontend/package.json" }}
+      - run:
+          name: Install dependencies
+          command: cd frontend && npm Install
+      - save_cache:
+          key: dependency-cache-{{ checksum "frontend/package.json "}}
+      - run:
+          name: Build project
+          command: cd frontend && npm run build
 
 workflows:
   version: 2
   build-test-and-deploy:
     jobs:
-      - build_backend
-      - lint_backend:
+      - test_frontend
+      - build_frontend:
           requires:
-            - build_backend
-      - test_backend_e2e:
-          requires:
-            - lint_backend
+            - test_frontend
