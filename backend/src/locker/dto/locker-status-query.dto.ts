@@ -6,5 +6,5 @@ import { ToArraySanitizer } from '../../sanitizer/to-array.sanitizer';
 export class LockerStatusQueryDto {
     @IsLockerStatus()
     @Sanitize(ToArraySanitizer)
-    status: LockerStatus[];
+    s: LockerStatus[];
 }

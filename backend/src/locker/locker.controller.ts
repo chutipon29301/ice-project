@@ -25,6 +25,8 @@ import { Token } from '../token/dto/token.dto';
 import { LockerSecretDto } from './dto/locker-secret.dto';
 import { AddLockerResponseDto } from './dto/add-locker-response.dto';
 import { LockerStatusQueryDto } from './dto/locker-status-query.dto';
+import { CurrentStatus } from '../models/locker-stat.model';
+import { EditRegisterLockerDto } from './dto/edit-register-locker-dto';
 
 @ApiUseTags('locker')
 @Controller('locker')
@@ -41,7 +43,7 @@ export class LockerController {
     @Roles(Role.ADMIN)
     @Get('list')
     async list(@Query() query: LockerStatusQueryDto): Promise<Locker[]> {
-        return await this.lockerService.list(...query.status);
+        return await this.lockerService.list(...query.s);
     }
 
     @ApiCreatedResponse({ description: 'new locker is created successfully' })
@@ -58,16 +60,33 @@ export class LockerController {
     @ApiBadRequestResponse({ description: 'cannot edit data' })
     @Roles(Role.ADMIN)
     @Patch(':id')
-    async edit(@Param('id') id: string, @Body() editLockerDto: EditLockerDto) {
-        await this.lockerService.edit(parseInt(id, 10), editLockerDto);
+    async edit(
+        @Param('id', new ParseIntPipe()) id: number,
+        @Body() body: EditLockerDto,
+    ) {
+        await this.lockerService.edit(id, body);
+    }
+
+    @ApiOkResponse({ description: 'editing register data is successful' })
+    @ApiBadRequestResponse({
+        description: 'cannot edit and change status of registered locker',
+    })
+    @Roles(Role.ADMIN)
+    @Patch('register/:id')
+    async editRegisterLocker(
+        @User() user: Token,
+        @Param('id', new ParseIntPipe()) id: number,
+        @Body() body: EditRegisterLockerDto,
+    ) {
+        await this.lockerService.editRegisterLocker(id, body, user.userID);
     }
 
     @ApiOkResponse({ description: 'locker is deleted' })
     @ApiBadRequestResponse({ description: 'cannot delete the locker' })
     @Roles(Role.ADMIN)
     @Delete(':id')
-    async delete(@Param('id') id: string) {
-        await this.lockerService.delete(parseInt(id, 10));
+    async delete(@Param('id', new ParseIntPipe()) id: number) {
+        await this.lockerService.delete(id);
     }
 
     @Roles(Role.USER)
@@ -91,5 +110,31 @@ export class LockerController {
     @Get('status/:id')
     async status(@Param('id', new ParseIntPipe()) id: number) {
         return await this.lockerService.status(id);
+    }
+
+    @Roles(Role.USER)
+    @Post('lock/:id')
+    async lock(
+        @User() user: Token,
+        @Param('id', new ParseIntPipe()) id: number,
+    ) {
+        await this.lockerService.triggerLock(
+            id,
+            user.userID,
+            CurrentStatus.LOCK,
+        );
+    }
+
+    @Roles(Role.USER)
+    @Post('unlock/:id')
+    async unlock(
+        @User() user: Token,
+        @Param('id', new ParseIntPipe()) id: number,
+    ) {
+        await this.lockerService.triggerLock(
+            id,
+            user.userID,
+            CurrentStatus.UNLOCK,
+        );
     }
 }

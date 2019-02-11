@@ -1,19 +1,25 @@
 import {
-    Injectable,
-    Inject,
     ConflictException,
+    Inject,
+    Injectable,
     UnauthorizedException,
+    NotFoundException,
 } from '@nestjs/common';
-import Locker, { LockerStatus } from '../models/locker.model';
+import UserPermission from '../models/user-permission.model';
+import { v4 } from 'uuid';
 import {
-    LockerRepository,
     LockerOwnerRepository,
+    LockerRepository,
     LockerStatRepository,
+    UsersRepository,
 } from '../config';
+import { ConfigService } from '../config/config.service';
 import LockerOwner from '../models/locker-owner.model';
 import LockerStat, { CurrentStatus } from '../models/locker-stat.model';
-import { ConfigService } from '../config/config.service';
-import { v4 } from 'uuid';
+import Locker, { LockerStatus } from '../models/locker.model';
+import Users from '../models/users.model';
+import { LockerStatusResponseDto } from './dto/locker-status-response.dto';
+import { EditRegisterLockerDto } from './dto/edit-register-locker-dto';
 
 @Injectable()
 export class LockerService {
@@ -25,6 +31,8 @@ export class LockerService {
         private readonly lockerOwnerRepository: typeof LockerOwner,
         @Inject(LockerStatRepository)
         private readonly lockerStatRepository: typeof LockerStat,
+        @Inject(UsersRepository)
+        private readonly usersRepository: typeof Users,
     ) {}
 
     async list(...status: LockerStatus[]): Promise<Locker[]> {
@@ -54,23 +62,43 @@ export class LockerService {
         });
     }
 
+    async editRegisterLocker(
+        id: number,
+        body: EditRegisterLockerDto,
+        userID: number,
+    ) {
+        try {
+            await this.edit(id, { ...body, status: LockerStatus.AVAILABLE });
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+        await this.lockerStatRepository.create({
+            status: CurrentStatus.LOCK,
+            userID,
+            lockerID: id,
+        });
+    }
+
     async delete(id: number) {
         await this.lockerRepository.destroy({ where: { id } });
     }
 
     async reserve(userID: number, lockerID: number) {
+        if (await this.lockerRepository.isLockerAvailable(lockerID)) {
+            throw new UnauthorizedException('Locker is not available');
+        }
         const locker = await this.lockerOwnerRepository.findOne({
+            attributes: ['id'],
             where: { lockerID, end: null },
         });
         if (locker) {
             throw new UnauthorizedException('Locker in used');
-        } else {
-            await this.lockerOwnerRepository.create({
-                lockerID,
-                userID,
-                start: new Date(),
-            });
         }
+        await this.lockerOwnerRepository.create({
+            lockerID,
+            userID,
+            start: new Date(),
+        });
     }
 
     async checkout(userID: number, lockerOwnerID: number) {
@@ -85,10 +113,80 @@ export class LockerService {
         }
     }
 
-    async status(lockerID: number) {
-        const locker = this.lockerRepository.findByPk(lockerID, {
-            include: [LockerStat],
+    async status(lockerID: number): Promise<LockerStatusResponseDto> {
+        const locker = await this.lockerRepository.find({
+            attributes: ['id', 'name', 'number'],
+            where: { id: lockerID },
+            include: [
+                {
+                    attributes: ['status'],
+                    model: LockerStat,
+                    as: 'lockerStatus',
+                    required: false,
+                },
+            ],
+            order: [['lockerStatus', 'createdAt', 'DESC']],
         });
-        return locker;
+        const lockerCurrentStatus = locker.lockerStatus[0];
+        return {
+            id: locker.id,
+            name: locker.name,
+            number: locker.number,
+            lockerStatus: lockerCurrentStatus.status,
+        };
+    }
+
+    async triggerLock(lockerID: number, userID: number, status: CurrentStatus) {
+        const user = await this.usersRepository.findByPk(userID, {
+            include: [
+                {
+                    model: LockerOwner,
+                    as: 'owns',
+                    include: [
+                        {
+                            model: Locker,
+                        },
+                    ],
+                    where: { end: null },
+                    required: false,
+                },
+                {
+                    model: UserPermission,
+                    as: 'permission',
+                    include: [
+                        {
+                            model: LockerOwner,
+                            include: [Locker],
+                            where: { end: null },
+                        },
+                    ],
+                    required: false,
+                },
+            ],
+        });
+        let isAuthorize: boolean = false;
+        user.owns.forEach(locker => {
+            if (locker.lockerID === lockerID) {
+                isAuthorize = true;
+            }
+        });
+        user.permission
+            .map(permission => permission.lockerOwner)
+            .forEach(o => {
+                if (o.lockerID === lockerID) {
+                    isAuthorize = true;
+                }
+            });
+        if (isAuthorize) {
+            this.lockerStatRepository.create({
+                status,
+                userID,
+                lockerID,
+            });
+        } else {
+            throw new UnauthorizedException(
+                'User is not owner or is not given access to the locker',
+            );
+        }
     }
 }
