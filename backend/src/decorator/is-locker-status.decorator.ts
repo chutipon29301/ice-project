@@ -19,7 +19,9 @@ export function IsLockerStatus(
             validator: {
                 validate(value: any[], args: ValidationArguments) {
                     for (const status of value) {
-                        if (Object.keys(LockerStatus).indexOf(status) < 0) { return false; }
+                        if (Object.keys(LockerStatus).indexOf(status) < 0) {
+                            return false;
+                        }
                     }
                     return true;
                 },

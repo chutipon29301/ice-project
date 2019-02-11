@@ -6,6 +6,7 @@ import {
     Patch,
     Param,
     Delete,
+    ParseIntPipe,
 } from '@nestjs/common';
 import { LocationService } from './location.service';
 import Location from '../models/location.model';
@@ -42,16 +43,16 @@ export class LocationController {
     @ApiBadRequestResponse({ description: 'cannot edit data' })
     @Patch('/:id')
     async edit(
-        @Param('id') id: string,
+        @Param('id', new ParseIntPipe()) id: number,
         @Body() editLocationDto: EditLocationDto,
     ) {
-        await this.locationService.edit(parseInt(id, 10), editLocationDto);
+        await this.locationService.edit(id, editLocationDto);
     }
 
     @ApiOkResponse({ description: 'locker is deleted' })
     @ApiBadRequestResponse({ description: 'cannot delete the location' })
     @Delete(':id')
-    async delete(@Param('id') id: string) {
-        await this.locationService.delete(parseInt(id, 10));
+    async delete(@Param('id', new ParseIntPipe()) id: number) {
+        await this.locationService.delete(id);
     }
 }
