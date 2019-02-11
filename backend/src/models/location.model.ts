@@ -1,12 +1,16 @@
-import { Table, Model, Column } from 'sequelize-typescript';
+import { Table, Model, Column, HasMany } from 'sequelize-typescript';
+import Locker from './locker.model';
 
 @Table({
     timestamps: true,
 })
 export default class Location extends Model<Location> {
     @Column
-    name: string;
+    public name: string;
 
     @Column
-    detail: string;
+    public detail: string;
+
+    @HasMany(() => Locker)
+    public lockers: Locker[];
 }

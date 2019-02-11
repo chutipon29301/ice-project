@@ -1,12 +1,12 @@
 import {
     AllowNull,
+    BelongsTo,
     Column,
+    Default,
     ForeignKey,
     Model,
     Table,
-    Default,
-    HasOne,
-    BelongsToMany,
+    HasMany,
 } from 'sequelize-typescript';
 import Locker from './locker.model';
 import Users from './users.model';
@@ -32,6 +32,9 @@ export default class LockerOwner extends Model<LockerOwner> {
     @Column
     public lockerID: number;
 
-    @BelongsToMany(() => Users, () => UserPermission)
-    public owners: Users[];
+    @BelongsTo(() => Locker)
+    public locker: Locker;
+
+    @HasMany(() => UserPermission)
+    public permissions: UserPermission;
 }

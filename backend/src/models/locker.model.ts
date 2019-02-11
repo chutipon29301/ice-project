@@ -1,19 +1,15 @@
 import {
-    BelongsToMany,
+    AllowNull,
     Column,
     DataType,
     Default,
     ForeignKey,
     Model,
     Table,
+    HasMany,
     BelongsTo,
-    AllowNull,
-    Unique,
 } from 'sequelize-typescript';
-import Group from './group.model';
 import Location from './location.model';
-import LockerPermission from './locker-permission.model';
-import Users from './users.model';
 import LockerOwner from './locker-owner.model';
 import LockerStat from './locker-stat.model';
 
@@ -30,32 +26,39 @@ export enum LockerStatus {
 export default class Locker extends Model<Locker> {
     @AllowNull(true)
     @Column
-    name: string;
+    public name: string;
 
     @AllowNull(true)
     @ForeignKey(() => Location)
     @Column
-    locationID: number;
-
-    @AllowNull(true)
-    @Unique
-    @Column
-    number: string;
+    public locationID: number;
 
     @AllowNull(true)
     @Column
-    serial: string;
+    public number: string;
 
-    @Default(LockerStatus.AVAILABLE)
+    // @Unique
+    @Column
+    public serial: string;
+
+    @Default(LockerStatus.UNREGISTERED)
     @Column(DataType.ENUM(Object.keys(LockerStatus)))
-    status: LockerStatus;
+    public status: LockerStatus;
 
-    @BelongsToMany(() => Group, () => LockerPermission)
-    public groups: Group[];
+    @HasMany(() => LockerOwner)
+    public owners: LockerOwner[];
 
-    @BelongsToMany(() => Users, () => LockerOwner)
-    public owners: Users[];
+    @HasMany(() => LockerStat)
+    public lockerStatus: LockerStat[];
 
-    @BelongsToMany(() => Users, () => LockerStat)
-    public usedBy: Users[];
+    @BelongsTo(() => Location)
+    public location: Location;
+
+    public static async isLockerAvailable(lockerID: number): Promise<boolean> {
+        const locker = await this.findByPk(lockerID, {
+            attributes: ['id'],
+            where: { status: LockerStatus.AVAILABLE },
+        });
+        return locker !== null;
+    }
 }

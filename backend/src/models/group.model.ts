@@ -1,8 +1,13 @@
-import { BelongsToMany, Column, Model, Table } from 'sequelize-typescript';
-import LockerPermission from './locker-permission.model';
-import Locker from './locker.model';
-import UserGroup from './user-group.model';
+import {
+    Column,
+    Model,
+    Table,
+    HasMany,
+    BelongsTo,
+    BelongsToMany,
+} from 'sequelize-typescript';
 import Users from './users.model';
+import UserGroup from './user-group.model';
 
 @Table({
     timestamps: true,
@@ -16,7 +21,4 @@ export default class Group extends Model<Group> {
 
     @BelongsToMany(() => Users, () => UserGroup)
     users: Users[];
-
-    @BelongsToMany(() => Locker, () => LockerPermission)
-    locker: Locker[];
 }

@@ -1,19 +1,14 @@
+import { UnauthorizedException } from '@nestjs/common';
 import {
-    BelongsToMany,
     Column,
     DataType,
     Default,
     Model,
     Table,
+    HasMany,
 } from 'sequelize-typescript';
-import Group from './group.model';
 import LockerOwner from './locker-owner.model';
-import LockerPermission from './locker-permission.model';
-import Locker from './locker.model';
-import UserGroup from './user-group.model';
 import UserPermission from './user-permission.model';
-import { UnauthorizedException } from '@nestjs/common';
-import LockerStat from './locker-stat.model';
 
 export enum Role {
     ADMIN = 'ADMIN',
@@ -42,17 +37,11 @@ export default class Users extends Model<Users> {
     @Column(DataType.ENUM(Object.keys(TokenType)))
     public tokenType: TokenType;
 
-    @BelongsToMany(() => Group, () => UserGroup)
-    public groups: Group[];
+    @HasMany(() => LockerOwner)
+    public owns: LockerOwner[];
 
-    @BelongsToMany(() => LockerOwner, () => UserPermission)
-    public hasPermissionTo: LockerOwner[];
-
-    @BelongsToMany(() => Locker, () => LockerOwner)
-    public ownedLockers: Locker[];
-
-    @BelongsToMany(() => Locker, () => LockerStat)
-    public histories: Locker[];
+    @HasMany(() => UserPermission)
+    public permission: UserPermission[];
 
     public static async checkExistUsersID(userID: number): Promise<boolean> {
         const user = await this.findByPk(userID);
