@@ -17,6 +17,7 @@ import {
     ApiOkResponse,
     ApiBadRequestResponse,
     ApiUseTags,
+    ApiBearerAuth,
 } from '@nestjs/swagger';
 import { Roles } from '../guard/role.decorator';
 import { Role } from '../models/users.model';
@@ -33,6 +34,7 @@ import { EditRegisterLockerDto } from './dto/edit-register-locker-dto';
 export class LockerController {
     constructor(private readonly lockerService: LockerService) {}
 
+    @ApiBearerAuth()
     @ApiBadRequestResponse({ description: 'cannot get list of lockers' })
     @Roles(Role.USER, Role.ADMIN)
     @Get()
@@ -40,6 +42,7 @@ export class LockerController {
         return await this.lockerService.list(LockerStatus.AVAILABLE);
     }
 
+    @ApiBearerAuth()
     @Roles(Role.ADMIN)
     @Get('list')
     async list(@Query() query: LockerStatusQueryDto): Promise<Locker[]> {
@@ -56,6 +59,7 @@ export class LockerController {
         return { id: locker.id, serial: locker.serial };
     }
 
+    @ApiBearerAuth()
     @ApiOkResponse({ description: 'editing data is successful' })
     @ApiBadRequestResponse({ description: 'cannot edit data' })
     @Roles(Role.ADMIN)
@@ -67,6 +71,7 @@ export class LockerController {
         await this.lockerService.edit(id, body);
     }
 
+    @ApiBearerAuth()
     @ApiOkResponse({ description: 'editing register data is successful' })
     @ApiBadRequestResponse({
         description: 'cannot edit and change status of registered locker',
@@ -81,6 +86,7 @@ export class LockerController {
         await this.lockerService.editRegisterLocker(id, body, user.userID);
     }
 
+    @ApiBearerAuth()
     @ApiOkResponse({ description: 'locker is deleted' })
     @ApiBadRequestResponse({ description: 'cannot delete the locker' })
     @Roles(Role.ADMIN)
@@ -89,6 +95,7 @@ export class LockerController {
         await this.lockerService.delete(id);
     }
 
+    @ApiBearerAuth()
     @Roles(Role.USER)
     @Post('reserve/:id')
     async reserveLocker(
@@ -98,6 +105,7 @@ export class LockerController {
         await this.lockerService.reserve(user.userID, id);
     }
 
+    @ApiBearerAuth()
     @Roles(Role.USER)
     @Post('checkout/:id')
     async checkoutLocker(
@@ -112,6 +120,7 @@ export class LockerController {
         return await this.lockerService.status(id);
     }
 
+    @ApiBearerAuth()
     @Roles(Role.USER)
     @Post('lock/:id')
     async lock(
@@ -125,6 +134,7 @@ export class LockerController {
         );
     }
 
+    @ApiBearerAuth()
     @Roles(Role.USER)
     @Post('unlock/:id')
     async unlock(

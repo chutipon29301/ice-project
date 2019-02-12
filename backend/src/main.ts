@@ -11,6 +11,7 @@ async function bootstrap() {
         .setDescription('The IoT back end API description')
         .setVersion('1.0')
         .addTag('IoT')
+        .addBearerAuth()
         .build();
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup('api', app, document);

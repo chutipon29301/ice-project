@@ -17,6 +17,7 @@ import {
     ApiBadRequestResponse,
     ApiCreatedResponse,
     ApiOkResponse,
+    ApiBearerAuth,
 } from '@nestjs/swagger';
 
 @ApiUseTags('location')

@@ -15,6 +15,7 @@ import {
     ApiOkResponse,
     ApiBadRequestResponse,
     ApiCreatedResponse,
+    ApiBearerAuth,
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { Roles } from '../guard/role.decorator';
@@ -29,6 +30,7 @@ import { UserService } from './user.service';
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+    @ApiBearerAuth()
     @ApiBadRequestResponse({
         description: 'fail to query all user information',
     })
@@ -66,6 +68,7 @@ export class UserController {
         res.redirect('https://www.google.com');
     }
 
+    @ApiBearerAuth()
     @ApiCreatedResponse({
         description: 'user successfully registered to the system',
     })
@@ -79,6 +82,7 @@ export class UserController {
         );
     }
 
+    @ApiBearerAuth()
     @ApiOkResponse({ description: 'Successfully edit user information' })
     @ApiBadRequestResponse({ description: 'fail to edit user information' })
     @Roles(Role.ADMIN)
@@ -87,6 +91,7 @@ export class UserController {
         await this.userService.edit(parseInt(id, 10), editUserDto);
     }
 
+    @ApiBearerAuth()
     @ApiOkResponse({ description: 'Successfully delete user information' })
     @ApiBadRequestResponse({ description: 'fail to delete user information' })
     @Roles(Role.ADMIN)
