@@ -2,11 +2,8 @@ version: "3.2"
 
 services:
   backend:
-    build: ./backend
-    image: iceprojectbackend
+    container_name: ice-project-backend
     restart: always
-    volumes:
-      - ./backend:/server
     environment:
       SERVER_URL:
       MYSQL_SERVER: db
@@ -20,6 +17,7 @@ services:
       - db
   db:
     image: mysql:5.7
+    container_name: ice-project-db
     restart: always
     environment:
       MYSQL_DATABASE:
