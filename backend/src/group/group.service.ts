@@ -15,7 +15,7 @@ export class GroupService {
         @Inject(GroupRepository) private readonly groupRepository: typeof Group,
         @Inject(UserGroupRepository)
         private readonly userGroupRepository: typeof UserGroup,
-    ) {}
+    ) { }
 
     async list(): Promise<Group[]> {
         return await this.groupRepository.findAll({
@@ -65,13 +65,24 @@ export class GroupService {
 
     async detailOfGroupID(id: number): Promise<Group> {
         const group = await this.groupRepository.findByPk(id);
-        return group;
+        if (group) {
+            return group;
+        } else {
+            throw new NotFoundException('Group not found');
+        }
     }
 
     async listUserInGroup(groupID: number): Promise<Users[]> {
         const group = await this.groupRepository.findByPk(groupID, {
-            include: [Users],
+            include: [{
+                model: Users,
+                required: false,
+            }],
         });
-        return group.users;
+        if (group) {
+            return group.users;
+        } else {
+            throw new NotFoundException('Group not found');
+        }
     }
 }

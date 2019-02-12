@@ -6,9 +6,12 @@ import {
     Model,
     Table,
     HasMany,
+    BelongsToMany,
 } from 'sequelize-typescript';
 import LockerOwner from './locker-owner.model';
 import UserPermission from './user-permission.model';
+import Group from './group.model';
+import UserGroup from './user-group.model';
 
 export enum Role {
     ADMIN = 'ADMIN',
@@ -42,6 +45,9 @@ export default class Users extends Model<Users> {
 
     @HasMany(() => UserPermission)
     public permission: UserPermission[];
+
+    @BelongsToMany(() => Group, () => UserGroup)
+    public groups: Group[];
 
     public static async checkExistUsersID(userID: number): Promise<boolean> {
         const user = await this.findByPk(userID);
