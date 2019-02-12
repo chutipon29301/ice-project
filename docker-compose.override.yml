@@ -1,6 +1,11 @@
 version: "3.2"
 
 services:
+  backend:
+    image: node:10
+    volumes:
+      - ./backend:/server
+    command: sh -c 'cd /server && yarn && yarn start'
   db:
     ports:
       - 3306:3306

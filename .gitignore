@@ -18,5 +18,8 @@ tmp/
 volumes/*
 volumes-test/*
 
+# Nginx
+nginx-data/*
+
 .vscode/c_cpp_properties.json
 .vscode/arduino.json
