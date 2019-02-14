@@ -5,7 +5,7 @@ services:
     image: node:10
     volumes:
       - ./backend:/server
-    command: sh -c 'cd /server && yarn && yarn start'
+    command: sh -c 'cd /server && yarn && yarn start:dev'
   db:
     ports:
       - 3306:3306
