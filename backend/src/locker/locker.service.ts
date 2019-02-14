@@ -38,7 +38,7 @@ export class LockerService {
     async list(...status: LockerStatus[]): Promise<Locker[]> {
         return await this.lockerRepository.findAll({
             where: {
-                status: { $in: status },
+                status: { $in: status || Object.keys(LockerStatus)  },
             },
             raw: true,
         });
