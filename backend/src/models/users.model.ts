@@ -7,6 +7,7 @@ import {
     Table,
     HasMany,
     BelongsToMany,
+    IFindOptions,
 } from 'sequelize-typescript';
 import LockerOwner from './locker-owner.model';
 import UserPermission from './user-permission.model';
@@ -50,16 +51,14 @@ export default class Users extends Model<Users> {
     public groups: Group[];
 
     public static async checkExistUsersID(userID: number): Promise<boolean> {
-        const user = await this.findByPk(userID);
+        const user = await this.findByPk(userID, { attributes: ['id'] });
         return user != null;
     }
 
-    public static async getUserFromLineID(lineID: string): Promise<Users> {
+    public static async getUserFromLineID(lineID: string, options?: IFindOptions<Users>): Promise<Users> {
         const user = await this.findOne({
-            where: {
-                oAuthID: lineID,
-                tokenType: TokenType.LINE,
-            },
+            ...options,
+            where: { ...options.where, oAuthID: lineID, tokenType: TokenType.LINE },
         });
         return user;
     }
@@ -73,7 +72,9 @@ export default class Users extends Model<Users> {
         userID: number,
         ...roles: Role[]
     ): Promise<boolean> {
-        const user = await this.findByPk(userID);
+        const user = await this.findByPk(userID, {
+            attributes: ['role'],
+        });
         if (user) {
             return roles.indexOf(user.role) !== -1;
         } else {
