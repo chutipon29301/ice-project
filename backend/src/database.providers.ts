@@ -13,7 +13,7 @@ export const databaseProviders = [
                 password: configService.mySQLPassword,
                 database: configService.mySQLDatabaseName,
                 port: 3306,
-                // logging: false,
+                logging: false,
                 modelPaths: [__dirname + '/models/'],
             });
             await sequelize.sync({
