@@ -1,21 +1,38 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { fake, replace, restore, replaceGetter } from 'sinon';
 
 describe('AppController', () => {
-  let app: TestingModule;
+    let app: TestingModule;
+    let appController: AppController;
+    let appService: AppService;
 
-  beforeAll(async () => {
-    app = await Test.createTestingModule({
-      controllers: [AppController],
-      providers: [AppService],
-    }).compile();
-  });
-
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      const appController = app.get<AppController>(AppController);
-      expect(appController.getHello()).toBe('Hello World!');
+    beforeAll(async () => {
+        app = await Test.createTestingModule({
+            controllers: [AppController],
+            providers: [AppService],
+        }).compile();
+        appController = app.get<AppController>(AppController);
+        appService = app.get<AppService>(AppService);
     });
-  });
+
+    afterEach(() => {
+        restore();
+    });
+
+    describe('root', () => {
+        it('should be defined', () => {
+            expect(appController).toBeDefined();
+        });
+
+        it('should call getPong function', () => {
+            const fakePong = () => ({ msg: 'fake pong' });
+            replaceGetter(appService, 'pong', fakePong);
+
+            const result = appController.getPong();
+
+            expect(result).toEqual(fakePong());
+        });
+    });
 });
