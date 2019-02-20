@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { JwtToken } from './dto/jwt-token.dto';
 
 @Injectable()
 export class JwtAuthService {
+
+    constructor(private readonly jwtService: JwtService) { }
     // async generateTokenFor(userID: number): Promise<string> {
     //     if (await this.usersRepository.checkExistUsersID(userID)) {
     //         return this.jwtService.sign({
@@ -13,12 +17,12 @@ export class JwtAuthService {
     //         );
     //     }
     // }
-    // async decode(token: string): Promise<Token> {
-    //     try {
-    //         const result = this.jwtService.decode(token) as Token;
-    //         return result;
-    //     } catch (error) {
-    //         throw new UnauthorizedException(error);
-    //     }
-    // }
+    async decode(token: string): Promise<JwtToken> {
+        try {
+            const result = this.jwtService.decode(token) as JwtToken;
+            return result;
+        } catch (error) {
+            throw new UnauthorizedException(error);
+        }
+    }
 }
