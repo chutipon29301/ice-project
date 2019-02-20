@@ -1,18 +1,34 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { AuthModule } from './auth.module';
 
 describe('Auth Controller', () => {
-    let module: TestingModule;
+    const channelSecret = 'secret';
+    const channelID = 'id';
+    const serverURL = 'url';
+    let app: TestingModule;
+    let appController: AuthController;
+    let appService: AuthService;
 
     beforeAll(async () => {
-        module = await Test.createTestingModule({
-            controllers: [AuthController],
+        process.env.CHANNEL_SECRET = channelSecret;
+        process.env.CHANNEL_ID = channelID;
+        process.env.SERVER_URL = serverURL;
+        app = await Test.createTestingModule({
+            imports: [AuthModule],
         }).compile();
+        appController = app.get<AuthController>(AuthController);
+        appService = app.get<AuthService>(AuthService);
     });
+
+    afterAll(() => {
+        process.env.CHANNEL_SECRET = undefined;
+        process.env.CHANNEL_ID = undefined;
+        process.env.SERVER_URL = undefined;
+    });
+
     it('should be defined', () => {
-        const controller: AuthController = module.get<AuthController>(
-            AuthController,
-        );
-        expect(controller).toBeDefined();
+        expect(appController).toBeDefined();
     });
 });

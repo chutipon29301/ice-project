@@ -4,8 +4,7 @@ import { JwtToken } from './dto/jwt-token.dto';
 
 @Injectable()
 export class JwtAuthService {
-
-    constructor(private readonly jwtService: JwtService) { }
+    constructor(private readonly jwtService: JwtService) {}
     // async generateTokenFor(userID: number): Promise<string> {
     //     if (await this.usersRepository.checkExistUsersID(userID)) {
     //         return this.jwtService.sign({

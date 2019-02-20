@@ -11,6 +11,7 @@ import { CryptoService } from '../crypto/crypto.service';
 describe('LineAuthService', () => {
     const channelSecret = 'secret';
     const channelID = 'id';
+    const serverURL = 'url';
     let service: LineAuthService;
     let jwtService: JwtService;
     let httpService: HttpService;
@@ -19,6 +20,7 @@ describe('LineAuthService', () => {
     beforeAll(async () => {
         process.env.CHANNEL_SECRET = channelSecret;
         process.env.CHANNEL_ID = channelID;
+        process.env.SERVER_URL = serverURL;
         const module: TestingModule = await Test.createTestingModule({
             imports: [
                 JwtModule.registerAsync({
@@ -44,6 +46,12 @@ describe('LineAuthService', () => {
         jwtService = module.get<JwtService>(JwtService);
         httpService = module.get<HttpService>(HttpService);
         cryptoService = module.get<CryptoService>(CryptoService);
+    });
+
+    afterAll(() => {
+        process.env.CHANNEL_SECRET = undefined;
+        process.env.CHANNEL_ID = undefined;
+        process.env.SERVER_URL = undefined;
     });
 
     afterEach(() => {
@@ -82,15 +90,5 @@ describe('LineAuthService', () => {
         replace(jwtService, 'decode', fakeDecode);
 
         expect(service.decode).toThrow(UnauthorizedException);
-    });
-
-    it('should successful generate line redirect link', () => {
-        const fakeEncrypt = fake.returns('a');
-
-        replace(cryptoService.AES, 'encrypt', fakeEncrypt);
-
-        service.lineAuthPageURL('a');
-
-        expect(fakeEncrypt.calledOnce).toBeTruthy();
     });
 });
