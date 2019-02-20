@@ -18,21 +18,26 @@ describe('LineAuthService', () => {
         process.env.CHANNEL_SECRET = 'secret';
         process.env.CHANNEL_ID = 'id';
         const module: TestingModule = await Test.createTestingModule({
-            imports: [JwtModule.registerAsync({
-                imports: [ConfigModule],
-                inject: [ConfigService],
-                useFactory: async (configService: ConfigService) => ({
-                    secretOrPrivateKey: configService.lineChannelSecret,
-                    signOptions: {
-                        algorithm: 'HS256',
-                        audience: configService.lineChannelID,
-                        issuer: 'https://access.line.me',
-                    },
-                })
-            }), HttpModule, CryptoModule],
+            imports: [
+                JwtModule.registerAsync({
+                    imports: [ConfigModule],
+                    inject: [ConfigService],
+                    useFactory: async (configService: ConfigService) => ({
+                        secretOrPrivateKey: configService.lineChannelSecret,
+                        signOptions: {
+                            algorithm: 'HS256',
+                            audience: configService.lineChannelID,
+                            issuer: 'https://access.line.me',
+                        },
+                    }),
+                }),
+                HttpModule,
+                CryptoModule,
+            ],
             providers: [LineAuthService],
-            exports: [LineAuthService]
+            exports: [LineAuthService],
         }).compile();
+
         service = module.get<LineAuthService>(LineAuthService);
         jwtService = module.get<JwtService>(JwtService);
         httpService = module.get<HttpService>(HttpService);
