@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
 import { LineAuthModule } from './line-auth/line-auth.module';
 import { CryptoModule } from './crypto/crypto.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-    imports: [ConfigModule, LineAuthModule, CryptoModule],
+    imports: [ConfigModule, LineAuthModule, CryptoModule, AuthModule],
     controllers: [AppController],
     providers: [AppService],
 })
