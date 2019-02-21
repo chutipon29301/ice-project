@@ -14,13 +14,15 @@ describe('JwtAuthService', () => {
     beforeAll(async () => {
         process.env.CHANNEL_SECRET = channelSecret;
         const module: TestingModule = await Test.createTestingModule({
-            imports: [JwtModule.registerAsync({
-                imports: [ConfigModule],
-                inject: [ConfigService],
-                useFactory: async (configService: ConfigService) => ({
-                    secretOrPrivateKey: configService.lineChannelSecret,
+            imports: [
+                JwtModule.registerAsync({
+                    imports: [ConfigModule],
+                    inject: [ConfigService],
+                    useFactory: async (configService: ConfigService) => ({
+                        secretOrPrivateKey: configService.lineChannelSecret,
+                    }),
                 }),
-            })],
+            ],
             providers: [JwtAuthService],
         }).compile();
         service = module.get<JwtAuthService>(JwtAuthService);
