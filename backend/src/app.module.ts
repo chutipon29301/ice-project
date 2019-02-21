@@ -6,6 +6,7 @@ import { LineAuthModule } from './line-auth/line-auth.module';
 import { CryptoModule } from './crypto/crypto.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthModule } from './jwt-auth/jwt-auth.module';
+import { UserModule } from './user/user.module';
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { JwtAuthModule } from './jwt-auth/jwt-auth.module';
         CryptoModule,
         AuthModule,
         JwtAuthModule,
+        UserModule,
     ],
     controllers: [AppController],
     providers: [AppService],
