@@ -1,39 +1,28 @@
 version: 2
 jobs:
-  build_backend:
+  test_backend:
     docker:
       - image: circleci/node:10
     steps:
       - checkout
       - restore_cache:
-          key: build-cache-{{ checksum "backend/package.json" }}
+          key:
+            - backend-dependencies-v1.0-{{ .Branch }}-{{ checksum "backend/package.json" }
+            # fallback to using the latest cache if no exact match is found
+            - backend-dependencies-v1.0-{{ .Branch }
+            - backend-dependencies-v1.0
       - run:
           name: Install dependencies
           command: cd backend && yarn
+
+      - run:
+          name: Run test
+          command: cd backend && yarn test
+
       - save_cache:
-          key: build-cache-{{ checksum "backend/package.json" }}
           paths:
-            - ./backend/node_modules
-      - run:
-          name: Run build
-          command: cd backend && yarn build
-  lint_backend:
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - restore_cache:
-          key: lint-cache-{{ checksum "backend/package.json" }}
-      - run:
-          name: Install dependencies
-          command: cd backend && yarn
-      - save_cache:
-          key: lint-cache-{{ checksum "backend/package.json" }}
-          paths:
-            - ./backend/node_modules
-      - run:
-          name: Lint
-          command: cd backend && yarn lint
+            - backend/node_modules
+          key: backend-dependencies-v1.0-{{ .Branch }}-{{ checksum "backend/package.json" }}
   test_backend_e2e:
     docker:
       - image: circleci/node:10
@@ -52,26 +41,38 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: test-cache-{{ checksum "backend/package.json" }}
+          key:
+            - backend-dependencies-v1.0-{{ .Branch }}-{{ checksum "backend/package.json" }
+            # fallback to using the latest cache if no exact match is found
+            - backend-dependencies-v1.0-{{ .Branch }
+            - backend-dependencies-v1.0
       - run:
           name: Install dependencies
           command: cd backend && yarn
-      - save_cache:
-          key: test-cache-{{ checksum "backend/package.json" }}
-          paths:
-            - ./backend/node_modules
+
       - run:
-          name: Test e2e
+          name: Run e2e test
           command: cd backend && yarn test:e2e
 
+      - save_cache:
+          paths:
+            - backend/node_modules
+          key: backend-dependencies-v1.0-{{ .Branch }}-{{ checksum "backend/package.json" }
+  build:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: TODO
+          command: echo 'Build backend'
 workflows:
   version: 2
-  build-test-and-deploy:
+  build-and-deploy:
     jobs:
-      - build_backend
-      - lint_backend:
-          requires:
-            - build_backend
+      - test_backend
       - test_backend_e2e:
           requires:
-            - lint_backend
+            - test_backend
+      - build:
+          requires:
+            - test_backend_e2e
