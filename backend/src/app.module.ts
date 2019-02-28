@@ -9,6 +9,7 @@ import { JwtAuthModule } from './jwt-auth/jwt-auth.module';
 import { UserModule } from './user/user.module';
 import { LocationModule } from './location/location.module';
 import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
+import { LockerModule } from './locker/locker.module';
 import * as helmet from 'helmet';
 
 @Module({
@@ -20,6 +21,7 @@ import * as helmet from 'helmet';
         JwtAuthModule,
         UserModule,
         LocationModule,
+        LockerModule,
     ],
     controllers: [AppController],
     providers: [AppService],
