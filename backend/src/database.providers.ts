@@ -1,11 +1,11 @@
 import { createConnection } from 'typeorm';
 import { ConfigService } from './config/config.service';
-import { ConfigModule } from './config/config.module';
+import { DbConnectionToken } from './constant';
+import { Provider } from '@nestjs/common';
 
-export const databaseProviders = [
+export const databaseProviders: Provider[] = [
     {
-        provide: 'DbConnectionToken',
-        imports: [ConfigModule],
+        provide: DbConnectionToken,
         inject: [ConfigService],
         useFactory: async (configService: ConfigService) =>
             await createConnection({
