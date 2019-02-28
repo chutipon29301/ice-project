@@ -7,6 +7,7 @@ import { CryptoModule } from './crypto/crypto.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthModule } from './jwt-auth/jwt-auth.module';
 import { UserModule } from './user/user.module';
+import { LocationModule } from './location/location.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { UserModule } from './user/user.module';
         AuthModule,
         JwtAuthModule,
         UserModule,
+        LocationModule,
     ],
     controllers: [AppController],
     providers: [AppService],
