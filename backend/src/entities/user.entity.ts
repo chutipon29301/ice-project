@@ -8,6 +8,7 @@ export enum Role {
 
 export enum AuthenticationType {
     LINE = 'LINE',
+    GITHUB = 'GITHUB',
 }
 
 export enum UserStatus {
@@ -18,6 +19,25 @@ export enum UserStatus {
 
 @Entity()
 export class User {
+    constructor(
+        nationalID: number,
+        firstName: string,
+        lastName: string,
+        role: Role,
+        authenticationID: string,
+        authenticationType: AuthenticationType,
+        phone: string,
+        status: UserStatus) {
+        this.nationalID = nationalID;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.authenticationID = authenticationID;
+        this.authenticationType = authenticationType;
+        this.phone = phone;
+        this.status = status;
+    }
+
     @PrimaryColumn()
     nationalID: number;
 
