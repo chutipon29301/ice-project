@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../database.module';
-import { databaseProviders } from '../database.providers';
 import { LockerController } from './locker.controller';
 import { LockerService } from './locker.service';
+import { lockerProviders } from './locker.providers';
 
 @Module({
     imports: [DatabaseModule],
-    providers: [...databaseProviders, LockerService],
+    providers: [...lockerProviders, LockerService],
     controllers: [LockerController],
 })
 export class LockerModule {}
