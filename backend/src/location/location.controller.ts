@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Location } from '../entities/location.entity';
 import { LocationService } from './location.service';
-import { LocationEntityDto } from './dto/location-enitity.dto';
+import { LocationEntityDto } from './dto/location-entity.dto';
 
 @Controller('location')
 export class LocationController {

@@ -7,6 +7,7 @@ import { State } from './dto/state.dto';
 import { LineAccessToken } from './dto/line-access-token.dto';
 import { LineAccessTokenRequestResponse } from './dto/line-access-token-request-response.dto';
 import { stringify } from 'qs';
+
 @Injectable()
 export class LineAuthService {
     private readonly passPhase = 'Hello World!';
