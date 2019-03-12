@@ -13,7 +13,8 @@ import { UserModule } from '../user/user.module';
             useFactory: async (configService: ConfigService) => ({
                 secretOrPrivateKey: configService.lineChannelSecret,
             }),
-        }), UserModule
+        }),
+        UserModule,
     ],
     providers: [JwtAuthService],
     exports: [JwtAuthService],

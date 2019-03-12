@@ -67,7 +67,12 @@ export class UserService {
     }
 
     async getUserWithLineID(lineID: string): Promise<User> {
-        const user = await this.userRepository.findOne({ where: { authenticationID: lineID, authenticationType: AuthenticationType.LINE } });
+        const user = await this.userRepository.findOne({
+            where: {
+                authenticationID: lineID,
+                authenticationType: AuthenticationType.LINE,
+            },
+        });
         return user;
     }
 }
