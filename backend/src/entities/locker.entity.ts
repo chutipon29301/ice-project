@@ -20,16 +20,21 @@ export class Locker {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @PrimaryColumn({
+    @Column({
         type: 'uuid',
         default: v4(),
+        unique: true,
     })
     serialNumber: string;
 
-    @Column()
+    @Column({
+        nullable: true,
+    })
     name: string;
 
-    @Column()
+    @Column({
+        nullable: true,
+    })
     number: string;
 
     @Column({
