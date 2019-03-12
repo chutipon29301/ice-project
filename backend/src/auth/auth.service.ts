@@ -6,24 +6,25 @@ import { ConfigService } from '../config/config.service';
 import { LineAccessToken } from '../line-auth/dto/line-access-token.dto';
 import { stringify } from 'querystring';
 import { LineAccessTokenRequestResponse } from 'src/line-auth/dto/line-access-token-request-response.dto';
+import { JwtTokenInfo } from '../jwt-auth/dto/jwt-encrypt-token.dto';
+import { JwtAuthService } from '../jwt-auth/jwt-auth.service';
 
 @Injectable()
 export class AuthService {
     private readonly lineCallbackURL: string = '/auth/line/callback';
     private readonly passPhase = 'Hello World!';
-    constructor(
-        private readonly lineAuthService: LineAuthService,
-        private readonly cryptoService: CryptoService,
-        private readonly configService: ConfigService,
-        private readonly httpService: HttpService,
-    ) {}
+
+    constructor(private readonly lineAuthService: LineAuthService,
+                private readonly jwtAuthService: JwtAuthService,
+                private readonly cryptoService: CryptoService,
+                private readonly configService: ConfigService,
+                private readonly httpService: HttpService) { }
 
     getLineAuthenticationPageURL(): string {
         return this.lineAuthService.lineAuthPageURL(this.lineCallbackURL);
     }
 
     async validateState(
-        code: string,
         encryptedState: string,
     ): Promise<boolean> {
         const state = State.from(
@@ -32,12 +33,12 @@ export class AuthService {
                 this.configService.lineChannelSecret,
             ),
         );
-        if (!state.compareTo(this.passPhase)) {
+        if (state.compareTo(this.passPhase)) {
+            return true;
+        } else {
             throw new UnauthorizedException(
                 'Line authenticate wrong callback state',
             );
-        } else {
-            return true;
         }
     }
 
@@ -71,4 +72,9 @@ export class AuthService {
             throw new UnauthorizedException(error);
         }
     }
+    async getJwtTokenFromLineToken(lineToken: string): Promise<JwtTokenInfo> {
+        const decodedLineToken = this.lineAuthService.decode(lineToken);
+        return this.jwtAuthService.generateTokenForLineID(decodedLineToken.sub);
+    }
+
 }

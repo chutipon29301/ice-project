@@ -1,19 +1,14 @@
-import {
-    Controller,
-    Get,
-    Res,
-    Query,
-    UnauthorizedException,
-    Post,
-    Body,
-} from '@nestjs/common';
+import { Controller, Get, Res, Query, UnauthorizedException, Post, Body } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
+import { LineUserToken } from './dto/line-user-token.dto';
+import { JwtTokenInfo } from '../jwt-auth/dto/jwt-encrypt-token.dto';
 import { RequestToken } from './dto/request-token.dto';
 import { LineAccessToken } from 'src/line-auth/dto/line-access-token.dto';
+
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(private readonly authService: AuthService) { }
 
     @Get('line')
     public async lineAuth(@Res() res: Response) {
@@ -32,7 +27,7 @@ export class AuthController {
         if (error != null || errorCode != null || errorMessage != null) {
             throw new UnauthorizedException(errorMessage);
         }
-        if (await this.authService.validateState(code, state)) {
+        if (await this.authService.validateState(state)) {
             return code;
         }
     }
@@ -40,5 +35,12 @@ export class AuthController {
     @Post('lineAuthToken')
     async lineAuthToken(@Body() body: RequestToken): Promise<LineAccessToken> {
         return this.authService.getAccessToken(body.code);
+    }
+
+    @Post('token/line')
+    async getJwtTokenFromLineToken(
+        @Body() body: LineUserToken,
+    ): Promise<JwtTokenInfo> {
+        return await this.authService.getJwtTokenFromLineToken(body.lineToken);
     }
 }
