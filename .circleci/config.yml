@@ -6,73 +6,47 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key:
+          keys:
             - backend-dependencies-v1.0-{{ .Branch }}-{{ checksum "backend/package.json" }
             # fallback to using the latest cache if no exact match is found
-            - backend-dependencies-v1.0-{{ .Branch }
+            - backend-dependencies-v1.0-{{ .Branch }}
             - backend-dependencies-v1.0
       - run:
           name: Install dependencies
-          command: cd backend && yarn
+          command: |
+            cd backend
+            yarn
 
       - run:
           name: Run test
-          command: cd backend && yarn test
+          command: |
+            cd backend
+            yarn test
 
       - save_cache:
           paths:
             - backend/node_modules
           key: backend-dependencies-v1.0-{{ .Branch }}-{{ checksum "backend/package.json" }}
-  test_backend_e2e:
-    docker:
-      - image: circleci/node:10
-        environment:
-          MYSQL_SERVER: db
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
-          MYSQL_DATABASE: db
-      - image: mysql:5.7
-        environment:
-          MYSQL_DATABASE: db
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
-          MYSQL_ROOT_PASSWORD: password
-        name: db
-    steps:
-      - checkout
-      - restore_cache:
-          key:
-            - backend-dependencies-v1.0-{{ .Branch }}-{{ checksum "backend/package.json" }
-            # fallback to using the latest cache if no exact match is found
-            - backend-dependencies-v1.0-{{ .Branch }
-            - backend-dependencies-v1.0
-      - run:
-          name: Install dependencies
-          command: cd backend && yarn
-
-      - run:
-          name: Run e2e test
-          command: cd backend && yarn test:e2e
-
-      - save_cache:
-          paths:
-            - backend/node_modules
-          key: backend-dependencies-v1.0-{{ .Branch }}-{{ checksum "backend/package.json" }
   build:
     machine: true
     steps:
       - checkout
       - run:
-          name: TODO
-          command: echo 'Build backend'
+          name: Build backend
+          command: |
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo 'export USERNAME="$DOCKER_HUB_USERNAME"' >> $BASH_ENV
+            echo 'export PASSWORD="$DOCKER_HUB_PASSWORD"' >> $BASH_ENV
+      - run:
+          name: Push to Docker Hub
+          command: |
+            echo ${PASSWORD} | docker login -u ${USERNAME} --password-stdin
+            docker push /backend/iceprojectbackend
 workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - test_backend
-      - test_backend_e2e:
-          requires:
-            - test_backend
-      - build:
-          requires:
-            - test_backend_e2e
+      - build
