@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { LocationModule } from './location/location.module';
 import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { LockerModule } from './locker/locker.module';
+import { LockerInstanceModule } from './locker-instance/locker-instance.module';
 import * as helmet from 'helmet';
 
 @Module({
@@ -22,6 +23,7 @@ import * as helmet from 'helmet';
         UserModule,
         LocationModule,
         LockerModule,
+        LockerInstanceModule,
     ],
     controllers: [AppController],
     providers: [AppService],
