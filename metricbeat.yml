@@ -1,0 +1,164 @@
+setup.kibana.host: "http://kibana:5601"
+
+#============================  Config Reloading ===============================
+
+# Config reloading allows to dynamically load modules. Each file which is
+# monitored must contain one or multiple modules as a list.
+metricbeat.config.modules:
+
+  # Glob pattern for configuration reloading
+  path: ${path.config}/modules.d/*.yml
+
+  # Period on which files under path should be checked for changes
+  reload.period: 10s
+
+  # Set to true to enable config reloading
+  reload.enabled: true
+
+# Maximum amount of time to randomly delay the start of a metricset. Use 0 to
+# disable startup delay.
+metricbeat.max_start_delay: 10s
+
+#==========================  Modules configuration ============================
+metricbeat.modules:
+
+#------------------------------- System Module -------------------------------
+- module: system
+  metricsets:
+    - cpu             # CPU usage
+    - load            # CPU load averages
+    - memory          # Memory usage
+    - network         # Network IO
+    - process         # Per process metrics
+    - process_summary # Process summary
+    - uptime          # System Uptime
+    - core            # Per CPU core usage
+    - diskio          # Disk IO
+    #- filesystem     # File system usage for each mountpoint
+    #- fsstat         # File system summary metrics
+    #- raid           # Raid
+    #- socket         # Sockets and connection info (linux only)
+  enabled: true
+  period: 10s
+  processes: ['.*']
+
+  # Configure the metric types that are included by these metricsets.
+  cpu.metrics:  ["percentages"]  # The other available options are normalized_percentages and ticks.
+  core.metrics: ["percentages"]  # The other available option is ticks.
+
+#------------------------------- Docker Module -------------------------------
+# - module: docker
+#   metricsets:
+#     - "container"
+#     - "cpu"
+#     - "diskio"
+#     - "healthcheck"
+#     - "info"
+#     #- "image"
+#     - "memory"
+#     - "network"
+#   hosts: ["unix:///var/run/docker.sock"]
+#   period: 10s
+#   enabled: true
+
+  # If set to true, replace dots in labels with `_`.
+  #labels.dedot: false
+
+  # If set to true, collects metrics per core.
+  #cpu.cores: true
+
+  # To connect to Docker over TLS you must specify a client and CA certificate.
+  #ssl:
+    #certificate_authority: "/etc/pki/root/ca.pem"
+    #certificate:           "/etc/pki/client/cert.pem"
+    #key:                   "/etc/pki/client/cert.key"
+
+#---------------------------- Elasticsearch Module ---------------------------
+# - module: elasticsearch
+#   metricsets:
+#     - node
+#     - node_stats
+#     #- index
+#     #- index_recovery
+#     #- index_summary
+#     #- shard
+#     #- ml_job
+#   period: 10s
+#   hosts: ["localhost:9200"]
+  #username: "elastic"
+  #password: "changeme"
+  #ssl.certificate_authorities: ["/etc/pki/root/ca.pem"]
+
+  # Set to false to fetch all entries
+  #index_recovery.active_only: true
+
+# #-------------------------------- HTTP Module --------------------------------
+# - module: http
+#   #metricsets:
+#   #  - json
+#   period: 10s
+#   hosts: ["localhost:80"]
+#   namespace: "json_namespace"
+#   path: "/"
+#   #body: ""
+#   #method: "GET"
+#   #username: "user"
+#   #password: "secret"
+#   #request.enabled: false
+#   #response.enabled: false
+#   #json.is_array: false
+#   #dedot.enabled: false
+
+# - module: http
+#   #metricsets:
+#   #  - server
+#   host: "localhost"
+#   port: "8080"
+#   enabled: false
+#   #paths:
+#   #  - path: "/foo"
+#   #    namespace: "foo"
+#   #    fields: # added to the the response in root. overwrites existing fields
+#   #      key: "value"
+
+#------------------------------- Kibana Module -------------------------------
+- module: kibana
+  metricsets: ["status"]
+  period: 10s
+  hosts: ["kibana:5601"]
+  basepath: ""
+  enabled: true
+
+#-------------------------------- MySQL Module -------------------------------
+- module: mysql
+  metricsets:
+    - "status"
+  #  - "galera_status"
+  period: 10s
+
+  # Host DSN should be defined as "user:pass@tcp(127.0.0.1:3306)/"
+  # The username and password can either be set in the DSN or using the username
+  # and password config options. Those specified in the DSN take precedence.
+  hosts: ["${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(db:3306)/"]
+
+  # Username of hosts. Empty by default.
+  #username: root
+
+  # Password of hosts. Empty by default.
+  #password: secret
+
+  # By setting raw to true, all raw fields from the status metricset will be added to the event.
+  #raw: false
+
+#-------------------------------- Nginx Module -------------------------------
+- module: nginx
+  metricsets: ["stubstatus"]
+  enabled: true
+  period: 10s
+
+  # Nginx hosts
+  hosts: ["http://nginx"]
+
+output.elasticsearch:
+  enabled: true
+  hosts: ["elasticsearch"]
