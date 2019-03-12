@@ -39,4 +39,5 @@ export class UserController {
             body.authenticationType);
         return user;
     }
+
 }
