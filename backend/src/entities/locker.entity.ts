@@ -21,10 +21,14 @@ export class Locker {
     })
     serialNumber: string;
 
-    @Column()
+    @Column({
+        nullable: true,
+    })
     name: string;
 
-    @Column()
+    @Column({
+        nullable: true,
+    })
     number: string;
 
     @Column({
