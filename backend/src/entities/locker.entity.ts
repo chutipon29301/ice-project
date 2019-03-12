@@ -1,10 +1,4 @@
-import {
-    Entity,
-    PrimaryColumn,
-    Column,
-    PrimaryGeneratedColumn,
-    ManyToOne,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { v4 } from 'uuid';
 import { Location } from './location.entity';
 
@@ -20,9 +14,10 @@ export class Locker {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @PrimaryColumn({
+    @Column({
         type: 'uuid',
         default: v4(),
+        unique: true,
     })
     serialNumber: string;
 
