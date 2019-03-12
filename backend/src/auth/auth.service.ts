@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, HttpService  } from '@nestjs/common';
+import { Injectable, UnauthorizedException, HttpService } from '@nestjs/common';
 import { LineAuthService } from '../line-auth/line-auth.service';
 import { State } from '../line-auth/dto/state.dto';
 import { CryptoService } from '../crypto/crypto.service';
@@ -11,10 +11,12 @@ import { LineAccessTokenRequestResponse } from 'src/line-auth/dto/line-access-to
 export class AuthService {
     private readonly lineCallbackURL: string = '/auth/line/callback';
     private readonly passPhase = 'Hello World!';
-    constructor(private readonly lineAuthService: LineAuthService,
-                private readonly cryptoService: CryptoService,
-                private readonly configService: ConfigService,
-                private readonly httpService: HttpService,) {}
+    constructor(
+        private readonly lineAuthService: LineAuthService,
+        private readonly cryptoService: CryptoService,
+        private readonly configService: ConfigService,
+        private readonly httpService: HttpService,
+    ) {}
 
     getLineAuthenticationPageURL(): string {
         return this.lineAuthService.lineAuthPageURL(this.lineCallbackURL);
@@ -39,7 +41,7 @@ export class AuthService {
         }
     }
 
-    async getAccessToken(code:string): Promise<LineAccessToken>{
+    async getAccessToken(code: string): Promise<LineAccessToken> {
         const body = {
             grant_type: 'authorization_code',
             code,
@@ -69,5 +71,4 @@ export class AuthService {
             throw new UnauthorizedException(error);
         }
     }
-
 }

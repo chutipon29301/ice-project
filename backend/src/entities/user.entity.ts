@@ -27,7 +27,8 @@ export class User {
         authenticationID: string,
         authenticationType: AuthenticationType,
         phone: string,
-        status: UserStatus) {
+        status: UserStatus,
+    ) {
         this.nationalID = nationalID;
         this.firstName = firstName;
         this.lastName = lastName;

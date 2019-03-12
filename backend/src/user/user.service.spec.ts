@@ -1,7 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { Repository } from 'typeorm';
-import { User, Role, AuthenticationType, UserStatus } from '../entities/user.entity';
+import {
+    User,
+    Role,
+    AuthenticationType,
+    UserStatus,
+} from '../entities/user.entity';
 import { UserRepositoryToken } from 'src/constant';
 import { fake, restore, replace } from 'sinon';
 
@@ -35,20 +40,28 @@ describe('UserService', () => {
 
         replace(userRepository, 'save', fakeSave);
 
-        const result = await service.create(fakeNationalID, fakeFirstName, fakeLastName, fakePhone, fakeAuthenticationID);
+        const result = await service.create(
+            fakeNationalID,
+            fakeFirstName,
+            fakeLastName,
+            fakePhone,
+            fakeAuthenticationID,
+        );
 
         expect(result).toEqual('a');
         expect(fakeSave.calledOnce).toBeTruthy();
-        expect(fakeSave.calledWith({
-            nationalID: fakeNationalID,
-            firstName: fakeFirstName,
-            lastName: fakeLastName,
-            role: Role.USER,
-            authenticationID: fakeAuthenticationID,
-            authenticationType: AuthenticationType.LINE,
-            phone: fakePhone,
-            status: UserStatus.ACTIVE,
-        })).toBeTruthy();
+        expect(
+            fakeSave.calledWith({
+                nationalID: fakeNationalID,
+                firstName: fakeFirstName,
+                lastName: fakeLastName,
+                role: Role.USER,
+                authenticationID: fakeAuthenticationID,
+                authenticationType: AuthenticationType.LINE,
+                phone: fakePhone,
+                status: UserStatus.ACTIVE,
+            }),
+        ).toBeTruthy();
     });
 
     it('should throw error when create user', async () => {
@@ -61,20 +74,28 @@ describe('UserService', () => {
 
         replace(userRepository, 'save', fakeSave);
 
-        const result = await service.create(fakeNationalID, fakeFirstName, fakeLastName, fakePhone, fakeAuthenticationID);
+        const result = await service.create(
+            fakeNationalID,
+            fakeFirstName,
+            fakeLastName,
+            fakePhone,
+            fakeAuthenticationID,
+        );
 
         expect(result).toEqual('a');
         expect(fakeSave.calledOnce).toBeTruthy();
-        expect(fakeSave.calledWith({
-            nationalID: fakeNationalID,
-            firstName: fakeFirstName,
-            lastName: fakeLastName,
-            role: Role.USER,
-            authenticationID: fakeAuthenticationID,
-            authenticationType: AuthenticationType.LINE,
-            phone: fakePhone,
-            status: UserStatus.ACTIVE,
-        })).toBeTruthy();
+        expect(
+            fakeSave.calledWith({
+                nationalID: fakeNationalID,
+                firstName: fakeFirstName,
+                lastName: fakeLastName,
+                role: Role.USER,
+                authenticationID: fakeAuthenticationID,
+                authenticationType: AuthenticationType.LINE,
+                phone: fakePhone,
+                status: UserStatus.ACTIVE,
+            }),
+        ).toBeTruthy();
     });
 
     it('should be created', async () => {
@@ -87,20 +108,27 @@ describe('UserService', () => {
 
         replace(userRepository, 'save', fakeSave);
 
-        const result = await service.create(fakeNationalID, fakeFirstName, fakeLastName, fakePhone, fakeAuthenticationID);
+        const result = await service.create(
+            fakeNationalID,
+            fakeFirstName,
+            fakeLastName,
+            fakePhone,
+            fakeAuthenticationID,
+        );
 
         expect(result).toEqual('a');
         expect(fakeSave.calledOnce).toBeTruthy();
-        expect(fakeSave.calledWith({
-            nationalID: fakeNationalID,
-            firstName: fakeFirstName,
-            lastName: fakeLastName,
-            role: Role.USER,
-            authenticationID: fakeAuthenticationID,
-            authenticationType: AuthenticationType.LINE,
-            phone: fakePhone,
-            status: UserStatus.ACTIVE,
-        })).toBeTruthy();
+        expect(
+            fakeSave.calledWith({
+                nationalID: fakeNationalID,
+                firstName: fakeFirstName,
+                lastName: fakeLastName,
+                role: Role.USER,
+                authenticationID: fakeAuthenticationID,
+                authenticationType: AuthenticationType.LINE,
+                phone: fakePhone,
+                status: UserStatus.ACTIVE,
+            }),
+        ).toBeTruthy();
     });
-
 });

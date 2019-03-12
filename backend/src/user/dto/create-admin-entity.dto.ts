@@ -21,5 +21,4 @@ export class CreateAdminEntityDto {
 
     @IsString()
     phone: string;
-
 }

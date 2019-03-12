@@ -7,7 +7,7 @@ import { UserModule } from './user.module';
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+    constructor(private readonly userService: UserService) {}
 
     @Get()
     async list() {
@@ -16,15 +16,14 @@ export class UserController {
     }
 
     @Post('register')
-    async registerUser(
-        @Body() body: CreateUserEntityDto,
-    ): Promise<User> {
+    async registerUser(@Body() body: CreateUserEntityDto): Promise<User> {
         const user = await this.userService.create(
             body.nationalID,
             body.firstName,
             body.lastName,
             body.phone,
-            body.authenticationID);
+            body.authenticationID,
+        );
         return user;
     }
 
@@ -36,8 +35,8 @@ export class UserController {
             body.lastName,
             body.phone,
             body.authenticationID,
-            body.authenticationType);
+            body.authenticationType,
+        );
         return user;
     }
-
 }
