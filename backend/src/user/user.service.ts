@@ -1,15 +1,21 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { UserRepositoryToken } from '../constant';
 import { Repository } from 'typeorm';
-import { User, Role, AuthenticationType, UserStatus } from '../entities/user.entity';
+import {
+    User,
+    Role,
+    AuthenticationType,
+    UserStatus,
+} from '../entities/user.entity';
 import { LineAuthService } from '../line-auth/line-auth.service';
 
 @Injectable()
 export class UserService {
     constructor(
-        @Inject(UserRepositoryToken) private readonly userRepository: Repository<User>,
+        @Inject(UserRepositoryToken)
+        private readonly userRepository: Repository<User>,
         private readonly lineAuthService: LineAuthService,
-    ) { }
+    ) {}
 
     async listUser(): Promise<User[]> {
         const users = await this.userRepository.find();
@@ -23,8 +29,17 @@ export class UserService {
         phone: string,
         authenticationID: string,
     ): Promise<User> {
-        authenticationID = this.lineAuthService.decode(authenticationID).sub
-        const user = new User(nationalID, firstName, lastName, Role.USER, authenticationID, AuthenticationType.LINE, phone, UserStatus.ACTIVE);
+        authenticationID = this.lineAuthService.decode(authenticationID).sub;
+        const user = new User(
+            nationalID,
+            firstName,
+            lastName,
+            Role.USER,
+            authenticationID,
+            AuthenticationType.LINE,
+            phone,
+            UserStatus.ACTIVE,
+        );
         await this.userRepository.save(user);
         return user;
     }
@@ -37,10 +52,17 @@ export class UserService {
         authenticationID: string,
         authenticationType: AuthenticationType,
     ): Promise<User> {
-        const user = new User(nationalID, firstName, lastName, Role.ADMIN, authenticationID, authenticationType, phone, UserStatus.ACTIVE);
+        const user = new User(
+            nationalID,
+            firstName,
+            lastName,
+            Role.ADMIN,
+            authenticationID,
+            authenticationType,
+            phone,
+            UserStatus.ACTIVE,
+        );
         await this.userRepository.save(user);
         return user;
     }
-
-    
 }
