@@ -2,12 +2,13 @@ import { Injectable, Inject } from '@nestjs/common';
 import { UserRepositoryToken } from '../constant';
 import { Repository } from 'typeorm';
 import { User, Role, AuthenticationType, UserStatus } from '../entities/user.entity';
+import { LineAuthService } from '../line-auth/line-auth.service';
 
 @Injectable()
 export class UserService {
     constructor(
-        @Inject(UserRepositoryToken)
-        private readonly userRepository: Repository<User>,
+        @Inject(UserRepositoryToken) private readonly userRepository: Repository<User>,
+        private readonly lineAuthService: LineAuthService,
     ) { }
 
     async listUser(): Promise<User[]> {
@@ -20,8 +21,9 @@ export class UserService {
         firstName: string,
         lastName: string,
         phone: string,
-        authenticationID: string
+        authenticationID: string,
     ): Promise<User> {
+        authenticationID = this.lineAuthService.decode(authenticationID).sub
         const user = new User(nationalID, firstName, lastName, Role.USER, authenticationID, AuthenticationType.LINE, phone, UserStatus.ACTIVE);
         await this.userRepository.save(user);
         return user;
@@ -39,4 +41,6 @@ export class UserService {
         await this.userRepository.save(user);
         return user;
     }
+
+    
 }

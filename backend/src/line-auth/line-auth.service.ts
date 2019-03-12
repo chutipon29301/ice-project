@@ -19,15 +19,6 @@ export class LineAuthService {
         private readonly cryptoService: CryptoService,
     ) {}
 
-    decode(token: string): LineToken {
-        try {
-            const result = this.jwtService.decode(token) as LineToken;
-            return result;
-        } catch (error) {
-            throw new UnauthorizedException(error);
-        }
-    }
-
     lineAuthPageURL(redirectURL: string, optionalState: string = ''): string {
         const scope = ['openid', 'profile', 'email'];
         const state = new State(this.passPhase, redirectURL, optionalState);
@@ -85,6 +76,15 @@ export class LineAuthService {
                 idToken: result.data.id_token,
                 state: state.stateString,
             };
+        } catch (error) {
+            throw new UnauthorizedException(error);
+        }
+    }
+
+    decode(token: string): LineToken {
+        try {
+            const result = this.jwtService.decode(token) as LineToken;
+            return result;
         } catch (error) {
             throw new UnauthorizedException(error);
         }
