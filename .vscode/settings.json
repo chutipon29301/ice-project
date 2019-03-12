@@ -4,6 +4,8 @@
         "Truthy",
         "nestjs",
         "openid",
-        "prestart"
-    ]
+        "prestart",
+        "typeorm"
+    ],
+    "python.linting.pylintEnabled": false
 }
