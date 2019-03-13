@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  test_backend:
+  test:
     docker:
       - image: circleci/node:10
     steps:
@@ -34,7 +34,7 @@ jobs:
       - run:
           name: Build backend
           command: |
-            docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --force-rm
       - run:
           name: Setup Environment Variables
           command: |
@@ -44,10 +44,45 @@ jobs:
           name: Push to Docker Hub
           command: |
             echo ${PASSWORD} | docker login -u ${USERNAME} --password-stdin
-            docker tag iceprojectbackend:latest nicharoj/iceprojectbackend:latest
-            docker push nicharoj/iceprojectbackend:latest
+            docker tag iceprojectbackend:latest ${USERNAME}/iceprojectbackend:latest
+            docker push ${USERNAME}/iceprojectbackend:latest
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo 'export USERNAME="$DOCKER_HUB_USERNAME"' >> $BASH_ENV
+            echo 'export ENCRYPTED_KEY="$GCP_ENCRYPTED_KEY"' >> $BASH_ENV
+            echo 'export PROJECT_ID="$GCP_PROJECT_ID"' >> $BASH_ENV
+            echo 'export ZONE="$GCP_ZONE"' >> $BASH_ENV
+      - run:
+          name: Connect to GCloud
+          command: |
+            echo ${ENCRYPTED_KEY} >> encrypted-key.txt
+            base64 -i encrypted-key.txt -d >> ${HOME}/gcp-key.json
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
+            "docker pull ${USERNAME}/iceprojectbackend:latest && \
+            docker run nicharoj/iceprojectbackend \
+            -e MYSQL_DATABASE='db' \
+            -e MYSQL_USER='user' \
+            -e MYSQL_PASSWORD='password' \
+            -e MYSQL_ROOT_PASSWORD='password' \
+            -e SERVER_URL='http://localhost' \
+            -e CHANNEL_ID='0000000000' \
+            -e CHANNEL_SECRET='xxxxxxxxxxxxxxxxx' \
+            -e IOT_DEVICE_SECRET='secret' \
+            -e NGINX_FILES_PATH=''./nginx-data' \
+            -e NGINX_VIRTUAL_HOST='ice-project.com' \
+            -e BACKEND_VIRTUAL_HOST='api.ice-project.com' \
+            -e LETSENCRYPT_EMAIL='ichannel.jakpat@gmail.com'"
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
