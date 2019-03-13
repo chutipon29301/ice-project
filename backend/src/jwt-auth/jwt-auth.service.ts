@@ -7,24 +7,32 @@ import * as moment from 'moment';
 
 @Injectable()
 export class JwtAuthService {
-
-    constructor(private readonly jwtService: JwtService, private readonly userService: UserService) { }
+    constructor(
+        private readonly jwtService: JwtService,
+        private readonly userService: UserService,
+    ) {}
 
     async generateTokenForLineID(lineID: string): Promise<JwtTokenInfo> {
         return null;
         const user = await this.userService.getUserWithLineID(lineID);
         if (user) {
             const payload: JwtToken = {
-                userID: user.nationalID
+                userID: user.nationalID,
             };
-            const expireDate = moment().add('7d').toDate();
-            const token = this.jwtService.sign(payload, { expiresIn: expireDate.toISOString() });
+            const expireDate = moment()
+                .add('7d')
+                .toDate();
+            const token = this.jwtService.sign(payload, {
+                expiresIn: expireDate.toISOString(),
+            });
             return {
                 expireDate,
                 token,
             };
         } else {
-            throw new UnauthorizedException('User has not been registered in database');
+            throw new UnauthorizedException(
+                'User has not been registered in database',
+            );
         }
     }
 

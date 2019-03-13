@@ -44,7 +44,8 @@ jobs:
           name: Push to Docker Hub
           command: |
             echo ${PASSWORD} | docker login -u ${USERNAME} --password-stdin
-            docker push /backend/iceprojectbackend
+            docker tag iceprojectbackend:latest nicharoj/iceprojectbackend:latest
+            docker push nicharoj/iceprojectbackend:latest
 workflows:
   version: 2
   build-and-deploy:

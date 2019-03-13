@@ -14,19 +14,19 @@ export class AuthService {
     private readonly lineCallbackURL: string = '/auth/line/callback';
     private readonly passPhase = 'Hello World!';
 
-    constructor(private readonly lineAuthService: LineAuthService,
-                private readonly jwtAuthService: JwtAuthService,
-                private readonly cryptoService: CryptoService,
-                private readonly configService: ConfigService,
-                private readonly httpService: HttpService) { }
+    constructor(
+        private readonly lineAuthService: LineAuthService,
+        private readonly jwtAuthService: JwtAuthService,
+        private readonly cryptoService: CryptoService,
+        private readonly configService: ConfigService,
+        private readonly httpService: HttpService,
+    ) {}
 
     getLineAuthenticationPageURL(): string {
         return this.lineAuthService.lineAuthPageURL(this.lineCallbackURL);
     }
 
-    async validateState(
-        encryptedState: string,
-    ): Promise<boolean> {
+    async validateState(encryptedState: string): Promise<boolean> {
         const state = State.from(
             this.cryptoService.AES.decrypt(
                 decodeURIComponent(encryptedState),
@@ -76,5 +76,4 @@ export class AuthService {
         const decodedLineToken = this.lineAuthService.decode(lineToken);
         return this.jwtAuthService.generateTokenForLineID(decodedLineToken.sub);
     }
-
 }
