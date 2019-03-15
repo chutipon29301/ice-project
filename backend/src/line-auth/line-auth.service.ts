@@ -70,11 +70,8 @@ export class LineAuthService {
                 })
                 .toPromise();
             return {
-                accessToken: result.data.access_token,
-                refreshToken: result.data.refresh_token,
                 expireIn: result.data.expires_in,
                 idToken: result.data.id_token,
-                state: state.stateString,
             };
         } catch (error) {
             throw new UnauthorizedException(error);

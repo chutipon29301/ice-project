@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-export class LineUserToken {
+export class LineUserTokenDto {
     @IsString()
     lineToken: string;
 }

@@ -1,3 +1,3 @@
-export class RequestToken {
+export class RequestTokenDto {
     code: string;
 }
