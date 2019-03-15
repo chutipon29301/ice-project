@@ -1,9 +1,8 @@
 import { IsString, IsNumber } from 'class-validator';
-import { ToInt } from 'class-sanitizer';
 
 export class CreateUserEntityDto {
-    @IsNumber()
-    @ToInt()
+
+    @IsString()
     nationalID: string;
 
     @IsString()
