@@ -21,7 +21,12 @@ export class LockerService {
     public async list(): Promise<Locker[]> {
         return await this.lockerRepository.find();
     }
-    async create(secret: string): Promise<Locker> {
+
+    public async findById(id: number): Promise<Locker> {
+        return await this.lockerRepository.findOne(id);
+    }
+
+    public async create(secret: string): Promise<Locker> {
         // if (this.configService.iotDeviceSecret !== secret) {
         //     throw new UnauthorizedException('Wrong secret');
         // }
@@ -33,10 +38,13 @@ export class LockerService {
             throw new ConflictException(error);
         }
     }
-    async edit(id: number, value: Partial<Locker>) {
+
+    public async edit(id: number, value: Partial<Locker>) {
         await this.lockerRepository.update(id, value);
     }
-    async delete(id: number) {
+
+    public async delete(id: number) {
         await this.lockerRepository.delete(id);
     }
+
 }
