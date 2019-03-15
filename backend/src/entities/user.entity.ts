@@ -96,10 +96,7 @@ export class User {
     @JoinTable()
     groups: Group[];
 
-    @OneToMany(
-        type => LockerInstance,
-        lockerInstance => lockerInstance.ownerUser,
-    )
+    @OneToMany(type => LockerInstance, lockerInstance => lockerInstance.ownerUser)
     ownerOfLockerInstance: LockerInstance[];
 
     @OneToMany(type => CreditUsage, creditUsage => creditUsage.user)

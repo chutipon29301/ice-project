@@ -1,13 +1,4 @@
-import {
-    Column,
-    Entity,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-    Generated,
-    OneToMany,
-    ManyToMany,
-    JoinTable,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Generated, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { Location } from './location.entity';
 import { LockerInstance } from './locker-instance.entity';
 import { Group } from './group.entity';
