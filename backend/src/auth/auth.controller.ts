@@ -16,7 +16,7 @@ import { LineAccessToken } from 'src/line-auth/dto/line-access-token.dto';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) { }
+    constructor(private readonly authService: AuthService) {}
 
     @Get('line')
     public async lineAuth(@Res() res: Response) {
@@ -41,7 +41,9 @@ export class AuthController {
     }
 
     @Post('lineAuthToken')
-    async lineAuthToken(@Body() body: RequestTokenDto): Promise<LineAccessToken> {
+    async lineAuthToken(
+        @Body() body: RequestTokenDto,
+    ): Promise<LineAccessToken> {
         return this.authService.getAccessToken(body.code);
     }
 

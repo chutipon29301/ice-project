@@ -1,13 +1,19 @@
-import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, RelationId, ManyToMany, OneToMany } from 'typeorm';
+import {
+    Entity,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    PrimaryColumn,
+    RelationId,
+    ManyToMany,
+    OneToMany,
+} from 'typeorm';
 import { Locker } from './locker.entity';
 import { User } from './user.entity';
 
 @Entity()
 export class LockerInstance {
-    constructor(
-        date: Date,
-        locker: Locker,
-    ) {
+    constructor(date: Date, locker: Locker) {
         this.date = date;
         this.locker = locker;
     }
@@ -24,7 +30,7 @@ export class LockerInstance {
 
     @Column({
         type: 'boolean',
-        default: true
+        default: true,
     })
     inUsed: boolean;
 

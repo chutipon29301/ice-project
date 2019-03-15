@@ -7,9 +7,9 @@ import { groupProviders } from './group.providers';
 import { UserModule } from 'src/user/user.module';
 
 @Module({
-  imports: [DatabaseModule, ConfigModule, UserModule],
-  providers: [...groupProviders, GroupService],
-  controllers: [GroupController],
-  exports: [GroupService]
+    imports: [DatabaseModule, ConfigModule, UserModule],
+    providers: [...groupProviders, GroupService],
+    controllers: [GroupController],
+    exports: [GroupService],
 })
 export class GroupModule {}

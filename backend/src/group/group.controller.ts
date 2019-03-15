@@ -1,4 +1,12 @@
-import { Controller, Get, Body, Post, Patch, Param, ParseIntPipe } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Body,
+    Post,
+    Patch,
+    Param,
+    ParseIntPipe,
+} from '@nestjs/common';
 import { GroupService } from './group.service';
 import { Group } from '../entities/group.entity';
 import { CreateGroupDto } from './dto/create-group.dto';
@@ -6,14 +14,15 @@ import { EditGroupDto } from './dto/edit-group.dto';
 
 @Controller('group')
 export class GroupController {
-    constructor(private readonly groupService: GroupService) { }
+    constructor(private readonly groupService: GroupService) {}
+
     @Get()
     async list(): Promise<{ groups: Group[] }> {
         return { groups: await this.groupService.list() };
     }
+
     @Post()
-    async create(
-        @Body() body: CreateGroupDto) {
+    async create(@Body() body: CreateGroupDto) {
         const group = await this.groupService.create(body.name);
         return group;
     }

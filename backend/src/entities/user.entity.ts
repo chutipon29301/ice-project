@@ -1,4 +1,11 @@
-import { Entity, PrimaryColumn, Column, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import {
+    Entity,
+    PrimaryColumn,
+    Column,
+    ManyToMany,
+    JoinTable,
+    OneToMany,
+} from 'typeorm';
 import { LockerUsage } from './locker-usage.entity';
 import { LockerInstance } from './locker-instance.entity';
 import { CreditUsage } from './credit-usage.entity';
@@ -89,7 +96,10 @@ export class User {
     @JoinTable()
     groups: Group[];
 
-    @OneToMany(type => LockerInstance, lockerInstance => lockerInstance.ownerUser)
+    @OneToMany(
+        type => LockerInstance,
+        lockerInstance => lockerInstance.ownerUser,
+    )
     ownerOfLockerInstance: LockerInstance[];
 
     @OneToMany(type => CreditUsage, creditUsage => creditUsage.user)

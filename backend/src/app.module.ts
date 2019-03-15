@@ -35,6 +35,8 @@ import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.midd
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(helmet(), SanitizerMiddleware, AuthHeaderParserMiddleware).forRoutes('*');
+        consumer
+            .apply(helmet(), SanitizerMiddleware, AuthHeaderParserMiddleware)
+            .forRoutes('*');
     }
 }

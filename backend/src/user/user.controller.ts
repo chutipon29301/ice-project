@@ -7,7 +7,7 @@ import { Roles } from 'src/guard/role.decorator';
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+    constructor(private readonly userService: UserService) {}
 
     @Roles(Role.SUPERUSER, Role.ADMIN)
     @Get()

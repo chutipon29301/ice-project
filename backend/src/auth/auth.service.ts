@@ -11,7 +11,6 @@ import { JwtAuthService } from '../jwt-auth/jwt-auth.service';
 
 @Injectable()
 export class AuthService {
-
     private readonly lineCallbackURL: string = '/auth/line/callback';
     private readonly passPhase = 'Hello World!';
 
@@ -60,7 +59,8 @@ export class AuthService {
                     },
                     data: stringify(body),
                     url: 'https://api.line.me/oauth2/v2.1/token',
-                }).toPromise();
+                })
+                .toPromise();
             return {
                 expireIn: result.data.expires_in,
                 idToken: result.data.id_token,
@@ -70,7 +70,9 @@ export class AuthService {
         }
     }
 
-    public async getJwtTokenFromLineToken(lineToken: string): Promise<JwtTokenInfo> {
+    public async getJwtTokenFromLineToken(
+        lineToken: string,
+    ): Promise<JwtTokenInfo> {
         const decodedLineToken = this.lineAuthService.decode(lineToken);
         return this.jwtAuthService.generateTokenForLineID(decodedLineToken.sub);
     }

@@ -9,9 +9,10 @@ import { ExecFileSyncOptionsWithStringEncoding } from 'child_process';
 @Injectable()
 export class GroupService {
     constructor(
-        @Inject(GroupRepositoryToken) private readonly groupRepository: Repository<Group>,
+        @Inject(GroupRepositoryToken)
+        private readonly groupRepository: Repository<Group>,
         private readonly userService: UserService,
-    ) { }
+    ) {}
 
     async list(): Promise<Group[]> {
         return await this.groupRepository.find();
@@ -47,7 +48,8 @@ export class GroupService {
         } else {
             const user = this.userService.getUserWithNationalID(nationalID);
             if (user) {
-                this.groupRepository.createQueryBuilder()
+                this.groupRepository
+                    .createQueryBuilder()
                     .relation(Group, 'users')
                     .of(groupID)
                     .add(user);

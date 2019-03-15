@@ -1,7 +1,6 @@
 import { IsString, IsNumber } from 'class-validator';
 
 export class CreateUserEntityDto {
-
     @IsString()
     nationalID: string;
 
