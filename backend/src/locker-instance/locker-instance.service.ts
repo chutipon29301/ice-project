@@ -22,4 +22,9 @@ export class LockerInstanceService {
             throw new NotFoundException('Locker not found');
         }
     }
+
+    public async getAllInstance(lockerID: number): Promise<LockerInstance[]> {
+        const lockers = await this.lockerInstanceRepository.find({ where: { lockerId: lockerID } });
+        return lockers;
+    }
 }
