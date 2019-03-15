@@ -13,7 +13,6 @@ export class JwtAuthService {
     ) {}
 
     async generateTokenForLineID(lineID: string): Promise<JwtTokenInfo> {
-        return null;
         const user = await this.userService.getUserWithLineID(lineID);
         if (user) {
             const payload: JwtToken = {
