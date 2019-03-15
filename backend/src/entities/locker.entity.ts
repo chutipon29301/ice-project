@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Generated, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Generated, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { Location } from './location.entity';
 import { LockerInstance } from './locker-instance.entity';
+import { Group } from './group.entity';
 
 export enum LockerAvailability {
     UNREGISTERED = 'UNREGISTERED',
@@ -43,4 +44,8 @@ export class Locker {
 
     @OneToMany(type => LockerInstance, lockerInstance => lockerInstance.locker)
     lockerInstance: Locker;
+
+    @ManyToMany(type => Group)
+    @JoinTable()
+    groups: Group[];
 }
