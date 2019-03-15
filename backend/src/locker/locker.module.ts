@@ -9,5 +9,6 @@ import { ConfigModule } from 'src/config/config.module';
     imports: [DatabaseModule, ConfigModule],
     providers: [...lockerProviders, LockerService],
     controllers: [LockerController],
+    exports: [LockerService],
 })
 export class LockerModule {}
