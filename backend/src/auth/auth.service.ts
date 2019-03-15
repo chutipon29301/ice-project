@@ -4,7 +4,7 @@ import { State } from '../line-auth/dto/state.dto';
 import { CryptoService } from '../crypto/crypto.service';
 import { ConfigService } from '../config/config.service';
 import { LineAccessToken } from '../line-auth/dto/line-access-token.dto';
-import { stringify } from 'querystring';
+import { stringify } from 'qs';
 import { LineAccessTokenRequestResponse } from 'src/line-auth/dto/line-access-token-request-response.dto';
 import { JwtTokenInfo } from '../jwt-auth/dto/jwt-encrypt-token.dto';
 import { JwtAuthService } from '../jwt-auth/jwt-auth.service';
@@ -60,14 +60,13 @@ export class AuthService {
                     },
                     data: stringify(body),
                     url: 'https://api.line.me/oauth2/v2.1/token',
-                })
-                .toPromise();
+                }).toPromise();
             return {
                 expireIn: result.data.expires_in,
                 idToken: result.data.id_token,
             };
         } catch (error) {
-            throw new UnauthorizedException(error);
+            throw new UnauthorizedException(error.response.data);
         }
     }
 
