@@ -2,17 +2,18 @@ import { Controller, Get, Post, Body } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserEntityDto } from './dto/create-user-entity.dto';
 import { CreateAdminEntityDto } from './dto/create-admin-entity.dto';
-import { User } from '../entities/user.entity';
-import { UserModule } from './user.module';
+import { User, Role } from '../entities/user.entity';
+import { Roles } from 'src/guard/role.decorator';
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) { }
 
+    @Roles(Role.SUPERUSER, Role.ADMIN)
     @Get()
-    async list() {
+    async list(): Promise<{ users: User[] }> {
         const users = await this.userService.listUser();
-        return users;
+        return { users };
     }
 
     @Post('register')
