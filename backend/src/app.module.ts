@@ -13,6 +13,7 @@ import { LockerModule } from './locker/locker.module';
 import { LockerInstanceModule } from './locker-instance/locker-instance.module';
 import { LockerUsageModule } from './locker-usage/locker-usage.module';
 import * as helmet from 'helmet';
+import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.middleware';
 
 @Module({
     imports: [
@@ -32,6 +33,6 @@ import * as helmet from 'helmet';
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(helmet(), SanitizerMiddleware).forRoutes('*');
+        consumer.apply(helmet(), SanitizerMiddleware, AuthHeaderParserMiddleware).forRoutes('*');
     }
 }
