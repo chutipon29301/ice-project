@@ -1,3 +1,3 @@
 export class JwtToken {
-    userID: number;
+    nationalID: string;
 }

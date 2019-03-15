@@ -5,7 +5,7 @@ import { AuthenticationType } from '../../entities/user.entity';
 export class CreateAdminEntityDto {
     @IsNumber()
     @ToInt()
-    nationalID: number;
+    nationalID: string;
 
     @IsString()
     firstName: string;

@@ -4,7 +4,7 @@ import { ToInt } from 'class-sanitizer';
 export class CreateUserEntityDto {
     @IsNumber()
     @ToInt()
-    nationalID: number;
+    nationalID: string;
 
     @IsString()
     firstName: string;

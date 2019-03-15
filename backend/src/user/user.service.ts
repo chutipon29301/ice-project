@@ -23,7 +23,7 @@ export class UserService {
     }
 
     async create(
-        nationalID: number,
+        nationalID: string,
         firstName: string,
         lastName: string,
         phone: string,
@@ -45,7 +45,7 @@ export class UserService {
     }
 
     async createAdmin(
-        nationalID: number,
+        nationalID: string,
         firstName: string,
         lastName: string,
         phone: string,

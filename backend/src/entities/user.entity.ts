@@ -23,7 +23,7 @@ export enum UserStatus {
 @Entity()
 export class User {
     constructor(
-        nationalID: number,
+        nationalID: string,
         firstName: string,
         lastName: string,
         role: Role,
@@ -43,7 +43,7 @@ export class User {
     }
 
     @PrimaryColumn()
-    nationalID: number;
+    nationalID: string;
 
     @Column()
     firstName: string;
