@@ -1,4 +1,7 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { LockerUsage } from './locker-usage.entity';
+import { LockerInstance } from './locker-instance.entity';
+import { CreditUsage } from './credit-usage.entity';
 
 export enum Role {
     USER = 'USER',
@@ -73,4 +76,17 @@ export class User {
         default: UserStatus.ACTIVE,
     })
     status: UserStatus;
+
+    @ManyToMany(type => LockerUsage)
+    @JoinTable()
+    lockerUsages: LockerUsage[];
+
+    @ManyToMany(type => LockerInstance)
+    accessibleLockerInstance: LockerInstance[];
+
+    @OneToMany(type => LockerInstance, lockerInstance => lockerInstance.ownerUser)
+    ownerOfLockerInstance: LockerInstance[];
+
+    @OneToMany(type => CreditUsage, creditUsage => creditUsage.user)
+    creditUsages: CreditUsage[];
 }

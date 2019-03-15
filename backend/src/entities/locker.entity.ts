@@ -1,6 +1,6 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { v4 } from 'uuid';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Generated, OneToMany } from 'typeorm';
 import { Location } from './location.entity';
+import { LockerInstance } from './locker-instance.entity';
 
 export enum LockerAvailability {
     UNREGISTERED = 'UNREGISTERED',
@@ -16,9 +16,9 @@ export class Locker {
 
     @Column({
         type: 'uuid',
-        default: v4(),
         unique: true,
     })
+    @Generated('uuid')
     serialNumber: string;
 
     @Column({
@@ -40,4 +40,7 @@ export class Locker {
 
     @ManyToOne(type => Location, location => location.lockers)
     location: Location;
+
+    @OneToMany(type => LockerInstance, lockerInstance => lockerInstance.locker)
+    lockerInstance: Locker;
 }

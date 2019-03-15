@@ -58,26 +58,44 @@ jobs:
             echo 'export PROJECT_ID="$GCP_PROJECT_ID"' >> $BASH_ENV
             echo 'export ZONE="$GCP_ZONE"' >> $BASH_ENV
       - run:
-          name: Connect to GCloud
+          name: Clone or Pull from Git to VM
           command: |
-            echo ${ENCRYPTED_KEY} >> encrypted-key.txt
-            base64 -i encrypted-key.txt -d >> ${HOME}/gcp-key.json
+            echo ${ENCRYPTED_KEY} > encrypted-key.txt
+            base64 -i encrypted-key.txt -d > ${HOME}/gcp-key.json
             gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
             gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
-            "docker pull ${USERNAME}/iceprojectbackend:latest && \
-            docker run nicharoj/iceprojectbackend \
-            -e MYSQL_DATABASE='db' \
-            -e MYSQL_USER='user' \
-            -e MYSQL_PASSWORD='password' \
-            -e MYSQL_ROOT_PASSWORD='password' \
-            -e SERVER_URL='http://localhost' \
-            -e CHANNEL_ID='0000000000' \
-            -e CHANNEL_SECRET='xxxxxxxxxxxxxxxxx' \
-            -e IOT_DEVICE_SECRET='secret' \
-            -e NGINX_FILES_PATH=''./nginx-data' \
-            -e NGINX_VIRTUAL_HOST='ice-project.com' \
-            -e BACKEND_VIRTUAL_HOST='api.ice-project.com' \
-            -e LETSENCRYPT_EMAIL='ichannel.jakpat@gmail.com'"
+            "test -e ice-project && git clone https://github.com/chutipon29301/ice-project.git -b develop || \
+            (cd ice-project && \
+            git pull https://github.com/chutipon29301/ice-project.git develop)"
+      - run:
+          name: Create .env
+          command: |
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
+            'cd ice-project && \
+            MYSQL_DATABASE=db && \
+            MYSQL_USER=user && \
+            MYSQL_PASSWORD=password && \
+            MYSQL_ROOT_PASSWORD=password && \
+            SERVER_URL=http://localhost && \
+            CHANNEL_ID=0000000000 && \
+            CHANNEL_SECRET=xxxxxxxxxxxxxxxxx && \
+            IOT_DEVICE_SECRET=secret && \
+            NGINX_FILES_PATH=./nginx-data && \
+            NGINX_VIRTUAL_HOST=ice-project.com && \
+            BACKEND_VIRTUAL_HOST=api.ice-project.com && \
+            LETSENCRYPT_EMAIL=ichannel.jakpat@gmail.com  && \
+            eval "echo \"$(< .env.template.prod)\"" > .env'
+      - run:
+          name: Deploy Backend
+          command: |
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
+            'cd ice-project && \
+            docker pull ${USERNAME}/iceprojectbackend:latest && \
+            docker image prune -f && \
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD:/$PWD" -w="/$PWD" \
+            docker/compose:1.23.2 -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate -d'
 workflows:
   version: 2
   build-and-deploy:

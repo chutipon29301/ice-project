@@ -17,6 +17,7 @@ export const databaseProviders: Provider[] = [
                 database: configService.mySQLDatabase,
                 entities: [__dirname + '/../**/*.entity{.ts,.js}'],
                 synchronize: true,
+                logging: true
             }),
     },
 ];
