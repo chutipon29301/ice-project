@@ -11,6 +11,7 @@ import { LocationModule } from './location/location.module';
 import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { LockerModule } from './locker/locker.module';
 import { LockerInstanceModule } from './locker-instance/locker-instance.module';
+import { LockerUsageModule } from './locker-usage/locker-usage.module';
 import * as helmet from 'helmet';
 
 @Module({
@@ -24,6 +25,7 @@ import * as helmet from 'helmet';
         LocationModule,
         LockerModule,
         LockerInstanceModule,
+        LockerUsageModule,
     ],
     controllers: [AppController],
     providers: [AppService],
