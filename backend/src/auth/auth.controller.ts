@@ -41,9 +41,7 @@ export class AuthController {
     }
 
     @Post('lineAuthToken')
-    async lineAuthToken(
-        @Body() body: RequestTokenDto,
-    ): Promise<LineAccessToken> {
+    async lineAuthToken(@Body() body: RequestTokenDto): Promise<LineAccessToken> {
         return this.authService.getAccessToken(body.code);
     }
 
