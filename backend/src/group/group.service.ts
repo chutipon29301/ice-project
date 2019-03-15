@@ -21,7 +21,7 @@ export class GroupService {
         try {
             const group = new Group(name);
             await this.groupRepository.save(group);
-            return group
+            return group;
         } catch (error) {
             throw new ConflictException(error);
         }
@@ -40,15 +40,15 @@ export class GroupService {
         const group = await this.groupRepository
             .createQueryBuilder()
             .leftJoinAndSelect('group.users', 'user')
-            .where("user.nationalID = :nationalID", { nationalID })
+            .where('user.nationalID = :nationalID', { nationalID })
             .getOne();
         if (group) {
             throw new ConflictException('User already in group');
         } else {
-            const user = this.userService.getUserWithNationalID(nationalID)
+            const user = this.userService.getUserWithNationalID(nationalID);
             if (user) {
                 this.groupRepository.createQueryBuilder()
-                    .relation(Group, "users")
+                    .relation(Group, 'users')
                     .of(groupID)
                     .add(user);
                 // group[0].users.push(user)

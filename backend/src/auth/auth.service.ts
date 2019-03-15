@@ -11,6 +11,7 @@ import { JwtAuthService } from '../jwt-auth/jwt-auth.service';
 
 @Injectable()
 export class AuthService {
+
     private readonly lineCallbackURL: string = '/auth/line/callback';
     private readonly passPhase = 'Hello World!';
 
@@ -22,11 +23,11 @@ export class AuthService {
         private readonly httpService: HttpService,
     ) {}
 
-    getLineAuthenticationPageURL(): string {
+    public getLineAuthenticationPageURL(): string {
         return this.lineAuthService.lineAuthPageURL(this.lineCallbackURL);
     }
 
-    async validateState(encryptedState: string): Promise<boolean> {
+    public async validateState(encryptedState: string): Promise<boolean> {
         const state = State.from(
             this.cryptoService.AES.decrypt(
                 decodeURIComponent(encryptedState),
@@ -42,7 +43,7 @@ export class AuthService {
         }
     }
 
-    async getAccessToken(code: string): Promise<LineAccessToken> {
+    public async getAccessToken(code: string): Promise<LineAccessToken> {
         const body = {
             grant_type: 'authorization_code',
             code,
@@ -62,17 +63,15 @@ export class AuthService {
                 })
                 .toPromise();
             return {
-                // accessToken: result.data.access_token,
-                // refreshToken: result.data.refresh_token,
                 expireIn: result.data.expires_in,
                 idToken: result.data.id_token,
-                // state: 'Hello World!',
             };
         } catch (error) {
             throw new UnauthorizedException(error);
         }
     }
-    async getJwtTokenFromLineToken(lineToken: string): Promise<JwtTokenInfo> {
+
+    public async getJwtTokenFromLineToken(lineToken: string): Promise<JwtTokenInfo> {
         const decodedLineToken = this.lineAuthService.decode(lineToken);
         return this.jwtAuthService.generateTokenForLineID(decodedLineToken.sub);
     }
