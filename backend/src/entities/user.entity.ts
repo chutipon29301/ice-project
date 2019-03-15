@@ -2,6 +2,7 @@ import { Entity, PrimaryColumn, Column, ManyToMany, JoinTable, OneToMany } from 
 import { LockerUsage } from './locker-usage.entity';
 import { LockerInstance } from './locker-instance.entity';
 import { CreditUsage } from './credit-usage.entity';
+import { Group } from './group.entity';
 
 export enum Role {
     USER = 'USER',
@@ -23,7 +24,7 @@ export enum UserStatus {
 @Entity()
 export class User {
     constructor(
-        nationalID: number,
+        nationalID: string,
         firstName: string,
         lastName: string,
         role: Role,
@@ -43,7 +44,7 @@ export class User {
     }
 
     @PrimaryColumn()
-    nationalID: number;
+    nationalID: string;
 
     @Column()
     firstName: string;
@@ -83,6 +84,10 @@ export class User {
 
     @ManyToMany(type => LockerInstance)
     accessibleLockerInstance: LockerInstance[];
+
+    @ManyToMany(type => Group)
+    @JoinTable()
+    groups: Group[];
 
     @OneToMany(type => LockerInstance, lockerInstance => lockerInstance.ownerUser)
     ownerOfLockerInstance: LockerInstance[];
