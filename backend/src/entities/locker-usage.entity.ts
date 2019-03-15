@@ -21,13 +21,15 @@ export class LockerUsage {
     })
     timeStamp: Date;
 
-    @ManyToOne(type => LockerInstance, { primary: true, cascade: true })
-    @JoinColumn({ referencedColumnName: 'date' })
+    @PrimaryColumn()
+    lockerId: string;
+
+    @PrimaryColumn()
     date: Date;
 
-    @ManyToOne(type => LockerInstance, { primary: true, cascade: true })
-    @JoinColumn({ referencedColumnName: 'locker' })
-    locker: Locker;
+    @ManyToOne(type => LockerInstance, { cascade: true })
+    @JoinColumn([{ name: 'lockerId', referencedColumnName: 'lockerId' }, { name: 'date', referencedColumnName: 'date' }])
+    lockerInstance: LockerInstance;
 
     @ManyToMany(type => User)
     @JoinTable()
