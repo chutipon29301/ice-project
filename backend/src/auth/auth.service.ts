@@ -62,11 +62,11 @@ export class AuthService {
                 })
                 .toPromise();
             return {
-                accessToken: result.data.access_token,
-                refreshToken: result.data.refresh_token,
+                // accessToken: result.data.access_token,
+                // refreshToken: result.data.refresh_token,
                 expireIn: result.data.expires_in,
                 idToken: result.data.id_token,
-                state: 'Hello World!',
+                // state: 'Hello World!',
             };
         } catch (error) {
             throw new UnauthorizedException(error);

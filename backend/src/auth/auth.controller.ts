@@ -11,7 +11,7 @@ import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LineUserTokenDto } from './dto/line-user-token.dto';
 import { JwtTokenInfo } from '../jwt-auth/dto/jwt-encrypt-token.dto';
-import { RequestToken } from './dto/request-token.dto';
+import { RequestTokenDto } from './dto/request-token.dto';
 import { LineAccessToken } from 'src/line-auth/dto/line-access-token.dto';
 
 @Controller('auth')
@@ -41,7 +41,7 @@ export class AuthController {
     }
 
     @Post('lineAuthToken')
-    async lineAuthToken(@Body() body: RequestToken): Promise<LineAccessToken> {
+    async lineAuthToken(@Body() body: RequestTokenDto): Promise<LineAccessToken> {
         return this.authService.getAccessToken(body.code);
     }
 
