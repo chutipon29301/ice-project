@@ -22,7 +22,7 @@ export class JwtAuthService {
                 .add('7d')
                 .toDate();
             const token = this.jwtService.sign(payload, {
-                expiresIn: expireDate.toISOString(),
+                expiresIn: '7d',
             });
             return {
                 expireDate,
