@@ -9,14 +9,14 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
-import { LineUserToken } from './dto/line-user-token.dto';
+import { LineUserTokenDto } from './dto/line-user-token.dto';
 import { JwtTokenInfo } from '../jwt-auth/dto/jwt-encrypt-token.dto';
 import { RequestToken } from './dto/request-token.dto';
 import { LineAccessToken } from 'src/line-auth/dto/line-access-token.dto';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(private readonly authService: AuthService) { }
 
     @Get('line')
     public async lineAuth(@Res() res: Response) {
@@ -47,7 +47,7 @@ export class AuthController {
 
     @Post('token/line')
     async getJwtTokenFromLineToken(
-        @Body() body: LineUserToken,
+        @Body() body: LineUserTokenDto,
     ): Promise<JwtTokenInfo> {
         return await this.authService.getJwtTokenFromLineToken(body.lineToken);
     }
