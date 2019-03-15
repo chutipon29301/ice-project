@@ -25,10 +25,10 @@ export class LockerUsage {
     lockerId: string;
 
     @PrimaryColumn()
-    date: Date;
+    instanceDate: Date;
 
     @ManyToOne(type => LockerInstance, { cascade: true })
-    @JoinColumn([{ name: 'lockerId', referencedColumnName: 'lockerId' }, { name: 'date', referencedColumnName: 'date' }])
+    @JoinColumn([{ name: 'lockerId', referencedColumnName: 'lockerId' }, { name: 'instanceDate', referencedColumnName: 'date' }])
     lockerInstance: LockerInstance;
 
     @ManyToMany(type => User)
