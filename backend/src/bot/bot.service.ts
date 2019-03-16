@@ -7,10 +7,8 @@ const path = require('path');
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
 const LINE_HEADER = {
   'Content-Type': 'application/json',
-  'Authorization': `Bearer TIh2X/GxAUaPoL9diW4QMntF9Eq8ChJAlyTdiI6Ui5FI4OGybgMgP+zKlfN/X1msbBxKF3zMeIdtK9LSHHmh/GLWvn49auTOLDU1+/NF2beWirWE5aR3BohVXDe1bWgq85ifP3lKH1s+MDze90BuAgdB04t89/1O/w1cDnyilFU=`
+  'Authorization': `Bearer 8bWBukvtuXm8uAUafP4svbC3MzMUEQZT0oZucjWNqle3rRWrzMBMfXe/xZkvEWbkbBxKF3zMeIdtK9LSHHmh/GLWvn49auTOLDU1+/NF2bfDvi4dFljTdjTxFQtYwSMeiWCE5xkqr1PIjbzOuc19fwdB04t89/1O/w1cDnyilFU=`
 };
-const msg = 'Helloooooo';
-const userId ='U40122d9abaa76c9d28ff68db2dca2ce6'; //gain
 
 @Injectable()
 export class BotService {
@@ -19,10 +17,12 @@ export class BotService {
   }
 
   async lineBotReplyMsg(@Body('req')req){
-    if (req.body.events[0].message.type === 'text') {
+    if (req.body.events[0].type === 'message') {
       reply(req.body);
-    }else if (req.body.events[0].message.type === 'text') {
-      reply(req.body);
+    }else if (req.body.events[0].type === 'postback') {
+      //replyPostback(req.body); //for template button postback
+    }else{
+      return;
     }
 
   }
@@ -32,8 +32,14 @@ export class BotService {
 const reply = (bodyResponse) => {
   const msg = bodyResponse.events[0].message.text;
   if(msg == 'Help'){
-    instructionMsg(bodyResponse);
-  }else{
+    helpMeMsg(bodyResponse);
+  }else if(msg == 'Manual'){
+    sendManual(bodyResponse);
+  }
+  else if(msg == 'Report'){
+    askReport(bodyResponse);
+  }
+  else{
     repeatMsg(bodyResponse);
   }
 };
@@ -55,9 +61,87 @@ const repeatMsg = (bodyResponse) => {
   });
 };
 
+const helpMeMsg = (bodyResponse) => {
+  const fName = 'helpMe.jpeg';
+  return request({
+    method: `POST`,
+    uri: `${LINE_MESSAGING_API}/reply`,
+    headers: LINE_HEADER,
+    body: JSON.stringify({
+      replyToken: bodyResponse.events[0].replyToken,
+      messages: [
+        // {
+        //   type: "template",
+        //   altText: "This is a buttons template",
+        //   template: {
+        //       type: "buttons",
+        //       thumbnailImageUrl: `https://af65e448.ngrok.io/bot/getPhoto/${fName}`,
+        //       imageAspectRatio: "rectangle",
+        //       imageSize: "cover",
+        //       imageBackgroundColor: "#FFFFFF",
+        //       title: "Menu",
+        //       text: "Helpme",
+        //       defaultAction: {
+        //           type: "uri",
+        //           label: "View detail",
+        //           uri: "http://google.com"
+        //       },
+        //       actions: [
+        //           {
+        //             type: "postback",
+        //             label: "Manual",
+        //             data: "wantToRequestmanual"
+        //           },
+        //           {
+        //             type: "postback",
+        //             label: "Report",
+        //             data: "wantToSendReport"
+        //             //uri: "http://google.com"
+        //           }
+        //       ]
+        //   }
+        // }
+        {
+          type: "imagemap",
+          baseUrl:`https://af65e448.ngrok.io/bot/getPhoto/${fName}?_ignored=`,
+          altText: "This is an imagemap",
+          baseSize: {
+            width: 1024,
+            height: 772
+          },
+          actions: [
+              {
+                type: "message",
+                label: "manual",
+                text: "Manual",
+                area: {
+                    x: 0,
+                    y: 0,
+                    width: 1024,
+                    height: 386
+                }
+              },
+              {
+                type: "message",
+                label: "report",
+                text: "Report",
+                area: {
+                    x: 0,
+                    y: 386,
+                    width: 1024,
+                    height: 386
+                }
+              }
+          ]
+        }
 
-const instructionMsg = (bodyResponse) => {
-  const fName = 'instruction.jpeg';
+     ]
+    })
+  });
+}
+
+const sendManual = (bodyResponse) => {
+  const fName = 'manual.jpeg';
   return request({
     method: `POST`,
     uri: `${LINE_MESSAGING_API}/reply`,
@@ -66,76 +150,58 @@ const instructionMsg = (bodyResponse) => {
       replyToken: bodyResponse.events[0].replyToken,
       messages: [
         {
-          type: "template",
-          altText: "This is a buttons template",
-          template: {
-              type: "buttons",
-              thumbnailImageUrl: `https://af65e448.ngrok.io/bot/getPhoto/${fName}`,
-              imageAspectRatio: "rectangle",
-              imageSize: "cover",
-              imageBackgroundColor: "#FFFFFF",
-              title: "Menu",
-              text: "Please select",
-              defaultAction: {
-                  type: "uri",
-                  label: "View detail",
-                  uri: "http://google.com"
-              },
-              actions: [
-                  {
-                    type: "postback",
-                    label: "Buy",
-                    data: "action=buy&itemid=123"
-                  },
-                  {
-                    type: "uri",
-                    label: "View detail",
-                    uri: "http://google.com"
-                  }
-              ]
-          }
+          type: "imagemap",
+          baseUrl:`https://af65e448.ngrok.io/bot/getPhoto/${fName}?_ignored=`,
+          altText: "This is an imagemap",
+          baseSize: {
+            width: 1024,
+            height: 772
+          },
+          actions: [
+              {
+                type: "uri",
+                linkUri: "https://google.com/",
+                area: {
+                    x: 0,
+                    y: 0,
+                    width: 400,
+                    height: 400
+                }
+              }
+          ]
         }
-        // {
-        //   type: "imagemap",
-        //   baseUrl:`https://af65e448.ngrok.io/bot/getPhoto/${fName}`,
-        //   altText: "This is an imagemap",
-        //   baseSize: {
-        //     width: 1024,
-        //     height: 772
-        //   },
-        //   actions: [
-        //       {
-        //           type: "uri",
-        //           linkUri: "https://google.com/",
-        //           area: {
-        //               x: 0,
-        //               y: 386,
-        //               width: 1024,
-        //               height: 772
-        //           }
-        //       },
-        //       {
-        //           type: "message",
-        //           text: "Hello",
-        //           area: {
-        //               x: 0,
-        //               y: 386,
-        //               width: 1024,
-        //               height: 386
-        //           }
-        //       }
-        //   ]
-        // }
 
      ]
     })
-  })
-  .catch((error) => {
-    return Promise.reject(error);
   });
 }
+const askReport = (bodyResponse) => {
+  return request({
+    method: `POST`,
+    uri: `${LINE_MESSAGING_API}/reply`,
+    headers: LINE_HEADER,
+    body: JSON.stringify({
+      replyToken: bodyResponse.events[0].replyToken,
+      messages: [
+        {
+          type: `text`,
+          text: 'Do you face any problem with our system?'
+        }
+    ]
+    })
+  });
+};
 
+// const replyPostback = (bodyResponse) => {
+//   const msg = bodyResponse.events[0].postback.data;
+//   if(msg == 'wantToRequestmanual'){
+//     sendManual(bodyResponse);
+//   }else if(msg == 'wantToSendReport'){
+//    // askReport(bodyResponse);
+//   }else{
 
+//   }
+// };
 
 
 
