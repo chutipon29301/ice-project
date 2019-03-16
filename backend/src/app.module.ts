@@ -10,17 +10,13 @@ import { UserModule } from './user/user.module';
 import { LocationModule } from './location/location.module';
 import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { LockerModule } from './locker/locker.module';
-<<<<<<< HEAD
 import { LockerInstanceModule } from './locker-instance/locker-instance.module';
 import { LockerUsageModule } from './locker-usage/locker-usage.module';
 import { GroupModule } from './group/group.module';
 import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.middleware';
 import { BotModule } from './bot/bot.module';
-=======
-import { BotController } from './bot/bot.controller';
-import { BotService } from './bot/bot.service';
->>>>>>> feat(back->bot): add bot module
 import * as helmet from 'helmet';
+
 
 @Module({
     imports: [
@@ -37,8 +33,8 @@ import * as helmet from 'helmet';
         GroupModule,
         BotModule,
     ],
-    controllers: [AppController, BotController],
-    providers: [AppService, BotService],
+    controllers: [AppController],
+    providers: [AppService],
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
