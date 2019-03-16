@@ -10,9 +10,9 @@ import { UserModule } from './user/user.module';
 import { LocationModule } from './location/location.module';
 import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { LockerModule } from './locker/locker.module';
-import { BotController } from './bot/bot.controller';
-import { BotService } from './bot/bot.service';
+import { BotModule } from './bot/bot.module';
 import * as helmet from 'helmet';
+
 
 @Module({
     imports: [
@@ -24,9 +24,10 @@ import * as helmet from 'helmet';
         UserModule,
         LocationModule,
         LockerModule,
+        BotModule,
     ],
-    controllers: [AppController, BotController],
-    providers: [AppService, BotService],
+    controllers: [AppController],
+    providers: [AppService],
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
