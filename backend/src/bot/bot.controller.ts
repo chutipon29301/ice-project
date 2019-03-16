@@ -13,8 +13,8 @@ export class BotController {
     return await this.service.lineBotReplyMsg(req);
   }
   @Get('getPhoto/:fileName')
-  async list(@Res() res, @Param('fileName') fileName: string) {
-      return await res.sendFile(path.join(__dirname, './', fileName));
+  async botSendPhoto(@Res() res, @Param('fileName') fileName: string) {
+      return await this.service.botSendPhoto(res, fileName);
   }
 
 
