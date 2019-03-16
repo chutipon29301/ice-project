@@ -43,7 +43,9 @@
     "sinon": "^7.2.4",
     "typeorm": "^0.2.13",
     "typescript": "^3.0.1",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2"
   },
   "devDependencies": {
     "@nestjs/testing": "^5.1.0",
