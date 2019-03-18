@@ -13,6 +13,8 @@ import { LockerModule } from './locker/locker.module';
 import { LockerInstanceModule } from './locker-instance/locker-instance.module';
 import { LockerUsageModule } from './locker-usage/locker-usage.module';
 import { GroupModule } from './group/group.module';
+import { BotController } from './bot/bot.controller';
+import { BotService } from './bot/bot.service';
 import * as helmet from 'helmet';
 import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.middleware';
 
@@ -30,8 +32,8 @@ import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.midd
         LockerUsageModule,
         GroupModule,
     ],
-    controllers: [AppController],
-    providers: [AppService],
+    controllers: [AppController, BotController],
+    providers: [AppService, BotService],
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
