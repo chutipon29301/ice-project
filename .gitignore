@@ -24,3 +24,6 @@ nginx-data/*
 .vscode/c_cpp_properties.json
 .vscode/arduino.json
 backend-old/*
+
+backend/src/bot/helpMe.jpeg
+backend/src/bot/manual.jpeg
