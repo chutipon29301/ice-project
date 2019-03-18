@@ -53,20 +53,19 @@ jobs:
       - run:
           name: Setup Environment Variables
           command: |
+            echo 'export GIT_USER="$GIT_USERNAME"' >> $BASH_ENV
             echo 'export USERNAME="$DOCKER_HUB_USERNAME"' >> $BASH_ENV
             echo 'export ENCRYPTED_KEY="$GCP_ENCRYPTED_KEY"' >> $BASH_ENV
             echo 'export PROJECT_ID="$GCP_PROJECT_ID"' >> $BASH_ENV
             echo 'export ZONE="$GCP_ZONE"' >> $BASH_ENV
       - run:
-          name: Clone or Pull from Git to VM
+          name: Clone from Git to VM
           command: |
             echo ${ENCRYPTED_KEY} > encrypted-key.txt
             base64 -i encrypted-key.txt -d > ${HOME}/gcp-key.json
             gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
             gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
-            "test -e ice-project && git clone https://github.com/chutipon29301/ice-project.git -b develop || \
-            (cd ice-project && \
-            git pull https://github.com/chutipon29301/ice-project.git develop)"
+            "sudo rm -rf ice-project && git clone --quiet https://github.com/${GIT_USER}/ice-project.git -b develop"
       - run:
           name: Create .env
           command: |
@@ -87,15 +86,20 @@ jobs:
             LETSENCRYPT_EMAIL=ichannel.jakpat@gmail.com  && \
             eval "echo \"$(< .env.template.prod)\"" > .env'
       - run:
+          name: Pull from Docker Hub
+          command: |
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
+            "cd ice-project && \
+            docker pull ${USERNAME}/iceprojectbackend:latest && \
+            docker image prune -f"
+      - run:
           name: Deploy Backend
           command: |
             gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
             gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
-            'cd ice-project && \
-            docker pull ${USERNAME}/iceprojectbackend:latest && \
-            docker image prune -f && \
-            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD:/$PWD" -w="/$PWD" \
-            docker/compose:1.23.2 -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate -d'
+            "cd ice-project && \
+            bash ./run-docker-compose-up.sh"
 workflows:
   version: 2
   build-and-deploy:
