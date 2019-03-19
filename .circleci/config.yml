@@ -1,78 +1,111 @@
 version: 2
 jobs:
-  test_backend:
+  test:
     docker:
       - image: circleci/node:10
     steps:
       - checkout
       - restore_cache:
-          key:
+          keys:
             - backend-dependencies-v1.0-{{ .Branch }}-{{ checksum "backend/package.json" }
             # fallback to using the latest cache if no exact match is found
-            - backend-dependencies-v1.0-{{ .Branch }
+            - backend-dependencies-v1.0-{{ .Branch }}
             - backend-dependencies-v1.0
       - run:
           name: Install dependencies
-          command: cd backend && yarn
+          command: |
+            cd backend
+            yarn
 
       - run:
           name: Run test
-          command: cd backend && yarn test
+          command: |
+            cd backend
+            yarn test
 
       - save_cache:
           paths:
             - backend/node_modules
           key: backend-dependencies-v1.0-{{ .Branch }}-{{ checksum "backend/package.json" }}
-  test_backend_e2e:
-    docker:
-      - image: circleci/node:10
-        environment:
-          MYSQL_SERVER: db
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
-          MYSQL_DATABASE: db
-      - image: mysql:5.7
-        environment:
-          MYSQL_DATABASE: db
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
-          MYSQL_ROOT_PASSWORD: password
-        name: db
-    steps:
-      - checkout
-      - restore_cache:
-          key:
-            - backend-dependencies-v1.0-{{ .Branch }}-{{ checksum "backend/package.json" }
-            # fallback to using the latest cache if no exact match is found
-            - backend-dependencies-v1.0-{{ .Branch }
-            - backend-dependencies-v1.0
-      - run:
-          name: Install dependencies
-          command: cd backend && yarn
-
-      - run:
-          name: Run e2e test
-          command: cd backend && yarn test:e2e
-
-      - save_cache:
-          paths:
-            - backend/node_modules
-          key: backend-dependencies-v1.0-{{ .Branch }}-{{ checksum "backend/package.json" }
   build:
     machine: true
     steps:
       - checkout
       - run:
-          name: TODO
-          command: echo 'Build backend'
+          name: Build backend
+          command: |
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --force-rm
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo 'export USERNAME="$DOCKER_HUB_USERNAME"' >> $BASH_ENV
+            echo 'export PASSWORD="$DOCKER_HUB_PASSWORD"' >> $BASH_ENV
+      - run:
+          name: Push to Docker Hub
+          command: |
+            echo ${PASSWORD} | docker login -u ${USERNAME} --password-stdin
+            docker tag iceprojectbackend:latest ${USERNAME}/iceprojectbackend:latest
+            docker push ${USERNAME}/iceprojectbackend:latest
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo 'export GIT_USERNAME="$CIRCLE_PROJECT_USERNAME"' >> $BASH_ENV
+            echo 'export GIT_BRANCH="$CIRCLE_BRANCH"' >> $BASH_ENV
+            echo 'export USERNAME="$DOCKER_HUB_USERNAME"' >> $BASH_ENV
+            echo 'export ENCRYPTED_KEY="$GCP_ENCRYPTED_KEY"' >> $BASH_ENV
+            echo 'export PROJECT_ID="$GCP_PROJECT_ID"' >> $BASH_ENV
+            echo 'export ZONE="$GCP_ZONE"' >> $BASH_ENV
+      - run:
+          name: Clone from Git to VM
+          command: |
+            echo ${ENCRYPTED_KEY} > encrypted-key.txt
+            base64 -i encrypted-key.txt -d > ${HOME}/gcp-key.json
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
+            "sudo rm -rf ice-project && git clone --quiet https://github.com/${GIT_USERNAME}/ice-project.git -b ${GIT_BRANCH}"
+      - run:
+          name: Create .env
+          command: |
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
+            'cd ice-project && \
+            MYSQL_DATABASE=db && \
+            MYSQL_USER=user && \
+            MYSQL_PASSWORD=password && \
+            MYSQL_ROOT_PASSWORD=password && \
+            SERVER_URL=http://localhost && \
+            CHANNEL_ID=0000000000 && \
+            CHANNEL_SECRET=xxxxxxxxxxxxxxxxx && \
+            IOT_DEVICE_SECRET=secret && \
+            NGINX_FILES_PATH=./nginx-data && \
+            NGINX_VIRTUAL_HOST=ice-project.com && \
+            BACKEND_VIRTUAL_HOST=api.ice-project.com && \
+            LETSENCRYPT_EMAIL=ichannel.jakpat@gmail.com  && \
+            eval "echo \"$(< .env.template.prod)\"" > .env'
+      - run:
+          name: Pull from Docker Hub
+          command: |
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
+            "cd ice-project && \
+            docker pull ${USERNAME}/iceprojectbackend:latest && \
+            docker image prune -f"
+      - run:
+          name: Deploy Backend
+          command: |
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
+            "cd ice-project && \
+            bash ./run-docker-compose-up.sh"
 workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - test_backend
-      - test_backend_e2e:
+      - build
+      - deploy:
           requires:
-            - test_backend
-      - build:
-          requires:
-            - test_backend_e2e
+            - build
