@@ -2,7 +2,9 @@ import { IsString, IsNumber, IsEnum } from 'class-validator';
 import { AuthenticationType } from '../../entities/user.entity';
 
 export class CreateAdminEntityDto {
-    @IsString()
+    @IsNumber()
+    @ToInt()
+    @ToInt()
     nationalID: string;
 
     @IsString()

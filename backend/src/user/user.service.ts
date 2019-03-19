@@ -15,7 +15,7 @@ export class UserService {
         @Inject(UserRepositoryToken)
         private readonly userRepository: Repository<User>,
         private readonly lineAuthService: LineAuthService,
-    ) {}
+    ) { }
 
     async listUser(): Promise<User[]> {
         const users = await this.userRepository.find();
@@ -81,14 +81,5 @@ export class UserService {
             where: { nationalID },
         });
         return user;
-    }
-
-    public async canUserActivateRole(
-        nationalID: string,
-        ...role: Role[]
-    ): Promise<boolean> {
-        const user = await this.getUserWithNationalID(nationalID);
-        const index = role.indexOf(user.role);
-        return index > -1;
     }
 }

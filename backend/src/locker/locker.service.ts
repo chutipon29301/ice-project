@@ -7,7 +7,6 @@ import {
 import { LockerRepositoryToken } from '../constant';
 import { Repository } from 'typeorm';
 import { Locker } from '../entities/locker.entity';
-import { v4 } from 'uuid';
 import { ConfigService } from '../config/config.service';
 
 @Injectable()
