@@ -31,7 +31,7 @@ describe('UserService', () => {
     });
 
     it('should successfully create user', async () => {
-        const fakeNationalID = 1100400400339;
+        const fakeNationalID = '1100400400339';
         const fakeFirstName = 'cherprang';
         const fakeLastName = 'areekul';
         const fakePhone = '0094332223';
@@ -65,7 +65,7 @@ describe('UserService', () => {
     });
 
     it('should throw error when create user', async () => {
-        const fakeNationalID = 1100400400339;
+        const fakeNationalID = '1100400400339';
         const fakeFirstName = 'cherprang';
         const fakeLastName = 'areekul';
         const fakePhone = '0094332223';
@@ -99,7 +99,7 @@ describe('UserService', () => {
     });
 
     it('should be created', async () => {
-        const fakeNationalID = 1100400400339;
+        const fakeNationalID = '1100400400339';
         const fakeFirstName = 'cherprang';
         const fakeLastName = 'areekul';
         const fakePhone = '0094332223';

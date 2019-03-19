@@ -16,7 +16,7 @@ export class JwtAuthService {
         const user = await this.userService.getUserWithLineID(lineID);
         if (user) {
             const payload: JwtToken = {
-                nationalID: user.nationalID,
+                userID: user.nationalID,
             };
             const expireDate = moment()
                 .add('7d')

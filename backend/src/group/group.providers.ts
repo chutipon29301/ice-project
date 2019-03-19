@@ -11,4 +11,4 @@ export const groupProviders: Provider[] = [
         inject: [DbConnectionToken],
     },
 ];
-];
+

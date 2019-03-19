@@ -26,6 +26,7 @@
     "@nestjs/core": "^5.4.0",
     "@nestjs/elasticsearch": "^0.2.1",
     "@nestjs/jwt": "^0.3.0",
+    "@nestjs/swagger": "^3.0.1",
     "class-sanitizer": "^0.0.5",
     "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",
@@ -36,14 +37,14 @@
     "mysql": "^2.16.0",
     "qs": "^6.6.0",
     "reflect-metadata": "^0.1.12",
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2",
     "rimraf": "^2.6.2",
     "rxjs": "^6.2.2",
     "sinon": "^7.2.4",
     "typeorm": "^0.2.13",
     "typescript": "^3.0.1",
-    "uuid": "^3.3.2",
-    "request": "^2.87.0",
-    "request-promise": "^4.2.2"
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@nestjs/testing": "^5.1.0",
