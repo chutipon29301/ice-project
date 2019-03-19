@@ -53,7 +53,8 @@ jobs:
       - run:
           name: Setup Environment Variables
           command: |
-            echo 'export GIT_USER="$GIT_USERNAME"' >> $BASH_ENV
+            echo 'export GIT_USERNAME="$CIRCLE_PROJECT_USERNAME"' >> $BASH_ENV
+            echo 'export GIT_BRANCH="$CIRCLE_BRANCH"' >> $BASH_ENV
             echo 'export USERNAME="$DOCKER_HUB_USERNAME"' >> $BASH_ENV
             echo 'export ENCRYPTED_KEY="$GCP_ENCRYPTED_KEY"' >> $BASH_ENV
             echo 'export PROJECT_ID="$GCP_PROJECT_ID"' >> $BASH_ENV
@@ -65,7 +66,7 @@ jobs:
             base64 -i encrypted-key.txt -d > ${HOME}/gcp-key.json
             gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
             gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
-            "sudo rm -rf ice-project && git clone --quiet https://github.com/${GIT_USER}/ice-project.git -b develop"
+            "sudo rm -rf ice-project && git clone --quiet https://github.com/${GIT_USERNAME}/ice-project.git -b ${GIT_BRANCH}"
       - run:
           name: Create .env
           command: |
