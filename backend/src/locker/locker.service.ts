@@ -46,5 +46,4 @@ export class LockerService {
     public async delete(id: number) {
         await this.lockerRepository.delete(id);
     }
-
 }

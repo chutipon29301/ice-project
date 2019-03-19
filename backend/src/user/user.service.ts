@@ -23,7 +23,7 @@ export class UserService {
     }
 
     async create(
-        nationalID: number,
+        nationalID: string,
         firstName: string,
         lastName: string,
         phone: string,
@@ -45,7 +45,7 @@ export class UserService {
     }
 
     async createAdmin(
-        nationalID: number,
+        nationalID: string,
         firstName: string,
         lastName: string,
         phone: string,
@@ -74,5 +74,21 @@ export class UserService {
             },
         });
         return user;
+    }
+
+    async getUserWithNationalID(nationalID: string): Promise<User> {
+        const user = await this.userRepository.findOne({
+            where: { nationalID },
+        });
+        return user;
+    }
+
+    public async canUserActivateRole(
+        nationalID: string,
+        ...role: Role[]
+    ): Promise<boolean> {
+        const user = await this.getUserWithNationalID(nationalID);
+        const index = role.indexOf(user.role);
+        return index > -1;
     }
 }

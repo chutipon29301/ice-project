@@ -6,11 +6,11 @@ import { LockerService } from 'src/locker/locker.service';
 
 @Injectable()
 export class LockerInstanceService {
-
     constructor(
-        @Inject(LockerInstanceRepositoryToken) private readonly lockerInstanceRepository: Repository<LockerInstance>,
+        @Inject(LockerInstanceRepositoryToken)
+        private readonly lockerInstanceRepository: Repository<LockerInstance>,
         private readonly lockerService: LockerService,
-    ) { }
+    ) {}
 
     public async create(lockerID: number): Promise<LockerInstance> {
         const locker = await this.lockerService.findById(lockerID);
@@ -24,7 +24,9 @@ export class LockerInstanceService {
     }
 
     public async getAllInstance(lockerID: number): Promise<LockerInstance[]> {
-        const lockers = await this.lockerInstanceRepository.find({ where: { lockerId: lockerID } });
+        const lockers = await this.lockerInstanceRepository.find({
+            where: { lockerId: lockerID },
+        });
         return lockers;
     }
 }

@@ -5,8 +5,8 @@ import { DatabaseModule } from 'src/database.module';
 import { lockerUsageProviders } from './locker-usage.providers';
 
 @Module({
-  imports: [DatabaseModule],
-  providers: [...lockerUsageProviders, LockerUsageService],
-  controllers: [LockerUsageController]
+    imports: [DatabaseModule],
+    providers: [...lockerUsageProviders, LockerUsageService],
+    controllers: [LockerUsageController],
 })
-export class LockerUsageModule { }
+export class LockerUsageModule {}

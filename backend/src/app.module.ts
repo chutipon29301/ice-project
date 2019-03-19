@@ -12,7 +12,11 @@ import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { LockerModule } from './locker/locker.module';
 import { LockerInstanceModule } from './locker-instance/locker-instance.module';
 import { LockerUsageModule } from './locker-usage/locker-usage.module';
+import { GroupModule } from './group/group.module';
+import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.middleware';
+import { BotModule } from './bot/bot.module';
 import * as helmet from 'helmet';
+
 
 @Module({
     imports: [
@@ -26,12 +30,17 @@ import * as helmet from 'helmet';
         LockerModule,
         LockerInstanceModule,
         LockerUsageModule,
+        GroupModule,
+        BotModule,
+        BotModule,
     ],
     controllers: [AppController],
     providers: [AppService],
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(helmet(), SanitizerMiddleware).forRoutes('*');
+        consumer
+            .apply(helmet(), SanitizerMiddleware, AuthHeaderParserMiddleware)
+            .forRoutes('*');
     }
 }

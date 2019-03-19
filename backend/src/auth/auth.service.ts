@@ -4,7 +4,7 @@ import { State } from '../line-auth/dto/state.dto';
 import { CryptoService } from '../crypto/crypto.service';
 import { ConfigService } from '../config/config.service';
 import { LineAccessToken } from '../line-auth/dto/line-access-token.dto';
-import { stringify } from 'querystring';
+import { stringify } from 'qs';
 import { LineAccessTokenRequestResponse } from 'src/line-auth/dto/line-access-token-request-response.dto';
 import { JwtTokenInfo } from '../jwt-auth/dto/jwt-encrypt-token.dto';
 import { JwtAuthService } from '../jwt-auth/jwt-auth.service';
@@ -22,11 +22,11 @@ export class AuthService {
         private readonly httpService: HttpService,
     ) {}
 
-    getLineAuthenticationPageURL(): string {
+    public getLineAuthenticationPageURL(): string {
         return this.lineAuthService.lineAuthPageURL(this.lineCallbackURL);
     }
 
-    async validateState(encryptedState: string): Promise<boolean> {
+    public async validateState(encryptedState: string): Promise<boolean> {
         const state = State.from(
             this.cryptoService.AES.decrypt(
                 decodeURIComponent(encryptedState),
@@ -42,7 +42,7 @@ export class AuthService {
         }
     }
 
-    async getAccessToken(code: string): Promise<LineAccessToken> {
+    public async getAccessToken(code: string): Promise<LineAccessToken> {
         const body = {
             grant_type: 'authorization_code',
             code,
@@ -62,17 +62,17 @@ export class AuthService {
                 })
                 .toPromise();
             return {
-                accessToken: result.data.access_token,
-                refreshToken: result.data.refresh_token,
                 expireIn: result.data.expires_in,
                 idToken: result.data.id_token,
-                state: 'Hello World!',
             };
         } catch (error) {
-            throw new UnauthorizedException(error);
+            throw new UnauthorizedException(error.response.data);
         }
     }
-    async getJwtTokenFromLineToken(lineToken: string): Promise<JwtTokenInfo> {
+
+    public async getJwtTokenFromLineToken(
+        lineToken: string,
+    ): Promise<JwtTokenInfo> {
         const decodedLineToken = this.lineAuthService.decode(lineToken);
         return this.jwtAuthService.generateTokenForLineID(decodedLineToken.sub);
     }

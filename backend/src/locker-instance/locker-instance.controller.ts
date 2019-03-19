@@ -4,7 +4,9 @@ import { LockerInstanceService } from './locker-instance.service';
 
 @Controller('locker-instance')
 export class LockerInstanceController {
-    constructor(private readonly lockerInstanceService: LockerInstanceService) { }
+    constructor(
+        private readonly lockerInstanceService: LockerInstanceService,
+    ) {}
 
     @Post('createInstance')
     async createInstance(@Body() body: LockerInstanceDto) {

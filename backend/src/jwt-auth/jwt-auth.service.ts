@@ -16,13 +16,13 @@ export class JwtAuthService {
         const user = await this.userService.getUserWithLineID(lineID);
         if (user) {
             const payload: JwtToken = {
-                userID: user.nationalID,
+                nationalID: user.nationalID,
             };
             const expireDate = moment()
                 .add('7d')
                 .toDate();
             const token = this.jwtService.sign(payload, {
-                expiresIn: expireDate.toISOString(),
+                expiresIn: '7d',
             });
             return {
                 expireDate,
