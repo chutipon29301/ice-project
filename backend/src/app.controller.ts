@@ -1,10 +1,14 @@
 import { Controller, Get, Body, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ToDate } from 'class-sanitizer';
+import { ToDateFromTimestamp } from './sanitizer';
 
 class PongSanitizedDTO {
     @ToDate()
     date: Date;
+
+    @ToDateFromTimestamp()
+    dateFromTimestamp: Date;
 }
 
 // tslint:disable-next-line:max-classes-per-file
