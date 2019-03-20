@@ -82,4 +82,8 @@ export class UserService {
         });
         return user;
     }
+    async canUserActivateRole(nationalID: string, ...roles: Role[]): Promise<boolean> {
+        const user = await this.getUserWithNationalID(nationalID);
+        return (roles.indexOf(user.role) !== -1);
+    }
 }
