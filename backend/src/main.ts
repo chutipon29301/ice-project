@@ -1,12 +1,13 @@
+import { SanitizationPipe } from './pipe/sanitization.pipe';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
-
     const app = await NestFactory.create(AppModule);
     app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(new SanitizationPipe());
     const options = new DocumentBuilder()
         .setTitle('Locker swarm example')
         .setDescription('The locker swarm API description')
