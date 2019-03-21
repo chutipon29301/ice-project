@@ -38,7 +38,6 @@
     "qs": "^6.6.0",
     "reflect-metadata": "^0.1.12",
     "request": "^2.87.0",
-    "request-promise": "^4.2.2",
     "rimraf": "^2.6.2",
     "rxjs": "^6.2.2",
     "sinon": "^7.2.4",

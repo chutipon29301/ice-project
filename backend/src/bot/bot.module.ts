@@ -1,10 +1,12 @@
-import { Module } from '@nestjs/common';
+import { Module, HttpModule } from '@nestjs/common';
 import { BotService } from './bot.service';
 import { BotController } from './bot.controller';
+import { ConfigModule } from '../config/config.module';
+import { LineAuthModule } from 'src/line-auth/line-auth.module';
 
 @Module({
-  controllers: [BotController],
-  providers: [BotService],
+    imports: [ConfigModule, HttpModule, LineAuthModule],
+    providers: [BotService],
+    controllers: [BotController],
 })
 export class BotModule {}
-

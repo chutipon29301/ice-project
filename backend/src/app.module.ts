@@ -17,7 +17,6 @@ import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.midd
 import { BotModule } from './bot/bot.module';
 import * as helmet from 'helmet';
 
-
 @Module({
     imports: [
         ConfigModule,
@@ -31,7 +30,6 @@ import * as helmet from 'helmet';
         LockerInstanceModule,
         LockerUsageModule,
         GroupModule,
-        BotModule,
         BotModule,
     ],
     controllers: [AppController],
