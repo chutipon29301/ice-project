@@ -12,7 +12,9 @@ services:
       MYSQL_DATABASE:
       CHANNEL_ID:
       CHANNEL_SECRET:
+      CHANNEL_ACCESS_TOKEN:
       IOT_DEVICE_SECRET:
+      LINE_MESSAGING_API_ENDPOINT:
       ELASTICSEARCH_URL: http://elasticsearch:9200/
     depends_on:
       - db
@@ -34,16 +36,16 @@ services:
     image: docker.elastic.co/kibana/kibana-oss:6.6.0
     container_name: ice-project-kibana
     restart: always
-    depends_on: 
+    depends_on:
       - elasticsearch
   metricbeat:
     image: docker.elastic.co/beats/metricbeat:6.6.0
     container_name: ice-project-metricbeat
     # restart: always
-    environment: 
+    environment:
       MYSQL_USER:
       MYSQL_PASSWORD:
-    depends_on: 
+    depends_on:
       - elasticsearch
       - kibana
     # command: ['setup','-e']

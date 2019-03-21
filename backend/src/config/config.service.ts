@@ -73,4 +73,26 @@ export class ConfigService {
             throw Error(`Unable to read "IOT_DEVICE_SECRET" environment`);
         }
     }
+
+    get lineMessagingApiEndpoint(): string {
+        const endpoint = process.env.LINE_MESSAGING_API_ENDPOINT;
+        if (endpoint) {
+            return endpoint;
+        } else {
+            throw Error(
+                `Unable to read "LINE_MESSAGING_API_ENDPOINT" environment`,
+            );
+        }
+    }
+    get channelAccessToken(): string {
+      const token = process.env.CHANNEL_ACCESS_TOKEN;
+      if (token) {
+        return token;
+      } else {
+        throw Error(
+          `Unable to read "CHANNEL_ACCESS_TOKEN" environment`,
+        );
+
+      }
+    }
 }
