@@ -1,21 +1,22 @@
-import { Controller, Get, Res, Param, Post, Body, Req } from '@nestjs/common';
-import { NestApplication } from '@nestjs/core';
+import { Controller, Post, Req, Body, Get, Res, Param } from '@nestjs/common';
+import { Request, Response } from 'express';
+import { LineUserEventDto } from './dto/line-user-event.dto';
 import { BotService } from './bot.service';
-
-const path = require('path');
+import { join } from 'path';
 
 @Controller('bot')
 export class BotController {
-  constructor (private readonly service:BotService){}
+    constructor(private readonly botService: BotService) {}
 
-  @Post('replyline')
-  async replyMsg(@Req()req){
-    return await this.service.lineBotReplyMsg(req);
-  }
-  @Get('getPhoto/:fileName')
-  async botSendPhoto(@Res() res, @Param('fileName') fileName: string) {
-      return await this.service.botSendPhoto(res, fileName);
-  }
+    @Post('replyline')
+    async replyMsg(@Body() body: LineUserEventDto) {
+        console.log(body);
+        this.botService.lineBotReplyMsg(body);
 
+    }
 
+    @Get('replyImage/:fName')
+    async getFile(@Res() response: Response, @Param('fName')fName: string) {
+        await response.sendFile(join(__dirname, './', fName));
+    }
 }
