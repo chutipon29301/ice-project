@@ -15,7 +15,7 @@ export class UserService {
         @Inject(UserRepositoryToken)
         private readonly userRepository: Repository<User>,
         private readonly lineAuthService: LineAuthService,
-    ) { }
+    ) {}
 
     async listUser(): Promise<User[]> {
         const users = await this.userRepository.find();
@@ -82,8 +82,15 @@ export class UserService {
         });
         return user;
     }
-    async canUserActivateRole(nationalID: string, ...roles: Role[]): Promise<boolean> {
+    async canUserActivateRole(
+        nationalID: string,
+        ...roles: Role[]
+    ): Promise<boolean> {
         const user = await this.getUserWithNationalID(nationalID);
-        return (roles.indexOf(user.role) !== -1);
+        if (user) {
+            return roles.indexOf(user.role) !== -1;
+        } else {
+            return false;
+        }
     }
 }

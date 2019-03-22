@@ -1,21 +1,23 @@
-import { Module, MiddlewareConsumer } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import * as helmet from 'helmet';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from './config/config.module';
-import { LineAuthModule } from './line-auth/line-auth.module';
-import { CryptoModule } from './crypto/crypto.module';
 import { AuthModule } from './auth/auth.module';
+import { BotModule } from './bot/bot.module';
+import { ConfigModule } from './config/config.module';
+import { CryptoModule } from './crypto/crypto.module';
+import { GroupModule } from './group/group.module';
+import { RoleGuard } from './guard/role.guard';
 import { JwtAuthModule } from './jwt-auth/jwt-auth.module';
-import { UserModule } from './user/user.module';
+import { LineAuthModule } from './line-auth/line-auth.module';
 import { LocationModule } from './location/location.module';
-import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
-import { LockerModule } from './locker/locker.module';
 import { LockerInstanceModule } from './locker-instance/locker-instance.module';
 import { LockerUsageModule } from './locker-usage/locker-usage.module';
-import { GroupModule } from './group/group.module';
+import { LockerModule } from './locker/locker.module';
 import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.middleware';
-import { BotModule } from './bot/bot.module';
-import * as helmet from 'helmet';
+import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
+import { UserModule } from './user/user.module';
 
 
 @Module({
@@ -34,7 +36,13 @@ import * as helmet from 'helmet';
         BotModule,
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [
+        AppService,
+        {
+            provide: APP_GUARD,
+            useClass: RoleGuard,
+        },
+    ],
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {

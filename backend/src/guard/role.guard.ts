@@ -5,9 +5,6 @@ import { Observable } from 'rxjs';
 import { JwtToken } from 'src/jwt-auth/dto/jwt-token.dto';
 import { Role } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
-// import { Role } from '../models/users.model';
-// import { RoleService } from '../role/role.service';
-// import { Token } from '../token/dto/token.dto';
 
 declare global {
     namespace Express {

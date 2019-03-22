@@ -1,15 +1,13 @@
-import { IsString, IsNumber, IsEnum } from 'class-validator';
-import { AuthenticationType } from '../../entities/user.entity';
-import { ToInt } from 'class-sanitizer';
 import { ApiModelProperty } from '@nestjs/swagger';
+import { IsEnum, IsString } from 'class-validator';
+import { AuthenticationType } from '../../entities/user.entity';
 
 export class CreateAdminEntityDto {
     @ApiModelProperty({
         description: 'National id of admin',
         required: true,
     })
-    @IsNumber()
-    @ToInt()
+    @IsString()
     nationalID: string;
 
     @ApiModelProperty({
