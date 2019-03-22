@@ -1,21 +1,20 @@
-import {
-    Injectable,
-    Inject,
-    UnauthorizedException,
-    ConflictException,
-} from '@nestjs/common';
-import { LockerRepositoryToken } from '../constant';
+import { ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { LocationService } from 'src/location/location.service';
 import { Repository } from 'typeorm';
-import { Locker } from '../entities/locker.entity';
 import { ConfigService } from '../config/config.service';
+import { LockerRepositoryToken } from '../constant';
+import { Locker, LockerAvailability } from '../entities/locker.entity';
+import { RegisterLockerDto } from './dto/register-locker.dto';
 
 @Injectable()
 export class LockerService {
+
     constructor(
         @Inject(LockerRepositoryToken)
         private readonly lockerRepository: Repository<Locker>,
         private readonly configService: ConfigService,
-    ) {}
+        private readonly locationService: LocationService,
+    ) { }
 
     public async list(): Promise<Locker[]> {
         return await this.lockerRepository.find();
@@ -26,9 +25,9 @@ export class LockerService {
     }
 
     public async create(secret: string): Promise<Locker> {
-        // if (this.configService.iotDeviceSecret !== secret) {
-        //     throw new UnauthorizedException('Wrong secret');
-        // }
+        if (this.configService.iotDeviceSecret !== secret) {
+            throw new UnauthorizedException('Wrong iot secret');
+        }
         try {
             const locker = new Locker();
             await this.lockerRepository.save(locker);
@@ -42,7 +41,31 @@ export class LockerService {
         await this.lockerRepository.update(id, value);
     }
 
+    public async registerLocker(id: number, value: RegisterLockerDto) {
+        const locker = await this.findLockerByID(id);
+        const location = await this.locationService.findLocationByID(value.locationID);
+        if (locker.availability === LockerAvailability.UNREGISTERED && location) {
+            locker.availability = LockerAvailability.AVAILABLE;
+            locker.name = value.name;
+            locker.number = value.number;
+            locker.location = location;
+            await this.lockerRepository.save(locker);
+        } else {
+            throw new NotFoundException();
+        }
+    }
+
     public async delete(id: number) {
         await this.lockerRepository.delete(id);
+    }
+
+    public async findLockerByID(id: number): Promise<Locker> {
+        const locker = await this.lockerRepository.findOne(id);
+        return locker;
+    }
+
+    public async findLockerBySerialNumber(serialNumber: string): Promise<Locker> {
+        const locker = await this.lockerRepository.findOne({ where: { serialNumber } });
+        return locker;
     }
 }

@@ -4,9 +4,10 @@ import { LockerController } from './locker.controller';
 import { LockerService } from './locker.service';
 import { lockerProviders } from './locker.providers';
 import { ConfigModule } from 'src/config/config.module';
+import { LocationModule } from 'src/location/location.module';
 
 @Module({
-    imports: [DatabaseModule, ConfigModule],
+    imports: [DatabaseModule, ConfigModule, LocationModule],
     providers: [...lockerProviders, LockerService],
     controllers: [LockerController],
     exports: [LockerService],
