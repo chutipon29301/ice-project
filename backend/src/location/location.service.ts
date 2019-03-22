@@ -31,4 +31,9 @@ export class LocationService {
     public async delete(id: number) {
         await this.locationRepository.delete(id);
     }
+
+    public async findLocationByID(id: number): Promise<Location> {
+        const location = await this.locationRepository.findOne(id);
+        return location;
+    }
 }
