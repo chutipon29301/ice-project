@@ -16,7 +16,7 @@ export class LineUserEventDto {
 export class LineEventDto {
     @IsString()
     // @ToInt()
-    type: 'message' | 'postback';
+    type: 'message' | 'postback' | 'follow';
 
     @IsString()
     replyToken: string;
