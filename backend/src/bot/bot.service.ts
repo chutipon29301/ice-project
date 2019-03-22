@@ -12,23 +12,28 @@ export class BotService {
     constructor(
         private readonly httpService: HttpService,
         private readonly configService: ConfigService,
-    ) {}
+    ) { }
 
     async lineBotReplyMsg(body: LineUserEventDto) {
         const event = body.events[0];
-
-        if(event.type === 'follow'){
-          return;
+        let msg = '';
+        switch (event.type) {
+            case 'message':
+                msg = event.message.text;
+                break;
+            case 'postback':
+                msg = event.postback.data;
+                break;
         }
         let msg = "";
-          switch(event.type){
+        switch (event.type) {
             case 'message':
-              msg = event.message.text;
-              break;
+                msg = event.message.text;
+                break;
             case 'postback':
-              msg = event.postback.data;
-              break;
-          }
+                msg = event.postback.data;
+                break;
+        }
 
         switch (msg) {
             case 'help me':
@@ -61,7 +66,9 @@ export class BotService {
                     {
                         headers: {
                             'Content-Type': 'application/json',
-                            Authorization: `Bearer ${this.configService.channelAccessToken}`,
+                            Authorization: `Bearer ${
+                                this.configService.channelAccessToken
+                                }`,
                         },
                     },
                 )

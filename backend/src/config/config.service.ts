@@ -85,14 +85,11 @@ export class ConfigService {
         }
     }
     get channelAccessToken(): string {
-      const token = process.env.CHANNEL_ACCESS_TOKEN;
-      if (token) {
-        return token;
-      } else {
-        throw Error(
-          `Unable to read "CHANNEL_ACCESS_TOKEN" environment`,
-        );
-
-      }
+        const token = process.env.CHANNEL_ACCESS_TOKEN;
+        if (token) {
+            return token;
+        } else {
+            throw Error(`Unable to read "CHANNEL_ACCESS_TOKEN" environment`);
+        }
     }
 }

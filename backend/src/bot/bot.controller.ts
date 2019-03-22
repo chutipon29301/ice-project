@@ -13,11 +13,10 @@ export class BotController {
     @Post('replyline')
     async replyMsg(@Body() body: LineUserEventDto) {
         this.botService.lineBotReplyMsg(body);
-
     }
 
     @Get('replyImage/:fName')
-    async getFile(@Res() response: Response, @Param('fName')fName: string) {
+    async getFile(@Res() response: Response, @Param('fName') fName: string) {
         await response.sendFile(join(__dirname, './', fName));
     }
 }
