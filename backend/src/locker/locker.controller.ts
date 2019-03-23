@@ -20,12 +20,17 @@ import { Role } from 'src/entities/user.entity';
 import { ListLockerResponseDto } from './dto/list-locker-response.dto';
 import { LockerCurrentStatusResponseDto } from './dto/locker-current-status-response.dto';
 import { LockerLockDto } from './dto/locker-lock.dto';
+import { ApiOperation } from '@nestjs/swagger';
 
 @ApiUseTags('Locker')
 @Controller('locker')
 export class LockerController {
     constructor(private readonly lockerService: LockerService) { }
-
+    
+    @ApiOperation({
+        title:
+            'List all locker',
+    })
     @Roles(Role.SUPERUSER, Role.ADMIN, Role.USER)
     @Get()
     async list(): Promise<ListLockerResponseDto> {
@@ -33,11 +38,19 @@ export class LockerController {
         return { lockers };
     }
 
+    @ApiOperation({
+        title:
+            'Get locker current status',
+    })
     @Get('status')
     async getCurrentStatus(@Query('serialNumber') serialNumber: string): Promise<LockerCurrentStatusResponseDto> {
         return await this.lockerService.getLockerCurrentStatus(serialNumber);
     }
 
+    @ApiOperation({
+        title:
+            'Adding locker to system',
+    })
     @Roles(Role.SUPERUSER, Role.ADMIN)
     @Post()
     async addLocker(
@@ -47,6 +60,10 @@ export class LockerController {
         return { id: locker.id, serial: locker.serialNumber };
     }
 
+    @ApiOperation({
+        title:
+            'To register locker by using locker id (Make available)',
+    })
     @Roles(Role.SUPERUSER, Role.ADMIN)
     @Post('register/:id')
     async registerLocker(
@@ -69,6 +86,10 @@ export class LockerController {
         await this.lockerService.delete(id);
     }
 
+    @ApiOperation({
+        title:
+            'To lock locker',
+    })
     @Post('lock')
     async lock(@Body() body: LockerLockDto): Promise<LockerCurrentStatusResponseDto> {
         return await this.lockerService.lock(body.serialNumber);
