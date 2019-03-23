@@ -1,14 +1,5 @@
-import {
-    Entity,
-    Column,
-    ManyToOne,
-    JoinColumn,
-    ManyToMany,
-    JoinTable,
-    PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, OneToMany } from 'typeorm';
 import { LockerInstance } from './locker-instance.entity';
-import { Locker } from './locker.entity';
 import { User } from './user.entity';
 
 export enum ActionType {
@@ -17,6 +8,12 @@ export enum ActionType {
 }
 @Entity()
 export class LockerUsage {
+
+    constructor(actionType: ActionType, lockerInstance: LockerInstance) {
+        this.actionType = actionType;
+        this.lockerInstance = lockerInstance;
+    }
+
     @Column({
         type: 'enum',
         enum: ActionType,
@@ -30,19 +27,18 @@ export class LockerUsage {
     timeStamp: Date;
 
     @PrimaryColumn()
-    lockerId: string;
+    lockerID: string;
 
     @PrimaryColumn()
     instanceDate: Date;
 
     @ManyToOne(type => LockerInstance, { cascade: true })
     @JoinColumn([
-        { name: 'lockerId', referencedColumnName: 'lockerId' },
-        { name: 'instanceDate', referencedColumnName: 'date' },
+        { name: 'lockerID', referencedColumnName: 'lockerID' },
+        { name: 'instanceDate', referencedColumnName: 'startTime' },
     ])
     lockerInstance: LockerInstance;
 
-    @ManyToMany(type => User)
-    @JoinTable()
-    users: User[];
+    @OneToMany(type => User, user => user.nationalID, { nullable: true })
+    users: User;
 }

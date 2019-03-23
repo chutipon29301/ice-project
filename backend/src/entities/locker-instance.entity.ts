@@ -1,32 +1,24 @@
-import {
-    Entity,
-    Column,
-    ManyToOne,
-    JoinColumn,
-    PrimaryColumn,
-    RelationId,
-    ManyToMany,
-    OneToMany,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import { LockerUsage } from './locker-usage.entity';
 import { Locker } from './locker.entity';
 import { User } from './user.entity';
 
 @Entity()
 export class LockerInstance {
-    constructor(date: Date, locker: Locker) {
-        this.date = date;
+    constructor(startTime: Date, locker: Locker, ownerUser: User) {
+        this.startTime = startTime;
         this.locker = locker;
+        this.ownerUser = ownerUser;
+        // if(ownerUser)
+        // this.accessibleUsers = [ownerUser];
     }
 
     @PrimaryColumn()
-    lockerId: string;
+    lockerID: string;
 
     @ManyToOne(type => Locker, { cascade: true })
-    @JoinColumn({ name: 'lockerId', referencedColumnName: 'id' })
+    @JoinColumn({ name: 'lockerID', referencedColumnName: 'id' })
     locker: Locker;
-
-    @PrimaryColumn()
-    date: Date;
 
     @Column({
         type: 'boolean',
@@ -36,6 +28,7 @@ export class LockerInstance {
 
     @Column({
         default: () => 'CURRENT_TIMESTAMP',
+        primary: true,
     })
     startTime: Date;
 
@@ -46,8 +39,12 @@ export class LockerInstance {
     endTime: Date;
 
     @ManyToMany(type => User)
+    @JoinTable()
     accessibleUsers: User[];
 
     @ManyToOne(type => User, user => user.ownerOfLockerInstance)
     ownerUser: User;
+
+    @OneToMany(type => LockerUsage, lockerUsage => lockerUsage.lockerID)
+    lockerUsages: LockerUsage[];
 }
