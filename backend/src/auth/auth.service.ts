@@ -20,7 +20,7 @@ export class AuthService {
         private readonly cryptoService: CryptoService,
         private readonly configService: ConfigService,
         private readonly httpService: HttpService,
-    ) {}
+    ) { }
 
     public getLineAuthenticationPageURL(): string {
         return this.lineAuthService.lineAuthPageURL(this.lineCallbackURL);
@@ -74,6 +74,10 @@ export class AuthService {
         lineToken: string,
     ): Promise<JwtTokenInfo> {
         const decodedLineToken = this.lineAuthService.decode(lineToken);
-        return this.jwtAuthService.generateTokenForLineID(decodedLineToken.sub);
+        if (decodedLineToken) {
+            return this.jwtAuthService.generateTokenForLineID(decodedLineToken.sub);
+        } else {
+            throw new UnauthorizedException('Invalid line token');
+        }
     }
 }
