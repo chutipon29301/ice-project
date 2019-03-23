@@ -1,8 +1,8 @@
 import { ToInt } from 'class-sanitizer';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsDate } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
-export class LockerInstanceDto {
+export class ListLockerInstanceDto {
     @ApiModelProperty({
         description: 'Locker id',
         required: true,
@@ -12,10 +12,10 @@ export class LockerInstanceDto {
     public lockerID: number;
 
     @ApiModelProperty({
-        description: 'National id of user',
+        description: 'Locker start using time',
         required: true,
     })
-    @IsString()
-    public nationalID: string;
+    @IsDate()
+    public startTime: Date;
 
 }
