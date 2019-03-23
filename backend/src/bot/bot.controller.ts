@@ -10,7 +10,6 @@ export class BotController {
 
     @Post('replyline')
     async replyMsg(@Body() body: LineUserEventDto) {
-        console.log(body);
         this.botService.lineBotReplyMsg(body);
 
     }
