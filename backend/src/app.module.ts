@@ -1,6 +1,5 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import * as helmet from 'helmet';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -18,6 +17,8 @@ import { LockerModule } from './locker/locker.module';
 import { AuthHeaderParserMiddleware } from './middleware/auth-header-parser.middleware';
 import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { UserModule } from './user/user.module';
+import { QrModule } from './qr/qr.module';
+import * as helmet from 'helmet';
 
 
 @Module({
@@ -34,6 +35,7 @@ import { UserModule } from './user/user.module';
         LockerUsageModule,
         GroupModule,
         BotModule,
+        QrModule,
     ],
     controllers: [AppController],
     providers: [
