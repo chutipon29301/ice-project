@@ -1,4 +1,13 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, OneToMany } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    JoinTable,
+    ManyToMany,
+    ManyToOne,
+    PrimaryColumn,
+    OneToMany,
+} from 'typeorm';
 import { LockerInstance } from './locker-instance.entity';
 import { User } from './user.entity';
 
@@ -8,7 +17,6 @@ export enum ActionType {
 }
 @Entity()
 export class LockerUsage {
-
     constructor(actionType: ActionType, lockerInstance: LockerInstance) {
         this.actionType = actionType;
         this.lockerInstance = lockerInstance;

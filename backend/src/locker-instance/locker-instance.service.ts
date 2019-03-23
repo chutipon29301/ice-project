@@ -1,4 +1,9 @@
-import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { LockerInstanceRepositoryToken } from '../constant';
 import { LockerInstance } from '../entities/locker-instance.entity';
@@ -12,15 +17,21 @@ export class LockerInstanceService {
     constructor(
         @Inject(LockerInstanceRepositoryToken)
         private readonly lockerInstanceRepository: Repository<LockerInstance>,
-        @Inject(forwardRef(() => LockerService)) private readonly lockerService: LockerService,
+        @Inject(forwardRef(() => LockerService))
+        private readonly lockerService: LockerService,
         private readonly lockerUsageService: LockerUsageService,
         private readonly userService: UserService,
-    ) { }
+    ) {}
 
-    public async create(lockerID: number, nationalID: string): Promise<LockerInstance> {
+    public async create(
+        lockerID: number,
+        nationalID: string,
+    ): Promise<LockerInstance> {
         const locker = await this.lockerService.findActiveLockerByID(lockerID);
         const user = await this.userService.getUserWithNationalID(nationalID);
-        const inUsedLockerInstance = await this.lockerInstanceRepository.findOne({ where: { inUsed: true } });
+        const inUsedLockerInstance = await this.lockerInstanceRepository.findOne(
+            { where: { inUsed: true } },
+        );
         if (locker && user && !inUsedLockerInstance) {
             const lockerInstance = new LockerInstance(new Date(), locker, user);
             this.lockerUsageService.create(ActionType.OPEN, lockerInstance);
@@ -37,13 +48,23 @@ export class LockerInstanceService {
         return lockerInstances;
     }
 
-    public async findInstance(lockerID: number, startTime: Date): Promise<LockerInstance> {
-        const lockerInstance = await this.lockerInstanceRepository.findOne({ where: { lockerID, startTime }, relations: ['lockerUsages'] });
+    public async findInstance(
+        lockerID: number,
+        startTime: Date,
+    ): Promise<LockerInstance> {
+        const lockerInstance = await this.lockerInstanceRepository.findOne({
+            where: { lockerID, startTime },
+            relations: ['lockerUsages'],
+        });
         return lockerInstance;
     }
 
-    public async findInUsedLockerInstanceByLockerID(lockerID: number): Promise<LockerInstance> {
-        const lockerInstance = await this.lockerInstanceRepository.findOne({ where: { lockerID, inUsed: true } });
+    public async findInUsedLockerInstanceByLockerID(
+        lockerID: number,
+    ): Promise<LockerInstance> {
+        const lockerInstance = await this.lockerInstanceRepository.findOne({
+            where: { lockerID, inUsed: true },
+        });
         return lockerInstance;
     }
 

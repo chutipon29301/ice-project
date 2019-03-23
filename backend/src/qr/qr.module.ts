@@ -4,8 +4,8 @@ import { QrController } from './qr.controller';
 import { LockerModule } from '../locker/locker.module';
 
 @Module({
-  imports: [LockerModule],
-  providers: [QrService],
-  controllers: [QrController]
+    imports: [LockerModule],
+    providers: [QrService],
+    controllers: [QrController],
 })
-export class QrModule { }
+export class QrModule {}

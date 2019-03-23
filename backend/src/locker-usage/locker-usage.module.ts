@@ -10,4 +10,4 @@ import { lockerUsageProviders } from './locker-usage.providers';
     controllers: [LockerUsageController],
     exports: [LockerUsageService],
 })
-export class LockerUsageModule { }
+export class LockerUsageModule {}

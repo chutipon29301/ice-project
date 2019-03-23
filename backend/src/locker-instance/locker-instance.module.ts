@@ -8,9 +8,14 @@ import { UserModule } from '../user/user.module';
 import { LockerUsageModule } from '../locker-usage/locker-usage.module';
 
 @Module({
-    imports: [DatabaseModule, forwardRef(()=>LockerModule), UserModule, LockerUsageModule],
+    imports: [
+        DatabaseModule,
+        forwardRef(() => LockerModule),
+        UserModule,
+        LockerUsageModule,
+    ],
     providers: [...lockerInstanceProviders, LockerInstanceService],
     controllers: [LockerInstanceController],
     exports: [LockerInstanceService],
 })
-export class LockerInstanceModule { }
+export class LockerInstanceModule {}

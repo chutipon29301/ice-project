@@ -9,9 +9,15 @@ import { LockerUsageModule } from '../locker-usage/locker-usage.module';
 import { LockerInstanceModule } from '../locker-instance/locker-instance.module';
 
 @Module({
-    imports: [DatabaseModule, ConfigModule, LocationModule, LockerUsageModule, forwardRef(() => LockerInstanceModule)],
+    imports: [
+        DatabaseModule,
+        ConfigModule,
+        LocationModule,
+        LockerUsageModule,
+        forwardRef(() => LockerInstanceModule),
+    ],
     providers: [...lockerProviders, LockerService],
     controllers: [LockerController],
     exports: [LockerService],
 })
-export class LockerModule { }
+export class LockerModule {}

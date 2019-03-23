@@ -1,4 +1,12 @@
-import { ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException, forwardRef, OnModuleInit } from '@nestjs/common';
+import {
+    ConflictException,
+    Inject,
+    Injectable,
+    NotFoundException,
+    UnauthorizedException,
+    forwardRef,
+    OnModuleInit,
+} from '@nestjs/common';
 import { LocationService } from 'src/location/location.service';
 import { Repository } from 'typeorm';
 import { ConfigService } from '../config/config.service';
@@ -19,9 +27,9 @@ export class LockerService {
         private readonly configService: ConfigService,
         private readonly locationService: LocationService,
         private readonly lockerUsageService: LockerUsageService,
-        @Inject(forwardRef(() => LockerInstanceService)) private readonly lockerInstanceService: LockerInstanceService,
-        private readonly moduleRef: ModuleRef,
-    ) { }
+        @Inject(forwardRef(() => LockerInstanceService))
+        private readonly lockerInstanceService: LockerInstanceService,
+    ) {}
 
     public async list(): Promise<Locker[]> {
         return await this.lockerRepository.find();
@@ -32,11 +40,17 @@ export class LockerService {
     }
 
     public async findActiveLockerByID(id: number): Promise<Locker | null> {
-        return await this.lockerRepository.findOne({ where: { id, availability: LockerAvailability.AVAILABLE } });
+        return await this.lockerRepository.findOne({
+            where: { id, availability: LockerAvailability.AVAILABLE },
+        });
     }
 
-    public async findActiveLockerBySerialNumber(serialNumber: string): Promise<Locker | null> {
-        return await this.lockerRepository.findOne({ where: { serialNumber, availability: LockerAvailability.AVAILABLE } });
+    public async findActiveLockerBySerialNumber(
+        serialNumber: string,
+    ): Promise<Locker | null> {
+        return await this.lockerRepository.findOne({
+            where: { serialNumber, availability: LockerAvailability.AVAILABLE },
+        });
     }
 
     public async create(secret: string): Promise<Locker> {
@@ -58,8 +72,13 @@ export class LockerService {
 
     public async registerLocker(id: number, value: RegisterLockerDto) {
         const locker = await this.findLockerByID(id);
-        const location = await this.locationService.findLocationByID(value.locationID);
-        if (locker.availability === LockerAvailability.UNREGISTERED && location) {
+        const location = await this.locationService.findLocationByID(
+            value.locationID,
+        );
+        if (
+            locker.availability === LockerAvailability.UNREGISTERED &&
+            location
+        ) {
             locker.availability = LockerAvailability.AVAILABLE;
             locker.name = value.name;
             locker.number = value.number;
@@ -79,17 +98,25 @@ export class LockerService {
         return locker;
     }
 
-    public async findLockerBySerialNumber(serialNumber: string): Promise<Locker> {
-        const locker = await this.lockerRepository.findOne({ where: { serialNumber } });
+    public async findLockerBySerialNumber(
+        serialNumber: string,
+    ): Promise<Locker> {
+        const locker = await this.lockerRepository.findOne({
+            where: { serialNumber },
+        });
         return locker;
     }
 
-    public async getLockerCurrentStatus(serialNumber: string): Promise<LockerCurrentStatusResponseDto> {
+    public async getLockerCurrentStatus(
+        serialNumber: string,
+    ): Promise<LockerCurrentStatusResponseDto> {
         const locker = await this.findLockerBySerialNumber(serialNumber);
         if (!locker) {
             throw new NotFoundException('Locker not found');
         }
-        const lockerUsages = await this.lockerUsageService.findLockerUsageByLockerID(locker.id);
+        const lockerUsages = await this.lockerUsageService.findLockerUsageByLockerID(
+            locker.id,
+        );
         if (locker && lockerUsages) {
             return {
                 isOpen: lockerUsages[0].actionType === ActionType.OPEN,
@@ -99,12 +126,16 @@ export class LockerService {
             throw new NotFoundException('Locker not found');
         }
     }
-    public async lock(serialNumber: string): Promise<LockerCurrentStatusResponseDto> {
+    public async lock(
+        serialNumber: string,
+    ): Promise<LockerCurrentStatusResponseDto> {
         const locker = await this.findLockerBySerialNumber(serialNumber);
         if (!locker) {
             throw new NotFoundException('Locker not found');
         }
-        const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerID(locker.id);
+        const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerID(
+            locker.id,
+        );
         if (!lockerInstance) {
             throw new NotFoundException('Locker not found');
         }

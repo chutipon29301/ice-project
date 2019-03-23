@@ -17,5 +17,4 @@ export class ListLockerInstanceDto {
     })
     @IsDate()
     public startTime: Date;
-
 }

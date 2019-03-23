@@ -11,11 +11,10 @@ import { ApiOperation } from '@nestjs/swagger';
 export class LockerInstanceController {
     constructor(
         private readonly lockerInstanceService: LockerInstanceService,
-    ) { }
+    ) {}
 
     @ApiOperation({
-        title:
-            'Get locker used history',
+        title: 'Get locker used history',
     })
     @Get(':id')
     async list(@Param('id') lockerID: number) {
@@ -23,16 +22,23 @@ export class LockerInstanceController {
     }
 
     @ApiOperation({
-        title:
-            'Create instance of locker when user start using locker',
+        title: 'Create instance of locker when user start using locker',
     })
     @Post('createInstance')
-    async createInstance(@Body() body: LockerInstanceDto): Promise<LockerInstance> {
-        return await this.lockerInstanceService.create(body.lockerID, body.nationalID);
+    async createInstance(
+        @Body() body: LockerInstanceDto,
+    ): Promise<LockerInstance> {
+        return await this.lockerInstanceService.create(
+            body.lockerID,
+            body.nationalID,
+        );
     }
 
     @Delete()
     async deleteInstance(@Body() body: ListLockerInstanceDto) {
-        return await this.lockerInstanceService.deleteInstance(body.lockerID, body.startTime);
+        return await this.lockerInstanceService.deleteInstance(
+            body.lockerID,
+            body.startTime,
+        );
     }
 }
