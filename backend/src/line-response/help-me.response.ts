@@ -36,7 +36,7 @@ export const helpMeResponse = function (serverURL:string) {
                thumbnailImageUrl: `${serverURL}/bot/replyImage/report.jpg?_ignored=`,
                imageBackgroundColor: "#000000",
                title: `Faulty locker ❓`,
-               text: `Unable to use locker            or any emergencies`,
+               text: `Unable to use locker or any emergencies`,
                actions: [
                    {
                        type: "postback",
