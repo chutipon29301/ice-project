@@ -13,13 +13,13 @@ import { LockerService } from './locker.service';
 import { LockerSecretDto } from './dto/locker-secret.dto';
 import { AddLockerResponseDto } from './dto/add-locker-response.dto';
 import { EditLockerDto } from './dto/edit-locker.dto';
-<<<<<<< HEAD
 import { ApiUseTags } from '@nestjs/swagger';
-=======
 import { RegisterLockerDto } from './dto/register-locker.dto';
 import { Roles } from 'src/guard/role.decorator';
 import { Role } from 'src/entities/user.entity';
->>>>>>> feat(back->locker): register locker
+import { ListLockerResponseDto } from './dto/list-locker-response.dto';
+import { LockerCurrentStatusResponseDto } from './dto/locker-current-status-response.dto';
+import { LockerLockDto } from './dto/locker-lock.dto';
 
 @ApiUseTags('Locker')
 @Controller('locker')
@@ -28,8 +28,14 @@ export class LockerController {
 
     @Roles(Role.SUPERUSER, Role.ADMIN, Role.USER)
     @Get()
-    async list() {
-        return await this.lockerService.list();
+    async list(): Promise<ListLockerResponseDto> {
+        const lockers = await this.lockerService.list();
+        return { lockers };
+    }
+
+    @Get('status')
+    async getCurrentStatus(@Query('serialNumber') serialNumber: string): Promise<LockerCurrentStatusResponseDto> {
+        return await this.lockerService.getLockerCurrentStatus(serialNumber);
     }
 
     @Roles(Role.SUPERUSER, Role.ADMIN)
@@ -61,5 +67,10 @@ export class LockerController {
     @Delete(':id')
     async delete(@Param('id', new ParseIntPipe()) id: number) {
         await this.lockerService.delete(id);
+    }
+
+    @Post('lock')
+    async lock(@Body() body: LockerLockDto): Promise<LockerCurrentStatusResponseDto> {
+        return await this.lockerService.lock(body.serialNumber);
     }
 }
