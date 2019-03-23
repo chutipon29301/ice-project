@@ -8,5 +8,6 @@ import { lockerUsageProviders } from './locker-usage.providers';
     imports: [DatabaseModule],
     providers: [...lockerUsageProviders, LockerUsageService],
     controllers: [LockerUsageController],
+    exports: [LockerUsageService],
 })
-export class LockerUsageModule {}
+export class LockerUsageModule { }
