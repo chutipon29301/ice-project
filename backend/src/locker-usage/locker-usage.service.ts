@@ -1,8 +1,9 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { LockerUsage, ActionType } from '../entities/locker-usage.entity';
-import { LockerUsageRepositoryToken } from '../constant';
+import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { LockerUsageRepositoryToken } from '../constant';
 import { LockerInstance } from '../entities/locker-instance.entity';
+import { ActionType, LockerUsage } from '../entities/locker-usage.entity';
+
 @Injectable()
 export class LockerUsageService {
     constructor(

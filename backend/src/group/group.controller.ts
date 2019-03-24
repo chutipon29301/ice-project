@@ -1,17 +1,9 @@
-import {
-    Controller,
-    Get,
-    Body,
-    Post,
-    Patch,
-    Param,
-    ParseIntPipe,
-} from '@nestjs/common';
-import { GroupService } from './group.service';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { Group } from '../entities/group.entity';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { EditGroupDto } from './dto/edit-group.dto';
 import { ApiUseTags } from '@nestjs/swagger';
+import { GroupService } from './group.service';
 
 @ApiUseTags('Group')
 @Controller('group')

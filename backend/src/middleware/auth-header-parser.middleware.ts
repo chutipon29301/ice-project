@@ -1,5 +1,5 @@
 import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { JwtToken } from 'src/jwt-auth/dto/jwt-token.dto';
 import { JwtAuthService } from 'src/jwt-auth/jwt-auth.service';
 

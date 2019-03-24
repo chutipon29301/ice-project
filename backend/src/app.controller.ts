@@ -1,6 +1,6 @@
-import { Controller, Get, Body, Post } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ToDate } from 'class-sanitizer';
+import { AppService } from './app.service';
 import { ToDateFromTimestamp } from './sanitizer';
 
 class PongSanitizedDTO {

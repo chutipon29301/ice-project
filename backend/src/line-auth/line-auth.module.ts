@@ -1,9 +1,9 @@
-import { Module, HttpModule } from '@nestjs/common';
-import { LineAuthService } from './line-auth.service';
+import { HttpModule, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { CryptoModule } from 'src/crypto/crypto.module';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
-import { CryptoModule } from 'src/crypto/crypto.module';
+import { LineAuthService } from './line-auth.service';
 
 @Module({
     imports: [

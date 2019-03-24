@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { LocationService } from './location.service';
-import { LocationController } from './location.controller';
 import { DatabaseModule } from 'src/database.module';
+import { LocationController } from './location.controller';
 import { locationProviders } from './location.providers';
+import { LocationService } from './location.service';
 
 @Module({
     imports: [DatabaseModule],

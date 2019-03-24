@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { JwtToken } from './dto/jwt-token.dto';
+import * as moment from 'moment';
 import { UserService } from '../user/user.service';
 import { JwtTokenInfo } from './dto/jwt-encrypt-token.dto';
-import * as moment from 'moment';
+import { JwtToken } from './dto/jwt-token.dto';
 
 @Injectable()
 export class JwtAuthService {

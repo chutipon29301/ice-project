@@ -1,7 +1,6 @@
 import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
 import { sanitize } from 'class-sanitizer';
-import { LineUserEventDto } from 'src/bot/dto/line-user-event.dto';
+import { NextFunction, Request, Response } from 'express';
 
 @Injectable()
 export class SanitizerMiddleware implements NestMiddleware {

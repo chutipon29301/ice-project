@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { LockerUsageService } from './locker-usage.service';
-import { LockerUsageController } from './locker-usage.controller';
 import { DatabaseModule } from 'src/database.module';
+import { LockerUsageController } from './locker-usage.controller';
 import { lockerUsageProviders } from './locker-usage.providers';
+import { LockerUsageService } from './locker-usage.service';
 
 @Module({
     imports: [DatabaseModule],

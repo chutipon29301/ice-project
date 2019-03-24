@@ -1,10 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { JwtAuthService } from './jwt-auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
+import { fake, replace, restore } from 'sinon';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
-import { fake, replace, restore } from 'sinon';
 import { JwtToken } from './dto/jwt-token.dto';
+import { JwtAuthService } from './jwt-auth.service';
 
 describe('JwtAuthService', () => {
     const channelSecret = 'secret';
@@ -39,7 +39,7 @@ describe('JwtAuthService', () => {
 
     it('should successfully decode token', async () => {
         const fakeEncodedToken = 'a';
-        const fakeDecodedToken: JwtToken = { userID: 1 };
+        const fakeDecodedToken: JwtToken = { nationalID: '1' };
         const fakeDecode = fake.returns(fakeDecodedToken);
 
         replace(jwtService, 'decode', fakeDecode);

@@ -1,12 +1,6 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    ManyToMany,
-    JoinTable,
-} from 'typeorm';
-import { User } from './user.entity';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Locker } from './locker.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Group {

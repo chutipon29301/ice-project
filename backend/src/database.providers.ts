@@ -1,7 +1,7 @@
+import { Provider } from '@nestjs/common';
 import { createConnection } from 'typeorm';
 import { ConfigService } from './config/config.service';
 import { DbConnectionToken } from './constant';
-import { Provider } from '@nestjs/common';
 
 export const databaseProviders: Provider[] = [
     {

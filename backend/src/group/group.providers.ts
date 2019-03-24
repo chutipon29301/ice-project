@@ -1,6 +1,6 @@
 import { Provider } from '@nestjs/common';
-import { GroupRepositoryToken, DbConnectionToken } from '../constant';
 import { Connection } from 'typeorm';
+import { DbConnectionToken, GroupRepositoryToken } from '../constant';
 import { Group } from '../entities/group.entity';
 
 export const groupProviders: Provider[] = [

@@ -1,10 +1,8 @@
-import { Injectable, Inject, ConflictException } from '@nestjs/common';
-import { Group } from '../entities/group.entity';
-import { GroupRepositoryToken, UserRepositoryToken } from '../constant';
-import { Repository } from 'typeorm';
-import { User } from 'src/entities/user.entity';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
-import { ExecFileSyncOptionsWithStringEncoding } from 'child_process';
+import { Repository } from 'typeorm';
+import { GroupRepositoryToken } from '../constant';
+import { Group } from '../entities/group.entity';
 
 @Injectable()
 export class GroupService {

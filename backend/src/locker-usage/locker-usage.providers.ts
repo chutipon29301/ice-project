@@ -1,7 +1,7 @@
 import { Provider } from '@nestjs/common';
-import { LockerUsageRepositoryToken, DbConnectionToken } from 'src/constant';
-import { Connection } from 'typeorm';
+import { DbConnectionToken, LockerUsageRepositoryToken } from 'src/constant';
 import { LockerUsage } from 'src/entities/locker-usage.entity';
+import { Connection } from 'typeorm';
 
 export const lockerUsageProviders: Provider[] = [
     {

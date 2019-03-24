@@ -1,6 +1,6 @@
-import { LocationRepositoryToken } from '../constant';
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { LocationRepositoryToken } from '../constant';
 import { Location } from '../entities/location.entity';
 
 @Injectable()

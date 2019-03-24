@@ -1,8 +1,4 @@
-import {
-    SanitizerInterface,
-    SanitizerConstraint,
-    Sanitize,
-} from 'class-sanitizer';
+import { Sanitize, SanitizerConstraint, SanitizerInterface } from 'class-sanitizer';
 
 export const ToDateFromTimestamp = () => Sanitize(ToDateFromTimestampSanitizer);
 

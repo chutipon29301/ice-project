@@ -1,12 +1,12 @@
 import { HttpModule, HttpService, UnauthorizedException } from '@nestjs/common';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { fake, replace, restore } from 'sinon';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { CryptoModule } from '../crypto/crypto.module';
-import { LineAuthService } from './line-auth.service';
-import { fake, restore, replace, replaceGetter } from 'sinon';
 import { CryptoService } from '../crypto/crypto.service';
+import { LineAuthService } from './line-auth.service';
 
 describe('LineAuthService', () => {
     const channelSecret = 'secret';

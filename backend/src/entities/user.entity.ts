@@ -1,15 +1,8 @@
-import {
-    Entity,
-    PrimaryColumn,
-    Column,
-    ManyToMany,
-    JoinTable,
-    OneToMany,
-} from 'typeorm';
-import { LockerUsage } from './locker-usage.entity';
-import { LockerInstance } from './locker-instance.entity';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm';
 import { CreditUsage } from './credit-usage.entity';
 import { Group } from './group.entity';
+import { LockerInstance } from './locker-instance.entity';
+import { LockerUsage } from './locker-usage.entity';
 
 export enum Role {
     USER = 'USER',

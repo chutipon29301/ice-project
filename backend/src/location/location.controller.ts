@@ -1,19 +1,10 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Delete,
-    Param,
-    ParseIntPipe,
-    Body,
-    Patch,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { Location } from '../entities/location.entity';
-import { LocationService } from './location.service';
 import { LocationEntityDto } from './dto/location-entity.dto';
 import { ApiUseTags } from '@nestjs/swagger';
 import { Roles } from 'src/guard/role.decorator';
 import { Role } from 'src/entities/user.entity';
+import { LocationService } from './location.service';
 
 @ApiUseTags('Location')
 @Controller('location')

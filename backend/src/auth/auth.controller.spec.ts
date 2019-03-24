@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
 import { AuthModule } from './auth.module';
+import { AuthService } from './auth.service';
 
 describe('Auth Controller', () => {
     const channelSecret = 'secret';

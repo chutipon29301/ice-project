@@ -2,8 +2,8 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { JwtToken } from 'src/jwt-auth/dto/jwt-token.dto';
 import { Role } from 'src/entities/user.entity';
+import { JwtToken } from 'src/jwt-auth/dto/jwt-token.dto';
 import { UserService } from 'src/user/user.service';
 
 declare global {

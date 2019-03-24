@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { replaceGetter, restore } from 'sinon';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { fake, replace, restore, replaceGetter } from 'sinon';
 
 describe('AppController', () => {
     let app: TestingModule;

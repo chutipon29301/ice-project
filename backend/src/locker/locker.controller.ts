@@ -1,26 +1,16 @@
-import {
-    Controller,
-    Get,
-    Query,
-    Post,
-    Body,
-    Param,
-    ParseIntPipe,
-    Patch,
-    Delete,
-} from '@nestjs/common';
-import { LockerService } from './locker.service';
-import { LockerSecretDto } from './dto/locker-secret.dto';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
+import { ApiOperation } from '@nestjs/swagger';
+import { Role } from '../entities/user.entity';
+import { Roles } from '../guard/role.decorator';
 import { AddLockerResponseDto } from './dto/add-locker-response.dto';
 import { EditLockerDto } from './dto/edit-locker.dto';
 import { ApiUseTags } from '@nestjs/swagger';
-import { RegisterLockerDto } from './dto/register-locker.dto';
-import { Roles } from 'src/guard/role.decorator';
-import { Role } from 'src/entities/user.entity';
 import { ListLockerResponseDto } from './dto/list-locker-response.dto';
 import { LockerCurrentStatusResponseDto } from './dto/locker-current-status-response.dto';
 import { LockerLockDto } from './dto/locker-lock.dto';
-import { ApiOperation } from '@nestjs/swagger';
+import { LockerSecretDto } from './dto/locker-secret.dto';
+import { RegisterLockerDto } from './dto/register-locker.dto';
+import { LockerService } from './locker.service';
 
 @ApiUseTags('Locker')
 @Controller('locker')

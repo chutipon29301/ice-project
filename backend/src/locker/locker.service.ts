@@ -1,23 +1,14 @@
-import {
-    ConflictException,
-    Inject,
-    Injectable,
-    NotFoundException,
-    UnauthorizedException,
-    forwardRef,
-    OnModuleInit,
-} from '@nestjs/common';
+import { ConflictException, forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { LocationService } from 'src/location/location.service';
 import { Repository } from 'typeorm';
 import { ConfigService } from '../config/config.service';
 import { LockerRepositoryToken } from '../constant';
+import { ActionType } from '../entities/locker-usage.entity';
 import { Locker, LockerAvailability } from '../entities/locker.entity';
-import { RegisterLockerDto } from './dto/register-locker.dto';
+import { LockerInstanceService } from '../locker-instance/locker-instance.service';
 import { LockerUsageService } from '../locker-usage/locker-usage.service';
 import { LockerCurrentStatusResponseDto } from './dto/locker-current-status-response.dto';
-import { ActionType } from '../entities/locker-usage.entity';
-import { LockerInstanceService } from '../locker-instance/locker-instance.service';
-import { ModuleRef } from '@nestjs/core';
+import { RegisterLockerDto } from './dto/register-locker.dto';
 
 @Injectable()
 export class LockerService {
