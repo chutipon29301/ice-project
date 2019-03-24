@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany
 import { LockerUsage } from './locker-usage.entity';
 import { Locker } from './locker.entity';
 import { User } from './user.entity';
+import { QRCode } from './qr-code.entity';
 
 @Entity()
 export class LockerInstance {
@@ -45,4 +46,8 @@ export class LockerInstance {
 
     @OneToMany(type => LockerUsage, lockerUsage => lockerUsage.lockerInstance)
     lockerUsages: LockerUsage[];
+
+    @OneToMany(type => QRCode, qrCode => qrCode.lockerInstance)
+    qrCodes: QRCode[];
+
 }
