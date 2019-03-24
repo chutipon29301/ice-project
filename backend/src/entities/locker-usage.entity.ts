@@ -8,9 +8,10 @@ export enum ActionType {
 }
 @Entity()
 export class LockerUsage {
+
     constructor(actionType: ActionType, lockerInstance: LockerInstance) {
         this.actionType = actionType;
-        this.lockerInstance = lockerInstance;
+        // this.lockerInstance = lockerInstance;
     }
 
     @Column({
@@ -26,18 +27,18 @@ export class LockerUsage {
     timeStamp: Date;
 
     @PrimaryColumn()
-    lockerID: string;
+    lockerID: number;
 
     @PrimaryColumn()
     instanceDate: Date;
 
-    @ManyToOne(type => LockerInstance, { cascade: true })
+    @ManyToOne(type => LockerInstance, lockerInstance => lockerInstance.lockerUsages, { cascade: true })
     @JoinColumn([
         { name: 'lockerID', referencedColumnName: 'lockerID' },
         { name: 'instanceDate', referencedColumnName: 'startTime' },
     ])
     lockerInstance: LockerInstance;
 
-    @OneToMany(type => User, user => user.nationalID, { nullable: true })
+    @ManyToOne(type => User, user => user.lockerUsages, { nullable: true })
     users: User;
 }

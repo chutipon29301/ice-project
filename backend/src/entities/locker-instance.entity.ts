@@ -12,7 +12,7 @@ export class LockerInstance {
     }
 
     @PrimaryColumn()
-    lockerID: string;
+    lockerID: number;
 
     @ManyToOne(type => Locker, { cascade: true })
     @JoinColumn({ name: 'lockerID', referencedColumnName: 'id' })
@@ -43,6 +43,6 @@ export class LockerInstance {
     @ManyToOne(type => User, user => user.ownerOfLockerInstance)
     ownerUser: User;
 
-    @OneToMany(type => LockerUsage, lockerUsage => lockerUsage.lockerID)
+    @OneToMany(type => LockerUsage, lockerUsage => lockerUsage.lockerInstance)
     lockerUsages: LockerUsage[];
 }

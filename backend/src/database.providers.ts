@@ -2,6 +2,7 @@ import { Provider } from '@nestjs/common';
 import { createConnection } from 'typeorm';
 import { ConfigService } from './config/config.service';
 import { DbConnectionToken } from './constant';
+import { join } from 'path';
 
 export const databaseProviders: Provider[] = [
     {
@@ -15,7 +16,7 @@ export const databaseProviders: Provider[] = [
                 username: configService.mySQLUser,
                 password: configService.mySQLPassword,
                 database: configService.mySQLDatabase,
-                entities: [__dirname + '/entities/*.entity{.ts,.js}'],
+                entities: [join(__dirname, './entities/*.entity{.ts,.js}')],
                 synchronize: true,
                 logging: true,
             }),
