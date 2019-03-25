@@ -11,7 +11,9 @@ import {
 import { Location } from '../entities/location.entity';
 import { LocationService } from './location.service';
 import { LocationEntityDto } from './dto/location-entity.dto';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('Location')
 @Controller('location')
 export class LocationController {
     constructor(private readonly locationService: LocationService) {}

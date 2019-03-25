@@ -13,7 +13,9 @@ import { LockerService } from './locker.service';
 import { LockerSecretDto } from './dto/locker-secret.dto';
 import { AddLockerResponseDto } from './dto/add-locker-response.dto';
 import { EditLockerDto } from './dto/edit-locker.dto';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('Locker')
 @Controller('locker')
 export class LockerController {
     constructor(private readonly lockerService: LockerService) {}

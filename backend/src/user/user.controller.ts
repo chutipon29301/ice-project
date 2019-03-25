@@ -4,7 +4,10 @@ import { CreateUserEntityDto } from './dto/create-user-entity.dto';
 import { CreateAdminEntityDto } from './dto/create-admin-entity.dto';
 import { User, Role } from '../entities/user.entity';
 import { Roles } from '../guard/role.decorator';
+import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiUseTags('User')
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {}
