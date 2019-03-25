@@ -25,15 +25,6 @@ export class BotService {
                 msg = event.postback.data;
                 break;
         }
-        let msg = "";
-        switch (event.type) {
-            case 'message':
-                msg = event.message.text;
-                break;
-            case 'postback':
-                msg = event.postback.data;
-                break;
-        }
 
         switch (msg) {
             case 'help me':
