@@ -15,7 +15,6 @@ export class BotService {
     ) {}
 
     async lineBotReplyMsg(body: LineUserEventDto) {
-
         const event = body.events[0];
 
         if(event.type === 'follow'){
