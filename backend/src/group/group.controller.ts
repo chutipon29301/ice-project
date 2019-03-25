@@ -11,7 +11,9 @@ import { GroupService } from './group.service';
 import { Group } from '../entities/group.entity';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { EditGroupDto } from './dto/edit-group.dto';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('Group')
 @Controller('group')
 export class GroupController {
     constructor(private readonly groupService: GroupService) {}
