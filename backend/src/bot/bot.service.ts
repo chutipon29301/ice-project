@@ -1,5 +1,5 @@
 import { HttpService, Injectable } from '@nestjs/common';
-import { defaultResponse } from 'src/line-response/default.reponse';
+import { defaultResponse } from 'src/line-response/default.response';
 import { manualResponse } from 'src/line-response/manual.response';
 import { reportResponse } from 'src/line-response/report.response';
 import { ConfigService } from '../config/config.service';
