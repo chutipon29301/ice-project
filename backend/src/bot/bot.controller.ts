@@ -3,7 +3,9 @@ import { Request, Response } from 'express';
 import { LineUserEventDto } from './dto/line-user-event.dto';
 import { BotService } from './bot.service';
 import { join } from 'path';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('Bot')
 @Controller('bot')
 export class BotController {
     constructor(private readonly botService: BotService) {}

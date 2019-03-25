@@ -13,7 +13,9 @@ import { LineUserTokenDto } from './dto/line-user-token.dto';
 import { JwtTokenInfo } from '../jwt-auth/dto/jwt-encrypt-token.dto';
 import { RequestTokenDto } from './dto/request-token.dto';
 import { LineAccessToken } from 'src/line-auth/dto/line-access-token.dto';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('Auth')
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
