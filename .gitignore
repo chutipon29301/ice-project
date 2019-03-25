@@ -21,9 +21,11 @@ volumes-test/*
 # Nginx
 nginx-data/*
 
-.vscode/c_cpp_properties.json
-.vscode/arduino.json
+# Editor configuration
+.vscode/*
 backend-old/*
 
+
+# Other files
 backend/src/bot/helpMe.jpeg
 backend/src/bot/manual.jpeg
