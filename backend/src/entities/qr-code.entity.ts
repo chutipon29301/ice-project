@@ -1,11 +1,11 @@
-import { Entity, OneToMany, Column, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from 'typeorm';
-import { LockerInstance } from './locker-instance.entity';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Locker } from './locker.entity';
 
 @Entity()
 export class QRCode {
 
-    constructor( lockerInstance: LockerInstance) {
-        this.lockerInstance =  lockerInstance;
+    constructor( locker: Locker) {
+        this.locker =  locker;
     }
 
     @PrimaryGeneratedColumn('uuid')
@@ -17,12 +17,11 @@ export class QRCode {
     @Column()
     instanceDate: Date;
 
-    @ManyToOne(type => LockerInstance, lockerInstance => lockerInstance.qrCodes)
+    @ManyToOne(type => Locker)
     @JoinColumn([
-        { name: 'lockerID', referencedColumnName: 'lockerID' },
-        { name: 'instanceDate', referencedColumnName: 'startTime' },
+        {name: 'lockerID', referencedColumnName: 'id'}
     ])
-    lockerInstance: LockerInstance;
+    locker: Locker;
 
     @Column()
     expireDate: Date;

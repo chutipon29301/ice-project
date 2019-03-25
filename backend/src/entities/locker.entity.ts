@@ -2,6 +2,7 @@ import { Column, Entity, Generated, JoinTable, ManyToMany, ManyToOne, OneToMany,
 import { Group } from './group.entity';
 import { Location } from './location.entity';
 import { LockerInstance } from './locker-instance.entity';
+import { QRCode } from './qr-code.entity';
 
 export enum LockerAvailability {
     UNREGISTERED = 'UNREGISTERED',
@@ -48,4 +49,7 @@ export class Locker {
     @ManyToMany(type => Group)
     @JoinTable()
     groups: Group[];
+
+    @OneToMany(type => QRCode, qrCode => qrCode.locker)
+    qrCode: QRCode[];
 }

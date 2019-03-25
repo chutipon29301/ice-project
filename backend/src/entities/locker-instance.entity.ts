@@ -47,7 +47,4 @@ export class LockerInstance {
     @OneToMany(type => LockerUsage, lockerUsage => lockerUsage.lockerInstance)
     lockerUsages: LockerUsage[];
 
-    @OneToMany(type => QRCode, qrCode => qrCode.lockerInstance)
-    qrCodes: QRCode[];
-
 }
