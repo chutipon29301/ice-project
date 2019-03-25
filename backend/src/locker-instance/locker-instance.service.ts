@@ -16,7 +16,7 @@ export class LockerInstanceService {
         private readonly lockerService: LockerService,
         private readonly lockerUsageService: LockerUsageService,
         private readonly userService: UserService,
-    ) {}
+    ) { }
 
     public async create(
         lockerID: number,
@@ -61,6 +61,17 @@ export class LockerInstanceService {
             where: { lockerID, inUsed: true },
         });
         return lockerInstance;
+    }
+
+    public async findInUsedLockerInstanceBySerialNumber(
+        serialNumber: string,
+    ): Promise<LockerInstance> {
+        const locker = await this.lockerService.findLockerBySerialNumber(serialNumber);
+        if (!locker) {
+            throw new NotFoundException('Locker not found');
+        } else {
+            return await this.findInUsedLockerInstanceByLockerID(locker.id);
+        }
     }
 
     public async deleteInstance(lockerID: number, startTime: Date) {
