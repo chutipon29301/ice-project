@@ -4,9 +4,9 @@ import { LockerInstance } from './locker-instance.entity';
 @Entity()
 export class QRCode {
 
-    // constructor( lockerInstance: LockerInstance) {
-
-    // }
+    constructor( lockerInstance: LockerInstance) {
+        this.lockerInstance =  lockerInstance;
+    }
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
