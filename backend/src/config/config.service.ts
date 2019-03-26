@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ConfigService {
+
     get mySQLServer() {
         const serverURL = process.env.MYSQL_SERVER;
         if (serverURL) {
             return serverURL;
         } else {
-            throw Error('Unable to read "MYSQL_SERVER" environment');
+            throw new Error('Unable to read "MYSQL_SERVER" environment');
         }
     }
 
@@ -16,7 +17,7 @@ export class ConfigService {
         if (username) {
             return username;
         } else {
-            throw Error('Unable to read "MYSQL_USER" environment');
+            throw new Error('Unable to read "MYSQL_USER" environment');
         }
     }
 
@@ -25,7 +26,7 @@ export class ConfigService {
         if (password) {
             return password;
         } else {
-            throw Error('Unable to read "MYSQL_PASSWORD" environment');
+            throw new Error('Unable to read "MYSQL_PASSWORD" environment');
         }
     }
 
@@ -34,7 +35,7 @@ export class ConfigService {
         if (db) {
             return db;
         } else {
-            throw Error('Unable to read "MYSQL_DATABASE" environment');
+            throw new Error('Unable to read "MYSQL_DATABASE" environment');
         }
     }
 
@@ -43,7 +44,16 @@ export class ConfigService {
         if (url) {
             return url;
         } else {
-            throw Error(`Unable to read "SERVER_URL" environment`);
+            throw new Error(`Unable to read "SERVER_URL" environment`);
+        }
+    }
+
+    get liffServerURL(): string {
+        const url = process.env.LIFF_SERVER_URL;
+        if (url) {
+            return url;
+        } else {
+            throw new Error(`Unable to read "LIFF_SERVER_URL" environment`);
         }
     }
 
@@ -52,7 +62,7 @@ export class ConfigService {
         if (id) {
             return id;
         } else {
-            throw Error(`Unable to read "CHANNEL_ID" environment`);
+            throw new Error(`Unable to read "CHANNEL_ID" environment`);
         }
     }
 
@@ -61,7 +71,7 @@ export class ConfigService {
         if (secret) {
             return secret;
         } else {
-            throw Error(`Unable to read "CHANNEL_SECRET" environment`);
+            throw new Error(`Unable to read "CHANNEL_SECRET" environment`);
         }
     }
 
@@ -70,7 +80,7 @@ export class ConfigService {
         if (secret) {
             return secret;
         } else {
-            throw Error(`Unable to read "IOT_DEVICE_SECRET" environment`);
+            throw new Error(`Unable to read "IOT_DEVICE_SECRET" environment`);
         }
     }
 
@@ -79,17 +89,19 @@ export class ConfigService {
         if (endpoint) {
             return endpoint;
         } else {
-            throw Error(
+            throw new Error(
                 `Unable to read "LINE_MESSAGING_API_ENDPOINT" environment`,
             );
         }
     }
+
     get channelAccessToken(): string {
         const token = process.env.CHANNEL_ACCESS_TOKEN;
         if (token) {
             return token;
         } else {
-            throw Error(`Unable to read "CHANNEL_ACCESS_TOKEN" environment`);
+            throw new Error(`Unable to read "CHANNEL_ACCESS_TOKEN" environment`);
         }
     }
+
 }
