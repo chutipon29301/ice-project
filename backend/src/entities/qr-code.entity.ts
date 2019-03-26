@@ -4,8 +4,8 @@ import { Locker } from './locker.entity';
 @Entity()
 export class QRCode {
 
-    constructor( locker: Locker) {
-        this.locker =  locker;
+    constructor(locker: Locker) {
+        this.locker = locker;
     }
 
     @PrimaryGeneratedColumn('uuid')
@@ -17,9 +17,9 @@ export class QRCode {
     @Column()
     instanceDate: Date;
 
-    @ManyToOne(type => Locker)
+    @ManyToOne(type => Locker, locker => locker.qrCodes)
     @JoinColumn([
-        {name: 'lockerID', referencedColumnName: 'id'}
+        { name: 'lockerID', referencedColumnName: 'id' }
     ])
     locker: Locker;
 

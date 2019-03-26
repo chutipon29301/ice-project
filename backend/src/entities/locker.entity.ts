@@ -50,6 +50,6 @@ export class Locker {
     @JoinTable()
     groups: Group[];
 
-    @OneToMany(type => QRCode, qrCode => qrCode.locker)
-    qrCode: QRCode[];
+    @OneToMany(type => QRCode, qrCode => qrCode.locker, { nullable: true })
+    qrCodes: QRCode[];
 }
