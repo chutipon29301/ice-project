@@ -9,5 +9,6 @@ import { QrService } from './qr.service';
     imports: [ConfigModule, LockerModule],
     providers: [...qrProviders, QrService],
     controllers: [QrController],
+    exports: [QrService],
 })
 export class QrModule { }
