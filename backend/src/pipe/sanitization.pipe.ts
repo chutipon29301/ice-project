@@ -1,6 +1,10 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 import { sanitize } from 'class-sanitizer';
-import { classToPlain, ClassTransformOptions, plainToClass } from 'class-transformer';
+import {
+    classToPlain,
+    ClassTransformOptions,
+    plainToClass,
+} from 'class-transformer';
 
 @Injectable()
 export class SanitizationPipe implements PipeTransform<any> {

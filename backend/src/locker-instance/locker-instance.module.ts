@@ -21,4 +21,4 @@ import { QrModule } from '../qr/qr.module';
     controllers: [LockerInstanceController],
     exports: [LockerInstanceService],
 })
-export class LockerInstanceModule { }
+export class LockerInstanceModule {}

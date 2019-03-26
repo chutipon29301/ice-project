@@ -20,7 +20,6 @@ import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { QrModule } from './qr/qr.module';
 import { UserModule } from './user/user.module';
 
-
 @Module({
     imports: [
         ConfigModule,

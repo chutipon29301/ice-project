@@ -12,7 +12,7 @@ export class BotService {
     constructor(
         private readonly httpService: HttpService,
         private readonly configService: ConfigService,
-    ) { }
+    ) {}
 
     async lineBotReplyMsg(body: LineUserEventDto) {
         const event = body.events[0];
@@ -28,10 +28,16 @@ export class BotService {
 
         switch (msg) {
             case 'help me':
-                await this.reply(event.replyToken, helpMeResponse(this.configService.serverURL));
+                await this.reply(
+                    event.replyToken,
+                    helpMeResponse(this.configService.serverURL),
+                );
                 break;
             case 'manual':
-                await this.reply(event.replyToken, manualResponse(this.configService.serverURL));
+                await this.reply(
+                    event.replyToken,
+                    manualResponse(this.configService.serverURL),
+                );
                 break;
             case 'report':
                 await this.reply(event.replyToken, reportResponse);
@@ -59,7 +65,7 @@ export class BotService {
                             'Content-Type': 'application/json',
                             Authorization: `Bearer ${
                                 this.configService.channelAccessToken
-                                }`,
+                            }`,
                         },
                     },
                 )

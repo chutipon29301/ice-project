@@ -16,7 +16,7 @@ import { UnlockLockerInstanceDto } from './dto/unlock-locker-instance.dto';
 export class LockerInstanceController {
     constructor(
         private readonly lockerInstanceService: LockerInstanceService,
-    ) { }
+    ) {}
 
     @ApiOperation({
         title: 'Get locker used history',
@@ -50,7 +50,10 @@ export class LockerInstanceController {
     }
     @Post('unlock')
     @Roles(Role.USER)
-    async unlockLocker(@User() user: JwtToken, @Body() body: UnlockLockerInstanceDto) {
+    async unlockLocker(
+        @User() user: JwtToken,
+        @Body() body: UnlockLockerInstanceDto,
+    ) {
         this.lockerInstanceService.unlock(body.accessCode, user.nationalID);
     }
 

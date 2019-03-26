@@ -4,9 +4,7 @@ import { QrService } from './qr.service';
 
 @Controller('qr')
 export class QrController {
-
-    constructor(private readonly qrService: QrService,
-    ) { }
+    constructor(private readonly qrService: QrService) {}
 
     @Get('generateLink')
     async generateQRCodeLink(
@@ -15,5 +13,4 @@ export class QrController {
         const link = await this.qrService.generateRedirectURL(serialNumber);
         return { link };
     }
-
 }

@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Post,
+} from '@nestjs/common';
 import { Location } from '../entities/location.entity';
 import { LocationEntityDto } from './dto/location-entity.dto';
 import { ApiUseTags } from '@nestjs/swagger';

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ConfigService {
-
     get mySQLServer() {
         const serverURL = process.env.MYSQL_SERVER;
         if (serverURL) {
@@ -100,8 +99,9 @@ export class ConfigService {
         if (token) {
             return token;
         } else {
-            throw new Error(`Unable to read "CHANNEL_ACCESS_TOKEN" environment`);
+            throw new Error(
+                `Unable to read "CHANNEL_ACCESS_TOKEN" environment`,
+            );
         }
     }
-
 }

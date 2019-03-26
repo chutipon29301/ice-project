@@ -1,4 +1,10 @@
-import { AES as aes, CipherOption, enc, LibWordArray, WordArray } from 'crypto-js';
+import {
+    AES as aes,
+    CipherOption,
+    enc,
+    LibWordArray,
+    WordArray,
+} from 'crypto-js';
 
 export class AES {
     encrypt(

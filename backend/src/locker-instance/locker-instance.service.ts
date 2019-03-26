@@ -1,4 +1,9 @@
-import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { LockerInstanceRepositoryToken } from '../constant';
 import { LockerInstance } from '../entities/locker-instance.entity';
@@ -18,7 +23,7 @@ export class LockerInstanceService {
         private readonly lockerService: LockerService,
         private readonly lockerUsageService: LockerUsageService,
         private readonly userService: UserService,
-    ) { }
+    ) {}
 
     public async create(
         lockerID: number,
@@ -68,7 +73,9 @@ export class LockerInstanceService {
     public async findInUsedLockerInstanceBySerialNumber(
         serialNumber: string,
     ): Promise<LockerInstance> {
-        const locker = await this.lockerService.findLockerBySerialNumber(serialNumber);
+        const locker = await this.lockerService.findLockerBySerialNumber(
+            serialNumber,
+        );
         if (!locker) {
             throw new NotFoundException('Locker not found');
         } else {
@@ -82,8 +89,12 @@ export class LockerInstanceService {
     }
 
     public async unlock(accessCode: string, nationalID: string) {
-        const lockerID = await this.qrService.findLockerInstanceByAccessCode(accessCode);
-        const lockerInstance = await this.findInUsedLockerInstanceByLockerID(lockerID);
+        const lockerID = await this.qrService.findLockerInstanceByAccessCode(
+            accessCode,
+        );
+        const lockerInstance = await this.findInUsedLockerInstanceByLockerID(
+            lockerID,
+        );
         const lockerUsage = new LockerUsage(ActionType.OPEN, lockerInstance);
         lockerInstance.lockerUsages.push(lockerUsage);
         await this.lockerInstanceRepository.save(lockerInstance);

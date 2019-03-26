@@ -16,8 +16,8 @@ export const helpMeResponse = (serverURL: string) => {
                                 type: 'postback',
                                 label: 'Get manual',
                                 data: 'manual',
-                            }
-                        ]
+                            },
+                        ],
                     },
                     {
                         thumbnailImageUrl: `${serverURL}/bot/replyImage/findlocker-banner.jpg?_ignored=`,
@@ -29,8 +29,8 @@ export const helpMeResponse = (serverURL: string) => {
                                 type: 'uri',
                                 label: 'Find',
                                 uri: 'line://app/1643085874-xeWvgKgE',
-                            }
-                        ]
+                            },
+                        ],
                     },
                     {
                         thumbnailImageUrl: `${serverURL}/bot/replyImage/report.jpg?_ignored=`,
@@ -41,15 +41,14 @@ export const helpMeResponse = (serverURL: string) => {
                             {
                                 type: `postback`,
                                 label: `Report`,
-                                data: `report`
+                                data: `report`,
                             },
-                        ]
-                    }
+                        ],
+                    },
                 ],
                 imageAspectRatio: `rectangle`,
-                imageSize: `cover`
-            }
-        }
-
+                imageSize: `cover`,
+            },
+        },
     ];
-}
+};

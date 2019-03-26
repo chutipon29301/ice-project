@@ -1,4 +1,11 @@
-import { ConflictException, forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+    ConflictException,
+    forwardRef,
+    Inject,
+    Injectable,
+    NotFoundException,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { LocationService } from 'src/location/location.service';
 import { Repository } from 'typeorm';
 import { ConfigService } from '../config/config.service';
@@ -20,7 +27,7 @@ export class LockerService {
         private readonly lockerUsageService: LockerUsageService,
         @Inject(forwardRef(() => LockerInstanceService))
         private readonly lockerInstanceService: LockerInstanceService,
-    ) { }
+    ) {}
 
     public async list(): Promise<Locker[]> {
         return await this.lockerRepository.find();

@@ -1,7 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UserRepositoryToken } from '../constant';
-import { AuthenticationType, Role, User, UserStatus } from '../entities/user.entity';
+import {
+    AuthenticationType,
+    Role,
+    User,
+    UserStatus,
+} from '../entities/user.entity';
 import { LineAuthService } from '../line-auth/line-auth.service';
 
 @Injectable()
