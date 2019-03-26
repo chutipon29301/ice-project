@@ -1,11 +1,13 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Locker } from './locker.entity';
+import * as moment from 'moment';
 
 @Entity()
 export class QRCode {
 
     constructor(locker: Locker) {
         this.locker = locker;
+        this.expireDate = moment().add('5min').toDate();
     }
 
     @PrimaryGeneratedColumn('uuid')
@@ -13,9 +15,6 @@ export class QRCode {
 
     @Column()
     lockerID: number;
-
-    @Column()
-    instanceDate: Date;
 
     @ManyToOne(type => Locker, locker => locker.qrCodes)
     @JoinColumn([

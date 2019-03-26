@@ -11,7 +11,7 @@ export class LockerUsage {
 
     constructor(actionType: ActionType, lockerInstance: LockerInstance) {
         this.actionType = actionType;
-        // this.lockerInstance = lockerInstance;
+        this.lockerInstance = lockerInstance;
     }
 
     @Column({
