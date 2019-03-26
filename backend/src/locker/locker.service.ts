@@ -20,7 +20,7 @@ export class LockerService {
         private readonly lockerUsageService: LockerUsageService,
         @Inject(forwardRef(() => LockerInstanceService))
         private readonly lockerInstanceService: LockerInstanceService,
-    ) {}
+    ) { }
 
     public async list(): Promise<Locker[]> {
         return await this.lockerRepository.find();
@@ -101,22 +101,26 @@ export class LockerService {
     public async getLockerCurrentStatus(
         serialNumber: string,
     ): Promise<LockerCurrentStatusResponseDto> {
-        const locker = await this.findLockerBySerialNumber(serialNumber);
+        const locker = await this.findActiveLockerBySerialNumber(serialNumber);
         if (!locker) {
             throw new NotFoundException('Locker not found');
         }
         const lockerUsages = await this.lockerUsageService.findLockerUsageByLockerID(
             locker.id,
         );
-        if (locker && lockerUsages) {
+        if (lockerUsages.length !== 0) {
             return {
                 isOpen: lockerUsages[0].actionType === ActionType.OPEN,
                 lockerNumber: locker.number,
             };
         } else {
-            throw new NotFoundException('Locker not found');
+            return {
+                isOpen: false,
+                lockerNumber: locker.number,
+            };
         }
     }
+
     public async lock(
         serialNumber: string,
     ): Promise<LockerCurrentStatusResponseDto> {
