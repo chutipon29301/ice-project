@@ -2,16 +2,18 @@ import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/commo
 import { Repository } from 'typeorm';
 import { LockerInstanceRepositoryToken } from '../constant';
 import { LockerInstance } from '../entities/locker-instance.entity';
-import { ActionType } from '../entities/locker-usage.entity';
+import { ActionType, LockerUsage } from '../entities/locker-usage.entity';
 import { LockerUsageService } from '../locker-usage/locker-usage.service';
 import { LockerService } from '../locker/locker.service';
 import { UserService } from '../user/user.service';
+import { QrService } from '../qr/qr.service';
 
 @Injectable()
 export class LockerInstanceService {
     constructor(
         @Inject(LockerInstanceRepositoryToken)
         private readonly lockerInstanceRepository: Repository<LockerInstance>,
+        private readonly qrService: QrService,
         @Inject(forwardRef(() => LockerService))
         private readonly lockerService: LockerService,
         private readonly lockerUsageService: LockerUsageService,
@@ -79,17 +81,18 @@ export class LockerInstanceService {
         await this.lockerInstanceRepository.delete(lockerInstance);
     }
 
-    // public async unlock(lockerID: number, startTime: Date) {
-    //     const lockerInstance = await this.findInstance(lockerID, startTime);
-    //     const lockerUsage = new LockerUsage(ActionType.OPEN, lockerInstance);
-    //     lockerInstance.lockerUsages.push(lockerUsage);
-    //     await this.lockerInstanceRepository.save(lockerInstance);
-    // }
+    public async unlock(accessCode: string, nationalID: string) {
+        const lockerID = await this.qrService.findLockerInstanceByAccessCode(accessCode);
+        const lockerInstance = await this.findInUsedLockerInstanceByLockerID(lockerID);
+        const lockerUsage = new LockerUsage(ActionType.OPEN, lockerInstance);
+        lockerInstance.lockerUsages.push(lockerUsage);
+        await this.lockerInstanceRepository.save(lockerInstance);
+    }
 
-    // public async lock(locker) {
-    //     const lockerInstance = await this.findInstance(lockerID, startTime);
-    //     const lockerUsage = new LockerUsage(ActionType.CLOSE, lockerInstance);
-    //     lockerInstance.lockerUsages.push(lockerUsage);
-    //     await this.lockerInstanceRepository.save(lockerInstance);
-    // }
+    public async lock(lockerID: number, startTime: Date) {
+        const lockerInstance = await this.findInstance(lockerID, startTime);
+        const lockerUsage = new LockerUsage(ActionType.CLOSE, lockerInstance);
+        lockerInstance.lockerUsages.push(lockerUsage);
+        await this.lockerInstanceRepository.save(lockerInstance);
+    }
 }
