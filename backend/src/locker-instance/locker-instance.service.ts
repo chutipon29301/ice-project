@@ -71,7 +71,6 @@ export class LockerInstanceService {
             where: { lockerID, inUsed: true },
             relations: ['locker', 'ownerUser'],
         });
-        console.log(lockerInstance);
         return lockerInstance;
     }
 
@@ -83,9 +82,8 @@ export class LockerInstanceService {
         );
         if (!locker) {
             throw new NotFoundException('Locker not found');
-        } else {
-            return await this.findInUsedLockerInstanceByLockerID(locker.id);
         }
+        return await this.findInUsedLockerInstanceByLockerID(locker.id);
     }
 
     public async deleteInstance(lockerID: number, startTime: Date) {
@@ -97,21 +95,20 @@ export class LockerInstanceService {
         const locker = await this.qrService.findLockerByAccessCode(
             accessCode,
         );
-        if (locker) {
-            const activeLocker = await this.lockerService.isLockerActiveByLockerID(locker.id);
-            if (activeLocker) {
-                const lockerInstance = await this.findInUsedLockerInstanceByLockerID(
-                    locker.id,
-                );
-                if (lockerInstance) {
-                    this.lockerUsageService.create(ActionType.OPEN, lockerInstance);
-                    return lockerInstance.lockerUsages;
-                } else {
-                    throw new NotFoundException('Locker instance not found');
-                }
-            } else {
-                throw new NotFoundException('Locker not "ACTIVE"');
-            }
+        if (!locker) {
+            throw new NotFoundException('Locker not found');
         }
+        const activeLocker = await this.lockerService.isLockerActiveByLockerID(locker.id);
+        if (!activeLocker) {
+            throw new NotFoundException('Not found "ACTIVE" Locker');
+        }
+        const lockerInstance = await this.findInUsedLockerInstanceByLockerID(
+            locker.id,
+        );
+        if (!lockerInstance) {
+            throw new NotFoundException('Locker instance not found');
+        }
+        this.lockerUsageService.create(ActionType.OPEN, lockerInstance);
+        return lockerInstance.lockerUsages;
     }
 }
