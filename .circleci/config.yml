@@ -58,55 +58,47 @@ jobs:
             echo 'export GIT_USERNAME="$CIRCLE_PROJECT_USERNAME"' >> $BASH_ENV
             echo 'export GIT_BRANCH="$CIRCLE_BRANCH"' >> $BASH_ENV
             echo 'export USERNAME="$DOCKER_HUB_USERNAME"' >> $BASH_ENV
-            echo 'export ENCRYPTED_KEY="$GCP_ENCRYPTED_KEY"' >> $BASH_ENV
-            echo 'export PROJECT_ID="$GCP_PROJECT_ID"' >> $BASH_ENV
-            echo 'export ZONE="$GCP_ZONE"' >> $BASH_ENV
-            echo 'export MYSQL_DATABASE="$ICE_MYSQL_DATABASE"' >> $BASH_ENV
-            echo 'export MYSQL_USER="$ICE_MYSQL_USER"' >> $BASH_ENV
-            echo 'export MYSQL_PASSWORD="$ICE_MYSQL_PASSWORD"' >> $BASH_ENV
-            echo 'export MYSQL_ROOT_PASSWORD="$ICE_MYSQL_ROOT_PASSWORD"' >> $BASH_ENV
-            echo 'export SERVER_URL="$ICE_SERVER_URL"' >> $BASH_ENV
-            echo 'export CHANNEL_ID="$ICE_CHANNEL_ID"' >> $BASH_ENV
-            echo 'export CHANNEL_SECRET="$ICE_CHANNEL_SECRET"' >> $BASH_ENV
-            echo 'export IOT_DEVICE_SECRET="$ICE_IOT_DEVICE_SECRET"' >> $BASH_ENV
-            echo 'export LINE_MESSAGING_API_ENDPOINT="$ICE_LINE_MESSAGING_API_ENDPOINT"' >> $BASH_ENV
-            echo 'export CHANNEL_ACCESS_TOKEN="$ICE_CHANNEL_ACCESS_TOKEN"' >> $BASH_ENV
-            echo 'export NGINX_FILES_PATH="$ICE_NGINX_FILES_PATH"' >> $BASH_ENV
-            echo 'export NGINX_VIRTUAL_HOST="$ICE_NGINX_VIRTUAL_HOST"' >> $BASH_ENV
-            echo 'export BACKEND_VIRTUAL_HOST="$ICE_BACKEND_VIRTUAL_HOST"' >> $BASH_ENV
-            echo 'export LETSENCRYPT_EMAIL="$ICE_LETSENCRYPT_EMAIL"' >> $BASH_ENV
+      - run:
+          name: Stop and delete containers and volumes
+          command: |
+            echo ${GCP_ENCRYPTED_KEY} > encrypted-key.txt
+            base64 -i encrypted-key.txt -d > ${HOME}/gcp-key.json
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud compute ssh --quiet --project $GCP_PROJECT_ID --zone $GCP_ZONE instance-1 -- \
+            '[ -z "$(docker ps -aq)"] || (docker stop $(docker ps -a -q) && docker volume prune -f)'
       - run:
           name: Clone from Git to VM
           command: |
-            echo ${ENCRYPTED_KEY} > encrypted-key.txt
-            base64 -i encrypted-key.txt -d > ${HOME}/gcp-key.json
             gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-            gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
-            "sudo rm -rf ice-project && git clone https://github.com/${GIT_USERNAME}/ice-project.git -b develop"
+            gcloud compute ssh --quiet --project $GCP_PROJECT_ID --zone $GCP_ZONE instance-1 -- \
+            "([ -d ice-project ] && \
+            (cd ice-project && git fetch --all && git reset --hard origin/develop) || \
+            (git clone https://github.com/${GIT_USERNAME}/ice-project.git -b develop))"
       - run:
-          name: Create and transfer .env over ssh
+          name: Create and transfer .env over scp
           command: |
             eval "echo \"$(< .env.template.prod)\"" > .env
             gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-            gcloud compute scp --project $PROJECT_ID ./.env instance-1:~/ice-project
+            gcloud compute scp --project $GCP_PROJECT_ID --zone $GCP_ZONE ./.env instance-1:~/ice-project
       - run:
           name: Pull from Docker hub
           command: |
             gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-            gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
-            "cd ice-project && \
-            docker pull ${USERNAME}/iceprojectbackend:latest && \
-            docker tag ${USERNAME}/iceprojectbackend:latest iceprojectbackend:latest && \
+            gcloud compute ssh --quiet --project $GCP_PROJECT_ID --zone $GCP_ZONE instance-1 -- \
+            "cd ice-project ; \
+            docker pull ${USERNAME}/iceprojectbackend:latest ; \
+            docker tag ${USERNAME}/iceprojectbackend:latest iceprojectbackend:latest ; \
             docker image prune -f"
       - run:
           name: Deploy backend
           command: |
             gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-            gcloud compute ssh --quiet --project $PROJECT_ID --zone $ZONE instance-1 -- \
-            "cd ice-project && \
-            bash ./run-docker-compose-up.sh"
+            gcloud compute ssh --quiet --project $GCP_PROJECT_ID --zone $GCP_ZONE instance-1 -- \
+            'cd ice-project ; \
+            ([ -d public ] || mkdir public) ; \
+            bash ./run-docker-compose-up.sh'
 
-  # frontend          
+  # frontend - require backend to be built and deployed first    
   build_liff:
     docker:
       - image: circleci/node:10
@@ -132,42 +124,40 @@ jobs:
           command: |
             cd liff
             yarn build
-      - store_artifacts:
-          path: liff/build
+      - persist_to_workspace:
+          root: liff/build
+          paths:
+            - .
   deploy_liff:
     docker:
       - image: google/cloud-sdk
     steps:
+      - attach_workspace:
+          at: liff
       - run:
           name: Setup environment variables
           command: |
-            echo 'export GIT_USERNAME="$CIRCLE_PROJECT_USERNAME"' >> $BASH_ENV
-            echo 'export GIT_BRANCH="$CIRCLE_BRANCH"' >> $BASH_ENV
-            echo 'export BUILD_NUM="CIRCLE_BUILD_NUM"' >> $BASH_ENV
             echo 'export USERNAME="$DOCKER_HUB_USERNAME"' >> $BASH_ENV
-            echo 'export ENCRYPTED_KEY="$GCP_ENCRYPTED_KEY"' >> $BASH_ENV
-            echo 'export PROJECT_ID="$GCP_PROJECT_ID"' >> $BASH_ENV
-            echo 'export ZONE="$GCP_ZONE"' >> $BASH_ENV
       - run:
-          name: Download artifact
+          name: Transfer build folder over scp
           command: |
-            export CIRCLE_TOKEN="${LIFF_ARTIFACT_TOKEN}"
-            curl https://circleci.com/api/v1.1/project/github/${GIT_USERNAME}/ice-project/latest/artifacts?circle-token=${CIRCLE_TOKEN}&branch=${GIT_BRANCH} | grep -o 'https://[^"]*' > artifacts.txt
-            <artifacts.txt xargs -P4 -I % wget %?circle-token=${CIRCLE_TOKEN}   
-            ls
-      - run:
-          name: Transfer build folder over ssh
-          command: |
-            echo ${ENCRYPTED_KEY} > encrypted-key.txt
+            echo ${GCP_ENCRYPTED_KEY} > encrypted-key.txt
             base64 -i encrypted-key.txt -d > ${HOME}/gcp-key.json
             gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-            gcloud compute scp --project $PROJECT_ID ./build instance-1:~/ice-project/liff
+            gcloud compute ssh --quiet --project $GCP_PROJECT_ID --zone $GCP_ZONE instance-1 -- "sudo rm -rf ice-project/public/liff"
+            gcloud compute scp --quiet --project $GCP_PROJECT_ID --zone $GCP_ZONE --recurse ./liff instance-1:~/ice-project/public
       
 workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build_liff
+      - build_backend
+      - deploy_backend:
+          requires:
+            - build_backend
+      - build_liff:
+          requires:
+            - deploy_backend
       - deploy_liff:
           requires:
             - build_liff
