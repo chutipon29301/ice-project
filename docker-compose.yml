@@ -24,6 +24,8 @@ services:
     image: mysql:5.7
     container_name: ice-project-db
     restart: always
+    volumes:
+      - ./volumes/database:/var/lib/mysql
     environment:
       MYSQL_DATABASE:
       MYSQL_USER:
@@ -33,6 +35,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.6.0
     container_name: ice-project-elasticsearch
     restart: always
+    volumes:
+      - ./volumes/elasticsearch:/usr/share/elasticsearch/data
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.6.0
     container_name: ice-project-kibana
@@ -43,6 +47,8 @@ services:
     image: docker.elastic.co/beats/metricbeat:6.6.0
     container_name: ice-project-metricbeat
     # restart: always
+    volumes:
+      - ./metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:r
     environment:
       MYSQL_USER:
       MYSQL_PASSWORD:
