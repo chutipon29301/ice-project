@@ -1,0 +1,182 @@
+
+  #landing-header {
+    position: relative;
+    text-align: center;
+  }
+  
+  #landing-header h1 {
+    color: #fff;
+  }
+  
+  #logo{
+    font-family: 'Seaweed Script', cursive;
+    font-size: 6vh;
+    margin: 10px auto;
+  }
+  
+ input::placeholder{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 26px;
+    line-height: normal;
+    color: #B0B0B0;
+}
+
+   .head{
+   height: 30vh;
+      } 
+    
+    #r-bar{
+    position: absolute;
+    left: 0%;
+    top: 0%;
+    bottom: 0%;
+    width: 56%;
+    background: #66A4EC;
+    }
+    
+    #r-logo{
+    position: absolute;
+    width: 322px;
+    height: 317px;
+    left: 53px;
+    top: calc(50% - 275px/2 - 10px);
+    background: url(./../../resources/swarm.png);
+    border: 0;
+    }
+
+    #r-title{
+    position: absolute;
+    height: 275px;
+    left: 390px;
+    right: 55%;
+    top: calc(50% - 275px/2 + 36.5px);
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 96px;
+    line-height: normal;
+    text-align: right;
+    letter-spacing: 0.154353px;
+
+    color: #FFFFFF;
+    }
+
+    #title{
+        position: absolute;
+    height: 275px;
+    width: 400px;
+    right: 5%;
+    top: calc(50% - 275px/2 - 250px);
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 96px;
+    line-height: normal;
+    text-align: right;
+    letter-spacing: 0.154353px;
+
+    color: #66A4EC;
+    }
+
+    #username{
+        position: absolute;
+        left: calc(56% + 5%);
+        right: 5%;
+        top: 44.24%;
+        bottom: 48.59%;
+        width: 32.5%;
+        background: #D2D2D2;
+        box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 8px;
+        border: 0;
+        padding-left: 1.5%;
+
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 26px;
+        line-height: normal;
+
+    }
+    #password{
+        position: absolute;
+        left: calc(56% + 5%);
+        right: 5%;
+        top: 55.06%;
+        bottom: 37.76%;
+        width: 32.5%;
+        background: #D2D2D2;
+        box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 8px;
+        border: 0;
+        padding-left: 1.5%;
+
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 26px;
+        line-height: normal;
+
+    }
+    #b1{
+        position: absolute;
+        right: 5%;
+        top: 67.53%;
+        bottom: 25.65%;
+        border: none;
+        background: #00D500;
+        border-radius: 8px;
+        width: 140px;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 24px;
+        line-height: normal;
+        text-align: center;
+        letter-spacing: 0.154353px;
+        
+        
+        color: #FFFFFF;}
+    #b2{
+        position: absolute;
+        right: 16%;
+        top: 67.53%;
+        bottom: 25.65%;
+        background: #66A4EC;
+        border-radius: 8px;
+        border: none;
+        width: 140px;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 24px;
+        line-height: normal;
+        text-align: center;
+        letter-spacing: 0.154353px;
+        text-decoration-line: underline;
+        color: #FFFFFF;}
+
+    #forget{
+        position: absolute;
+        right: 5%;
+        top: 74%;
+
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: normal;
+        text-align: right;
+        letter-spacing: 0.154353px;
+        text-decoration-line: underline;
+        
+        color: #AAAAAA;   
+    }
+    
+
+
+
+      
