@@ -13,7 +13,7 @@ export class QRCode {
     constructor(locker: Locker) {
         this.locker = locker;
         this.expireDate = moment()
-            .add('5min')
+            .add(5, 'minutes')
             .toDate();
     }
 
