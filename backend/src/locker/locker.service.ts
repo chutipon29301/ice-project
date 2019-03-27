@@ -33,8 +33,18 @@ export class LockerService {
         return await this.lockerRepository.find();
     }
 
-    public async findById(id: number): Promise<Locker> {
-        return await this.lockerRepository.findOne(id);
+    public async findLockerByID(id: number): Promise<Locker> {
+        const locker = await this.lockerRepository.findOne(id);
+        return locker;
+    }
+
+    public async findLockerBySerialNumber(
+        serialNumber: string,
+    ): Promise<Locker> {
+        const locker = await this.lockerRepository.findOne({
+            where: { serialNumber },
+        });
+        return locker;
     }
 
     public async findActiveLockerByID(id: number): Promise<Locker | null> {
@@ -64,18 +74,13 @@ export class LockerService {
         }
     }
 
-    public async edit(id: number, value: Partial<Locker>) {
-        await this.lockerRepository.update(id, value);
-    }
-
     public async registerLocker(id: number, value: RegisterLockerDto) {
         const locker = await this.findLockerByID(id);
         const location = await this.locationService.findLocationByID(
             value.locationID,
         );
         if (
-            locker.availability === LockerAvailability.UNREGISTERED &&
-            location
+            locker.availability === LockerAvailability.UNREGISTERED && location
         ) {
             locker.availability = LockerAvailability.AVAILABLE;
             locker.name = value.name;
@@ -87,22 +92,12 @@ export class LockerService {
         }
     }
 
+    public async edit(id: number, value: Partial<Locker>) {
+        await this.lockerRepository.update(id, value);
+    }
+
     public async delete(id: number) {
         await this.lockerRepository.delete(id);
-    }
-
-    public async findLockerByID(id: number): Promise<Locker> {
-        const locker = await this.lockerRepository.findOne(id);
-        return locker;
-    }
-
-    public async findLockerBySerialNumber(
-        serialNumber: string,
-    ): Promise<Locker> {
-        const locker = await this.lockerRepository.findOne({
-            where: { serialNumber },
-        });
-        return locker;
     }
 
     public async getLockerCurrentStatus(
