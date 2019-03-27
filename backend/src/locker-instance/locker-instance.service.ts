@@ -37,8 +37,8 @@ export class LockerInstanceService {
         const inUsedLockerInstance = await this.lockerInstanceRepository.findOne(
             { where: { inUsed: true } },
         );
-        if (locker && user && !inUsedLockerInstance) {
-            const lockerInstance = new LockerInstance(new Date(), locker, user);
+        if (activeLocker && user && !inUsedLockerInstance) {
+            const lockerInstance = new LockerInstance(new Date(), activeLocker, user);
             this.lockerUsageService.create(ActionType.OPEN, lockerInstance);
             return lockerInstance;
         } else {
