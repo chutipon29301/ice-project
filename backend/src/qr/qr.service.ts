@@ -8,13 +8,12 @@ import { LockerService } from '../locker/locker.service';
 
 @Injectable()
 export class QrService {
-
     constructor(
         @Inject(QRCodeRepositoryToken)
         private readonly qrCodeRepository: Repository<QRCode>,
         private readonly configService: ConfigService,
         private readonly lockerService: LockerService,
-    ) { }
+    ) {}
 
     public async generateRedirectURL(serialNumber: string): Promise<string> {
         const locker = await this.lockerService.findActiveLockerBySerialNumber(
@@ -23,9 +22,13 @@ export class QrService {
         if (locker) {
             const qr = new QRCode(locker);
             await this.qrCodeRepository.save(qr);
-            return `${this.configService.liffServerURL}/unlock?accessCode=${qr.id}`;
+            return `${this.configService.liffServerURL}/unlock?accessCode=${
+                qr.id
+            }`;
         } else {
-            throw new NotFoundException(`Cannot generate link: Locker with serial number ${serialNumber} not found`);
+            throw new NotFoundException(
+                `Cannot generate link: Locker with serial number ${serialNumber} not found`,
+            );
         }
     }
 

@@ -82,6 +82,7 @@ export class UserService {
         });
         return user;
     }
+
     async canUserActivateRole(
         nationalID: string,
         ...roles: Role[]

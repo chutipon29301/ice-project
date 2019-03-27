@@ -6,8 +6,8 @@ import { DatabaseModule } from '../database.module';
 import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [DatabaseModule, UserModule],
-  providers: [...shareLockerProviders, ShareLockerService],
-  controllers: [ShareLockerController]
+    imports: [DatabaseModule, UserModule],
+    providers: [...shareLockerProviders, ShareLockerService],
+    controllers: [ShareLockerController],
 })
-export class ShareLockerModule { }
+export class ShareLockerModule {}

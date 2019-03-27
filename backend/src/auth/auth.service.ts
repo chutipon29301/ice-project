@@ -46,7 +46,9 @@ export class AuthService {
         const body = {
             grant_type: 'authorization_code',
             code,
-            redirect_uri: `${this.configService.liffServerURL}/auth/line/callback`,
+            redirect_uri: `${
+                this.configService.liffServerURL
+            }/auth/line/callback`,
             client_id: this.configService.lineChannelID,
             client_secret: this.configService.lineChannelSecret,
         };

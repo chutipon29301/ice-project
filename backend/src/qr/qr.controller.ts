@@ -5,13 +5,15 @@ import { QrService } from './qr.service';
 
 @Controller('qr')
 export class QrController {
-    constructor(private readonly qrService: QrService) { }
+    constructor(private readonly qrService: QrService) {}
 
     @Get('generateLink')
     async generateQRCodeLink(
         @Query() query: RequestQrCodeDto,
     ): Promise<GeneratedQRResponseDto> {
-        const link = await this.qrService.generateRedirectURL(query.serialNumber);
+        const link = await this.qrService.generateRedirectURL(
+            query.serialNumber,
+        );
         return { link };
     }
 }

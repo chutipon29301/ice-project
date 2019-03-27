@@ -1,4 +1,4 @@
-export class RequestInvitationDto{
+export class RequestInvitationDto {
     // userID
     // lockerID
 }

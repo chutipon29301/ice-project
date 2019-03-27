@@ -1,11 +1,19 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    JoinTable,
+    ManyToMany,
+    ManyToOne,
+    OneToMany,
+    PrimaryColumn,
+} from 'typeorm';
 import { LockerUsage } from './locker-usage.entity';
 import { Locker } from './locker.entity';
 import { User } from './user.entity';
 
 @Entity()
 export class LockerInstance {
-
     constructor(startTime: Date, locker: Locker, ownerUser: User) {
         this.startTime = startTime;
         this.locker = locker;
@@ -16,7 +24,9 @@ export class LockerInstance {
     @PrimaryColumn()
     lockerID: number;
 
-    @ManyToOne(type => Locker, locker => locker.lockerInstances, { cascade: true })
+    @ManyToOne(type => Locker, locker => locker.lockerInstances, {
+        cascade: true,
+    })
     @JoinColumn([{ name: 'lockerID', referencedColumnName: 'id' }])
     locker: Locker;
 
@@ -51,5 +61,4 @@ export class LockerInstance {
 
     @OneToMany(type => LockerUsage, lockerUsage => lockerUsage.lockerInstance)
     lockerUsages: LockerUsage[];
-
 }

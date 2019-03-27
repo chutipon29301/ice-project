@@ -9,12 +9,9 @@ export class ShareLockerService {
     constructor(
         @Inject(UserInvitationRepositoryToken)
         private readonly userInvitationRepository: Repository<UserInvitation>,
-        private readonly userService: UserService) { }
+        private readonly userService: UserService,
+    ) {}
 
-    public generateInvitationLink() {
-
-    }
-    public addUserToShareAccess() {
-
-    }
+    public generateInvitationLink() {}
+    public addUserToShareAccess() {}
 }

@@ -27,7 +27,7 @@ export class LockerService {
         private readonly lockerUsageService: LockerUsageService,
         @Inject(forwardRef(() => LockerInstanceService))
         private readonly lockerInstanceService: LockerInstanceService,
-    ) { }
+    ) {}
 
     public async list(): Promise<Locker[]> {
         return await this.lockerRepository.find();
@@ -80,7 +80,8 @@ export class LockerService {
             value.locationID,
         );
         if (
-            locker.availability === LockerAvailability.UNREGISTERED && location
+            locker.availability === LockerAvailability.UNREGISTERED &&
+            location
         ) {
             locker.availability = LockerAvailability.AVAILABLE;
             locker.name = value.name;

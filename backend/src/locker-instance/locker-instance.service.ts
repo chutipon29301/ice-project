@@ -24,22 +24,26 @@ export class LockerInstanceService {
         private readonly lockerService: LockerService,
         private readonly lockerUsageService: LockerUsageService,
         private readonly userService: UserService,
-    ) { }
+    ) {}
 
     public async create(
         accessCode: string,
         nationalID: string,
     ): Promise<LockerInstance> {
-        const locker = await this.qrService.findLockerByAccessCode(
-            accessCode,
+        const locker = await this.qrService.findLockerByAccessCode(accessCode);
+        const activeLocker = await this.lockerService.findActiveLockerByID(
+            locker.id,
         );
-        const activeLocker = await this.lockerService.findActiveLockerByID(locker.id);
         const user = await this.userService.getUserWithNationalID(nationalID);
         const inUsedLockerInstance = await this.lockerInstanceRepository.findOne(
             { where: { inUsed: true } },
         );
         if (activeLocker && user && !inUsedLockerInstance) {
-            const lockerInstance = new LockerInstance(new Date(), activeLocker, user);
+            const lockerInstance = new LockerInstance(
+                new Date(),
+                activeLocker,
+                user,
+            );
             this.lockerUsageService.create(ActionType.OPEN, lockerInstance);
             return lockerInstance;
         } else {
@@ -87,12 +91,18 @@ export class LockerInstanceService {
         return await this.findInUsedLockerInstanceByLockerID(locker.id);
     }
 
-    public async findLockerInstancesByNationalID(nationalID: string): Promise<LockerInstance[]> {
+    public async findLockerInstancesByNationalID(
+        nationalID: string,
+    ): Promise<LockerInstance[]> {
         const user = this.userService.getUserWithNationalID(nationalID);
         if (!user) {
-            throw new UnauthorizedException('User has not been register with the system');
+            throw new UnauthorizedException(
+                'User has not been register with the system',
+            );
         }
-        const lockerInstances = this.lockerInstanceRepository.find({ where: { userID: nationalID, inUsed: true } });
+        const lockerInstances = this.lockerInstanceRepository.find({
+            where: { userID: nationalID, inUsed: true },
+        });
         return lockerInstances;
     }
 
@@ -101,14 +111,17 @@ export class LockerInstanceService {
         await this.lockerInstanceRepository.delete(lockerInstance);
     }
 
-    public async unlock(accessCode: string, nationalID: string): Promise<LockerUsage[]> {
-        const locker = await this.qrService.findLockerByAccessCode(
-            accessCode,
-        );
+    public async unlock(
+        accessCode: string,
+        nationalID: string,
+    ): Promise<LockerUsage[]> {
+        const locker = await this.qrService.findLockerByAccessCode(accessCode);
         if (!locker) {
             throw new NotFoundException('Locker not found');
         }
-        const activeLocker = await this.lockerService.isLockerActiveByLockerID(locker.id);
+        const activeLocker = await this.lockerService.isLockerActiveByLockerID(
+            locker.id,
+        );
         if (!activeLocker) {
             throw new NotFoundException('Not found "ACTIVE" Locker');
         }

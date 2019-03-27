@@ -63,6 +63,10 @@ export class Locker {
     @OneToMany(type => QRCode, qrCode => qrCode.locker, { nullable: true })
     qrCodes: QRCode[];
 
-    @OneToMany(type => UserInvitation, userInvitation => userInvitation.locker, { nullable: true })
+    @OneToMany(
+        type => UserInvitation,
+        userInvitation => userInvitation.locker,
+        { nullable: true },
+    )
     userInvitations: UserInvitation[];
 }
