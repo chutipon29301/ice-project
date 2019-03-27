@@ -6,3 +6,4 @@ export const LockerInstanceRepositoryToken = 'LockerInstanceRepositoryToken';
 export const LockerUsageRepositoryToken = 'LockerUsageRepositoryToken';
 export const GroupRepositoryToken = 'GroupRepositoryToken';
 export const QRCodeRepositoryToken = 'QRCodeRepositoryToken';
+export const UserInvitationRepositoryToken = 'UserInvitationRepositoryToken';
