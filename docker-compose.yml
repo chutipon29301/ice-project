@@ -48,7 +48,7 @@ services:
     container_name: ice-project-metricbeat
     # restart: always
     volumes:
-      - ./metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:r
+      - ./metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
     environment:
       MYSQL_USER:
       MYSQL_PASSWORD:
