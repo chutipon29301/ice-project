@@ -1,0 +1,29 @@
+<div class="sidenav">
+
+    <h1 id = "lgtitle" class="noselect">Locker Swarm</h1>
+    <hr id = "thr">
+
+    <div  id = "admindt" >
+      <div id = "adname">  Admin name </div>
+      <div id = "addetails"> Details </div>
+    </div>
+
+    <div id = "tab">
+      <a class="item" routerLinkActive="active" routerLink="/admin/dashboard" class="noselect" style="cursor: pointer;"> <div id = "v1"></div> Dashboard</a>
+      <a class="item" routerLinkActive="active" routerLink="/admin/users" class="noselect" style="cursor: pointer;"> <div id = "v2"></div> User</a>
+    </div>
+
+   <hr id = "bhr">
+   
+    <div id = "logout" class="noselect">
+       <div id = "close"></div> <div id = "logtext"> Log Out </div>
+    </div>
+
+  </div>
+  
+  <div class="main">
+      <router-outlet></router-outlet>
+  </div>
+
+
+

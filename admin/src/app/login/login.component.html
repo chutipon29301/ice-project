@@ -1,0 +1,19 @@
+<div id = "r-bar">
+  <div id = "r-logo">
+  </div>
+  <div id = "r-title" class = "noselect">
+    LOCKER SWARM
+  </div>
+</div>
+
+<h1 id="title" class = "noselect">Admin Website</h1>
+
+
+
+       <form (ngSubmit)="onSignin(f)" #f="ngForm">
+           <input id="username" type="text" name="username" placeholder="Username" ngModel required>
+           <input id="password" type="password" name="password" placeholder="Password" ngModel required>
+          <button id="b1"[disabled]="!f.valid"> Login </button>
+       </form>
+      <button id = "b2"> Sign up </button>
+      <p id = "forget">Forget Password</p>

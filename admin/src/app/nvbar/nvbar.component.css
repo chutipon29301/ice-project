@@ -1,0 +1,142 @@
+.sidenav {
+    height: 100%;
+    width: 256px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #ffffff;
+    overflow-x: hidden;
+    box-shadow: 6px 0px 18px rgba(0, 0, 0, 0.06);
+  }
+  
+  .sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #334D6E;
+    display: block;
+  }
+  
+  .sidenav a:hover {
+    color: #109CF1;
+  }
+
+  .main {
+    margin-left: 256px; 
+    height: 100%;
+    font-size: 28px; 
+    background-color: #F5F6F8;
+  }
+
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }
+
+  #thr{
+    position: absolute;
+    top: 60px;
+  }
+
+  #bhr{
+    position: absolute;
+    bottom: 434px;
+  }
+
+  #lgtitle{
+    font-style: normal;
+    font-weight: 900;
+    font-size: 18px;
+    line-height: normal;
+    position: absolute;
+    left: 19px;
+    right: 25px;
+    color: #109CF1;
+    margin: 19px 0px 19px;
+  }
+
+  #admindt{
+    margin-top: 80px; 
+  }
+
+  #tab{
+    margin-top: 30px; 
+  }
+
+  #adname{
+    padding-left: 40px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: normal;
+    
+    color: #192A3E;
+    
+  }
+
+  #addetails{
+    padding-left: 40px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: normal;
+    letter-spacing: 0.01em;
+    
+    color: #90A0B7;
+  }
+
+  .item{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: normal;
+    letter-spacing: 0.01em;
+    
+  }
+
+  #logout{
+    position: absolute;
+
+    bottom: 0px;
+    height: 60px;
+    width: 100%;
+    color: white;
+    background: #FF5A5A;
+  }
+
+  #v1{
+      width: 15.5px;
+      height: 15px;
+      margin-top: 3px;
+    margin-right: 5px;
+      display: inline-block;
+    background: url(./../../resources/v1.png);
+  }
+
+  #v2{
+    width: 15.5px;
+    height: 15px;
+    margin-right: 5px;
+    display: inline-block;
+    background: url(./../../resources/v2.png);
+  }
+
+  #close{
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    position: absolute;
+    top: 20px;
+    left: 75px;
+    background: url(./../../resources/close.png);
+  }
+
+  #logtext{
+    position: absolute;
+    top: 20px;
+    left: 108px;
+  }
+  .active{
+    color: #109CF1 !important;
+  }

@@ -1,0 +1,41 @@
+<div id = "lcomponent">
+
+  <div class="top"></div>
+      <div id = "title">Lockers Status
+          <div id = "add" (click)="open($event)"></div>
+      </div>
+            <hr id = "bottommar">
+
+    <div id = "lcontainer">
+
+    <div class="top"></div>
+      <div id = "ilcontainer">
+          <div *ngFor="let locker of lockers; let i = index">
+            <div id = "locker">
+            <div id = "plockers"></div>
+            <div id = "namelock">{{locker.name}}</div>
+            <div id = "numlock">No. {{locker.number}}</div>
+            <div id = "avalock" *ngIf= "locker.available; else unavailable" >Available</div>
+            <ng-template #unavailable>
+              <div id = "unavalock" >Unavailable</div>
+            </ng-template>
+            <button id = "remove" > Remove </button>
+            <hr id = "bottomhr">
+          </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close" (click)="close($event)">&times;</span>
+      <p>Some text in the Modal..</p>
+    </div>
+  
+  </div>
+
