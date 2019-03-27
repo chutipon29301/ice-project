@@ -16,7 +16,7 @@ import { UnlockLockerInstanceDto } from './dto/unlock-locker-instance.dto';
 export class LockerInstanceController {
     constructor(
         private readonly lockerInstanceService: LockerInstanceService,
-    ) {}
+    ) { }
 
     @ApiOperation({
         title: 'Get locker used history',
@@ -30,17 +30,17 @@ export class LockerInstanceController {
         title: 'Create instance of locker when user start using locker',
     })
     @Post('createInstance')
-    @Roles(Role.USER)
     async createInstance(
         @User() user: JwtToken,
         @Body() body: LockerInstanceDto,
     ): Promise<LockerInstance> {
         return await this.lockerInstanceService.create(
-            body.lockerID,
+            body.accessCode,
             user.nationalID,
         );
     }
 
+    @Roles(Role.ADMIN, Role.SUPERUSER)
     @Delete()
     async deleteInstance(@Body() body: ListLockerInstanceDto) {
         return await this.lockerInstanceService.deleteInstance(
@@ -49,16 +49,11 @@ export class LockerInstanceController {
         );
     }
     @Post('unlock')
-    @Roles(Role.USER)
+    @Roles(Role.USER, Role.SUPERUSER)
     async unlockLocker(
         @User() user: JwtToken,
         @Body() body: UnlockLockerInstanceDto,
     ) {
-        this.lockerInstanceService.unlock(body.accessCode, user.nationalID);
-    }
-
-    @Post('lock')
-    async lockLocker(@Body() body: ListLockerInstanceDto) {
-        this.lockerInstanceService.lock(body.lockerID, body.startTime);
+        return this.lockerInstanceService.unlock(body.accessCode, user.nationalID);
     }
 }

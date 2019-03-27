@@ -4,17 +4,9 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 export class LockerInstanceDto {
     @ApiModelProperty({
-        description: 'Locker id',
-        required: true,
-    })
-    @IsNumber()
-    @ToInt()
-    public lockerID: number;
-
-    @ApiModelProperty({
-        description: 'National id of user',
+        description: 'Access Code to locker',
         required: true,
     })
     @IsString()
-    public nationalID: string;
+    public accessCode: string;
 }

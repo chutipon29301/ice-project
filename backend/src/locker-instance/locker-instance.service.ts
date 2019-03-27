@@ -23,13 +23,16 @@ export class LockerInstanceService {
         private readonly lockerService: LockerService,
         private readonly lockerUsageService: LockerUsageService,
         private readonly userService: UserService,
-    ) {}
+    ) { }
 
     public async create(
-        lockerID: number,
+        accessCode: string,
         nationalID: string,
     ): Promise<LockerInstance> {
-        const locker = await this.lockerService.findActiveLockerByID(lockerID);
+        const locker = await this.qrService.findLockerByAccessCode(
+            accessCode,
+        );
+        const activeLocker = await this.lockerService.findActiveLockerByID(locker.id);
         const user = await this.userService.getUserWithNationalID(nationalID);
         const inUsedLockerInstance = await this.lockerInstanceRepository.findOne(
             { where: { inUsed: true } },
@@ -66,7 +69,9 @@ export class LockerInstanceService {
     ): Promise<LockerInstance> {
         const lockerInstance = await this.lockerInstanceRepository.findOne({
             where: { lockerID, inUsed: true },
+            relations: ['locker', 'ownerUser'],
         });
+        console.log(lockerInstance);
         return lockerInstance;
     }
 
@@ -88,22 +93,25 @@ export class LockerInstanceService {
         await this.lockerInstanceRepository.delete(lockerInstance);
     }
 
-    public async unlock(accessCode: string, nationalID: string) {
-        const lockerID = await this.qrService.findLockerInstanceByAccessCode(
+    public async unlock(accessCode: string, nationalID: string): Promise<LockerUsage[]> {
+        const locker = await this.qrService.findLockerByAccessCode(
             accessCode,
         );
-        const lockerInstance = await this.findInUsedLockerInstanceByLockerID(
-            lockerID,
-        );
-        const lockerUsage = new LockerUsage(ActionType.OPEN, lockerInstance);
-        lockerInstance.lockerUsages.push(lockerUsage);
-        await this.lockerInstanceRepository.save(lockerInstance);
-    }
-
-    public async lock(lockerID: number, startTime: Date) {
-        const lockerInstance = await this.findInstance(lockerID, startTime);
-        const lockerUsage = new LockerUsage(ActionType.CLOSE, lockerInstance);
-        lockerInstance.lockerUsages.push(lockerUsage);
-        await this.lockerInstanceRepository.save(lockerInstance);
+        if (locker) {
+            const activeLocker = await this.lockerService.isLockerActiveByLockerID(locker.id);
+            if (activeLocker) {
+                const lockerInstance = await this.findInUsedLockerInstanceByLockerID(
+                    locker.id,
+                );
+                if (lockerInstance) {
+                    this.lockerUsageService.create(ActionType.OPEN, lockerInstance);
+                    return lockerInstance.lockerUsages;
+                } else {
+                    throw new NotFoundException('Locker instance not found');
+                }
+            } else {
+                throw new NotFoundException('Locker not "ACTIVE"');
+            }
+        }
     }
 }
