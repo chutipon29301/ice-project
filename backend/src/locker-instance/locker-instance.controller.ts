@@ -14,9 +14,18 @@ import { UnlockLockerInstanceDto } from './dto/unlock-locker-instance.dto';
 @ApiUseTags('Locker Instance')
 @Controller('locker-instance')
 export class LockerInstanceController {
+
     constructor(
         private readonly lockerInstanceService: LockerInstanceService,
     ) { }
+
+    @Roles(Role.USER, Role.SUPERUSER)
+    @Get('myLocker')
+    async getMyLocker(
+        @User() user: JwtToken
+    ): Promise<LockerInstance[]> {
+        return await this.lockerInstanceService.findLockerInstancesByNationalID(user.nationalID);
+    }
 
     @ApiOperation({
         title: 'Get locker used history',
@@ -40,14 +49,6 @@ export class LockerInstanceController {
         );
     }
 
-    @Roles(Role.ADMIN, Role.SUPERUSER)
-    @Delete()
-    async deleteInstance(@Body() body: ListLockerInstanceDto) {
-        return await this.lockerInstanceService.deleteInstance(
-            body.lockerID,
-            body.startTime,
-        );
-    }
     @Post('unlock')
     @Roles(Role.USER, Role.SUPERUSER)
     async unlockLocker(
@@ -55,5 +56,14 @@ export class LockerInstanceController {
         @Body() body: UnlockLockerInstanceDto,
     ) {
         return this.lockerInstanceService.unlock(body.accessCode, user.nationalID);
+    }
+
+    @Delete()
+    @Roles(Role.ADMIN, Role.SUPERUSER)
+    async deleteInstance(@Body() body: ListLockerInstanceDto) {
+        return await this.lockerInstanceService.deleteInstance(
+            body.lockerID,
+            body.startTime,
+        );
     }
 }

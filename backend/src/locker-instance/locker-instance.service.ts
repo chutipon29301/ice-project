@@ -3,6 +3,7 @@ import {
     Inject,
     Injectable,
     NotFoundException,
+    UnauthorizedException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { LockerInstanceRepositoryToken } from '../constant';
@@ -84,6 +85,15 @@ export class LockerInstanceService {
             throw new NotFoundException('Locker not found');
         }
         return await this.findInUsedLockerInstanceByLockerID(locker.id);
+    }
+
+    public async findLockerInstancesByNationalID(nationalID: string): Promise<LockerInstance[]> {
+        const user = this.userService.getUserWithNationalID(nationalID);
+        if (!user) {
+            throw new UnauthorizedException('User has not been register with the system');
+        }
+        const lockerInstances = this.lockerInstanceRepository.find({ where: { userID: nationalID, inUsed: true } });
+        return lockerInstances;
     }
 
     public async deleteInstance(lockerID: number, startTime: Date) {
