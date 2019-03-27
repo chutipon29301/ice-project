@@ -24,8 +24,8 @@ export class LockerInstance {
     @PrimaryColumn()
     lockerID: number;
 
-    @ManyToOne(type => Locker, { cascade: true })
-    @JoinColumn({ name: 'lockerID', referencedColumnName: 'id' })
+    @ManyToOne(type => Locker, locker => locker.lockerInstances, { cascade: true })
+    @JoinColumn([{ name: 'lockerID', referencedColumnName: 'id' }])
     locker: Locker;
 
     @Column({
