@@ -12,7 +12,7 @@ export class BotService {
     constructor(
         private readonly httpService: HttpService,
         private readonly configService: ConfigService,
-    ) { }
+    ) {}
 
     async lineBotReplyMsg(body: LineUserEventDto) {
         const event = body.events[0];
@@ -56,14 +56,14 @@ export class BotService {
             await this.httpService
                 .post(
                     `${this.configService.lineMessagingApiEndpoint}/reply`,
-                    {
-                        replyToken,
-                        messages,
-                    },
+                    { replyToken, messages },
                     {
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${this.configService.channelAccessToken}`,
+                            // tslint:disable-next-line:object-literal-key-quotes
+                            Authorization: `Bearer ${
+                                this.configService.channelAccessToken
+                            }`,
                         },
                     },
                 )
