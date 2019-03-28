@@ -3,11 +3,15 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { SanitizationPipe } from './pipe/sanitization.pipe';
+import { join } from 'path';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+
     app.useGlobalPipes(new ValidationPipe());
     app.useGlobalPipes(new SanitizationPipe());
+    app.useStaticAssets(join(__dirname, '../public'));
+
     const options = new DocumentBuilder()
         .setTitle('Locker swarm example')
         .setDescription('The locker swarm API description')
@@ -15,9 +19,9 @@ async function bootstrap() {
         .addTag('locker-swarm')
         .addBearerAuth()
         .build();
-
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup('api', app, document);
+
     await app.listen(3000);
 }
 bootstrap();
