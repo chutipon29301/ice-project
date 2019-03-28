@@ -98,7 +98,7 @@ jobs:
             ([ -d public ] || mkdir public) ; \
             bash ./run-docker-compose-up.sh'
 
-  # frontend - require backend to be built and deployed first    
+  # liff - requires backend to finish building and deploying   
   build_liff:
     docker:
       - image: circleci/node:10
@@ -128,6 +128,7 @@ jobs:
           root: liff/build
           paths:
             - .
+
   deploy_liff:
     docker:
       - image: google/cloud-sdk
@@ -146,18 +147,63 @@ jobs:
             gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
             gcloud compute ssh --quiet --project $GCP_PROJECT_ID --zone $GCP_ZONE instance-1 -- "sudo rm -rf ice-project/public/liff"
             gcloud compute scp --quiet --project $GCP_PROJECT_ID --zone $GCP_ZONE --recurse ./liff instance-1:~/ice-project/public
+
+  # admin - requires backend to finish building and deploying
+  build_admin:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - admin-dependencies-v1.0-{{ .Branch }}-{{ checksum "admin/package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - admin-dependencies-v1.0-{{ .Branch }}
+            - admin-dependencies-v1.0
+      - run:
+          name: Install dependencies
+          command: |
+            cd admin
+            sudo yarn
+      - save_cache:
+          paths:
+            - admin/node_modules
+          key: admin-dependencies-v1.0-{{ .Branch }}-{{ checksum "admin/package.json" }}
+      - run:
+          name: Build admin frontend
+          command: |
+            cd admin
+            sudo yarn ng build --prod
+      - persist_to_workspace:
+          root: admin/dist
+          paths:
+            - .
+
+  deploy_admin:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - attach_workspace:
+          at: dist
+      - run:
+          name: Setup environment variables
+          command: |
+            echo 'export USERNAME="$DOCKER_HUB_USERNAME"' >> $BASH_ENV
+      - run:
+          name: Transfer build folder over scp
+          command: |
+            echo ${GCP_ENCRYPTED_KEY} > encrypted-key.txt
+            base64 -i encrypted-key.txt -d > ${HOME}/gcp-key.json
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud compute ssh --quiet --project $GCP_PROJECT_ID --zone $GCP_ZONE instance-1 -- "sudo rm -rf ice-project/public/dist"
+            gcloud compute scp --quiet --project $GCP_PROJECT_ID --zone $GCP_ZONE --recurse ./dist instance-1:~/ice-project/public
       
+
 workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build_backend
-      - deploy_backend:
+      - build_admin
+      - deploy_admin:
           requires:
-            - build_backend
-      - build_liff:
-          requires:
-            - deploy_backend
-      - deploy_liff:
-          requires:
-            - build_liff
+            - build_admin
