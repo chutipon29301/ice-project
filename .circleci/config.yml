@@ -203,7 +203,17 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
+      - build_backend
+      - build_liff
       - build_admin
+      - deploy_backend:
+          requires:
+            - build_backend
+      - deploy_liff:
+          requires:
+            - deploy_backend
+            - build_liff
       - deploy_admin:
           requires:
+            - deploy_backend
             - build_admin
