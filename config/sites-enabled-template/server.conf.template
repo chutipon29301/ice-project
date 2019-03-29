@@ -1,0 +1,74 @@
+
+
+server {
+    listen 80;
+    server_name nginx;
+
+    location /server-status {
+        stub_status;
+    }
+}
+
+server {
+    listen 80;
+    server_name $NGINX_SERVER_NAME;
+    server_tokens off;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://${DOLLAR}host${DOLLAR}request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name $BACKEND_VIRTUAL_HOST;
+    server_tokens off;
+
+    ssl_certificate /etc/letsencrypt/live/$NGINX_CERT_NAME/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/$NGINX_CERT_NAME/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        proxy_pass http://backend:3000;
+        proxy_set_header    Host                ${DOLLAR}http_host;
+        proxy_set_header    X-Real-IP           ${DOLLAR}remote_addr;
+        proxy_set_header    X-Forwarded-For     ${DOLLAR}proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name $LIFF_VIRTUAL_HOST;
+    server_tokens off;
+
+    ssl_certificate /etc/letsencrypt/live/$NGINX_CERT_NAME/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/$NGINX_CERT_NAME/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        root /tmp/public/liff;
+        try_files ${DOLLAR}uri ${DOLLAR}uri/ /;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name $ADMIN_VIRTUAL_HOST;
+    server_tokens off;
+
+    ssl_certificate /etc/letsencrypt/live/$NGINX_CERT_NAME/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/$NGINX_CERT_NAME/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        root /tmp/public/admin;
+        try_files ${DOLLAR}uri ${DOLLAR}uri/ /;
+    }
+}

@@ -1,41 +1,60 @@
 version: "3.2"
 
 services:
-  nginx-proxy:
-    image: jwilder/nginx-proxy
-    labels:
-      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
-    restart: always
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ${NGINX_FILES_PATH:-./nginx-data}/vhost.d:/etc/nginx/vhost.d
-      - ${NGINX_FILES_PATH:-./nginx-data}/html:/usr/share/nginx/html
-      - ${NGINX_FILES_PATH:-./nginx-data}/certs:/etc/nginx/certs:ro
-      - ./nginx-proxy/conf.d/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro
-  letsencrypt-nginx-proxy-companion:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    restart: always
-    depends_on:
-      - nginx-proxy
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${NGINX_FILES_PATH:-./nginx-data}/vhost.d:/etc/nginx/vhost.d
-      - ${NGINX_FILES_PATH:-./nginx-data}/html:/usr/share/nginx/html
-      - ${NGINX_FILES_PATH:-./nginx-data}/certs:/etc/nginx/certs:rw
+  # nginx-proxy:
+  #   image: jwilder/nginx-proxy
+  #   labels:
+  #     com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+  #   restart: always
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  #     - /var/run/docker.sock:/tmp/docker.sock:ro
+  #     - ${NGINX_FILES_PATH:-./nginx-data}/vhost.d:/etc/nginx/vhost.d
+  #     - ${NGINX_FILES_PATH:-./nginx-data}/html:/usr/share/nginx/html
+  #     - ${NGINX_FILES_PATH:-./nginx-data}/certs:/etc/nginx/certs:ro
+  #     - ./nginx-proxy/conf.d/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro
+  # letsencrypt-nginx-proxy-companion:
+  #   image: jrcs/letsencrypt-nginx-proxy-companion
+  #   restart: always
+  #   depends_on:
+  #     - nginx-proxy
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - ${NGINX_FILES_PATH:-./nginx-data}/vhost.d:/etc/nginx/vhost.d
+  #     - ${NGINX_FILES_PATH:-./nginx-data}/html:/usr/share/nginx/html
+  #     - ${NGINX_FILES_PATH:-./nginx-data}/certs:/etc/nginx/certs:rw
   nginx:
-    image: nginx:alpine
-    restart: always
-    environment:
-      VIRTUAL_HOST: ${NGINX_VIRTUAL_HOST}
-      LETSENCRYPT_HOST: ${NGINX_VIRTUAL_HOST}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+    image: nginx:1.15-alpine
+    restart: unless-stopped
     volumes:
       - ./config/nginx.conf:/etc/nginx/nginx.conf
-      - ./config/sites-enabled/server.conf:/etc/nginx/sites-enabled/server.conf
+      - ./config/sites-enabled-template/server.conf.template:/etc/nginx/sites-enabled-template/server.conf.template
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
       - ./public:/tmp/public
+      - ./run-nginx.sh:/run-nginx.sh
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      NGINX_SERVER_NAME:
+      NGINX_CERT_NAME:
+      BACKEND_VIRTUAL_HOST:
+      LIFF_VIRTUAL_HOST:
+      ADMIN_VIRTUAL_HOST:
+    depends_on:
+      - backend
+    command: "/bin/sh -c 'sh /run-nginx.sh && while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    # command: "/bin/sh -c 'sh /run-nginx.sh && ls /etc/nginx/sites-enabled && cat /etc/nginx/sites-enabled/server.conf'"
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   backend:
     build: ./backend
     image: iceprojectbackend

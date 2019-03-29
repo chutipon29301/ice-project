@@ -1,3 +1,9 @@
+# Certbot
+certbot
+
+# Frontend
+public
+
 # Dependency directory
 node_modules/
 
