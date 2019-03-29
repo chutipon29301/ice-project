@@ -50,7 +50,6 @@ export class LockerController {
     @ApiOperation({
         title: 'Adding locker to system',
     })
-    @Roles(Role.SUPERUSER, Role.ADMIN)
     @Post()
     async addLocker(
         @Body() body: LockerSecretDto,
