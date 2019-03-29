@@ -175,7 +175,7 @@ jobs:
             cd admin
             sudo yarn ng build --prod
       - persist_to_workspace:
-          root: admin/dist
+          root: admin/dist/locker-swarm
           paths:
             - .
 
