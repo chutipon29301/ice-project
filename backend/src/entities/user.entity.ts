@@ -89,7 +89,7 @@ export class User {
     @JoinTable()
     lockerUsages: LockerUsage[];
 
-    @ManyToMany(type => LockerInstance)
+    @ManyToMany(type => LockerInstance, lockerInstance => lockerInstance.accessibleUsers)
     accessibleLockerInstance: LockerInstance[];
 
     @ManyToMany(type => Group)

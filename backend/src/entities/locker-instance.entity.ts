@@ -11,6 +11,7 @@ import {
 import { LockerUsage } from './locker-usage.entity';
 import { Locker } from './locker.entity';
 import { User } from './user.entity';
+import { UserInvitation } from './user-invitation.entity';
 
 @Entity()
 export class LockerInstance {
@@ -48,8 +49,21 @@ export class LockerInstance {
     })
     endTime: Date;
 
-    @ManyToMany(type => User)
-    @JoinTable({ name: 'can_access' })
+    @ManyToMany(type => User, user => user.accessibleLockerInstance)
+    @JoinTable({
+        name: 'can_access',
+        joinColumns: [{
+            name: 'lockerID',
+            referencedColumnName: 'lockerID',
+        }, {
+            name: 'startTime',
+            referencedColumnName: 'startTime',
+        }],
+        inverseJoinColumns: [{
+            name: 'nationalID',
+            referencedColumnName: 'nationalID',
+        }],
+    })
     accessibleUsers: User[];
 
     @Column()
@@ -61,4 +75,11 @@ export class LockerInstance {
 
     @OneToMany(type => LockerUsage, lockerUsage => lockerUsage.lockerInstance)
     lockerUsages: LockerUsage[];
+
+    @OneToMany(
+        type => UserInvitation,
+        userInvitation => userInvitation.lockerInstance,
+        { nullable: true },
+    )
+    userInvitations: UserInvitation[];
 }

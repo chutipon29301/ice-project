@@ -1,17 +1,11 @@
-import {
-    Column,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Locker } from './locker.entity';
 import * as moment from 'moment';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { LockerInstance } from './locker-instance.entity';
 
 @Entity()
 export class UserInvitation {
-    constructor(locker: Locker) {
-        this.locker = locker;
+    constructor(lockerInstance: LockerInstance) {
+        this.lockerInstance = lockerInstance;
         this.expireDate = moment()
             .add(30, 'minutes')
             .toDate();
@@ -23,10 +17,15 @@ export class UserInvitation {
     @Column()
     lockerID: number;
 
-    @ManyToOne(type => Locker, locker => locker.userInvitations)
-    @JoinColumn([{ name: 'lockerID', referencedColumnName: 'id' }])
-    locker: Locker;
+    @ManyToOne(type => LockerInstance, lockerInstance => lockerInstance.userInvitations)
+    @JoinColumn([{ name: 'lockerID', referencedColumnName: 'lockerID' }])
+    lockerInstance: LockerInstance;
 
     @Column()
     expireDate: Date;
+
+    @Column({
+        default: false,
+    })
+    isUsed: boolean;
 }

@@ -1,18 +1,8 @@
-import {
-    Column,
-    Entity,
-    Generated,
-    JoinTable,
-    ManyToMany,
-    ManyToOne,
-    OneToMany,
-    PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, Generated, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Group } from './group.entity';
 import { Location } from './location.entity';
 import { LockerInstance } from './locker-instance.entity';
 import { QRCode } from './qr-code.entity';
-import { UserInvitation } from './user-invitation.entity';
 
 export enum LockerAvailability {
     UNREGISTERED = 'UNREGISTERED',
@@ -62,11 +52,4 @@ export class Locker {
 
     @OneToMany(type => QRCode, qrCode => qrCode.locker, { nullable: true })
     qrCodes: QRCode[];
-
-    @OneToMany(
-        type => UserInvitation,
-        userInvitation => userInvitation.locker,
-        { nullable: true },
-    )
-    userInvitations: UserInvitation[];
 }
