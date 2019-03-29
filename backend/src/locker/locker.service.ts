@@ -104,7 +104,7 @@ export class LockerService {
     public async getLockerCurrentStatus(
         serialNumber: string,
     ): Promise<LockerCurrentStatusResponseDto> {
-        const locker = await this.findActiveLockerBySerialNumber(serialNumber);
+        const locker = await this.findLockerBySerialNumber(serialNumber);
         if (!locker) {
             throw new NotFoundException('Locker not found');
         }
