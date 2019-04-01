@@ -83,6 +83,13 @@ export class UserService {
         return user;
     }
 
+    async findUserWithNationalIDOrFail(nationalID: string): Promise<User> {
+        const user = await this.userRepository.findOneOrFail({
+            where: { nationalID },
+        });
+        return user;
+    }
+
     async canUserActivateRole(
         nationalID: string,
         ...roles: Role[]
