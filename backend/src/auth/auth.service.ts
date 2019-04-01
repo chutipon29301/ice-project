@@ -47,7 +47,7 @@ export class AuthService {
             grant_type: 'authorization_code',
             code,
             redirect_uri: `${
-                this.configService.liffServerURL
+                this.configService.serverURL
             }/auth/line/callback`,
             client_id: this.configService.lineChannelID,
             client_secret: this.configService.lineChannelSecret,
