@@ -115,6 +115,10 @@ ul.ant-card-actions {
   color: #0db7ed;
 }
 
+.am-list-item .am-input-label {
+  margin-right: 12px !important;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
