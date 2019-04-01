@@ -79,18 +79,20 @@ export class LockerService {
         const location = await this.locationService.findLocationByID(
             value.locationID,
         );
-        if (
-            locker.availability === LockerAvailability.UNREGISTERED &&
-            location
-        ) {
-            locker.availability = LockerAvailability.AVAILABLE;
-            locker.name = value.name;
-            locker.number = value.number;
-            locker.location = location;
-            await this.lockerRepository.save(locker);
-        } else {
-            throw new NotFoundException();
+        if (!location) {
+            throw new NotFoundException('Location not found');
         }
+        if (!locker) {
+            throw new NotFoundException('Locker not found');
+        }
+        if (locker.availability !== LockerAvailability.UNREGISTERED) {
+            throw new ConflictException('Locker has already been registered');
+        }
+        locker.availability = LockerAvailability.AVAILABLE;
+        locker.name = value.name;
+        locker.number = value.number;
+        locker.location = location;
+        await this.lockerRepository.save(locker);
     }
 
     public async edit(id: number, value: Partial<Locker>) {
