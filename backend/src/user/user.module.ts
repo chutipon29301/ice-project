@@ -8,6 +8,6 @@ import { LineAuthModule } from '../line-auth/line-auth.module';
     imports: [LineAuthModule],
     providers: [...userProviders, UserService],
     controllers: [UserController],
-    exports: [UserService],
+    exports: [UserService, LineAuthModule],
 })
 export class UserModule {}

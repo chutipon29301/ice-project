@@ -4,6 +4,7 @@ import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { UserModule } from '../user/user.module';
 import { JwtAuthService } from './jwt-auth.service';
+import { LineAuthModule } from '../line-auth/line-auth.module';
 
 @Module({
     imports: [
@@ -16,7 +17,7 @@ import { JwtAuthService } from './jwt-auth.service';
         }),
         UserModule,
     ],
-    providers: [JwtAuthService],
-    exports: [JwtAuthService],
+    providers: [JwtAuthService, LineAuthModule],
+    exports: [JwtAuthService, LineAuthModule],
 })
-export class JwtAuthModule {}
+export class JwtAuthModule { }
