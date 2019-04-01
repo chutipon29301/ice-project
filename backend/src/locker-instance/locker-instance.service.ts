@@ -32,7 +32,7 @@ export class LockerInstanceService {
         private readonly canAccessRelationRepository: Repository<
             CanAccessRelation
         >,
-    ) {}
+    ) { }
 
     public async create(
         accessCode: string,
@@ -133,6 +133,22 @@ export class LockerInstanceService {
     public async deleteInstance(lockerID: number, startTime: Date) {
         const lockerInstance = await this.findInstance(lockerID, startTime);
         await this.lockerInstanceRepository.delete(lockerInstance);
+    }
+
+    public async addPermissionFromNationalIDAndLockerID(
+        nationalID: string,
+        lockerID: number,
+    ) {
+        const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+        const lockerInstance = await this.findInUsedLockerInstanceByLockerID(lockerID);
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        if (!lockerInstance) {
+            throw new NotFoundException('Locker instance not found');
+        }
+        const canAccessRelation = new CanAccessRelation(user, lockerInstance);
+        await this.canAccessRelationRepository.save(canAccessRelation);
     }
 
     public async unlock(
