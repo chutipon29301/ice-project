@@ -1,3 +1,5 @@
+
+
 import { HttpService, Injectable } from '@nestjs/common';
 import { defaultResponse } from 'src/line-response/default.response';
 import { manualResponse } from 'src/line-response/manual.response';
@@ -17,6 +19,9 @@ export class BotService {
     async lineBotReplyMsg(body: LineUserEventDto) {
         const event = body.events[0];
         let msg = '';
+        if(event.type === 'follow'){
+          return;
+        }
         switch (event.type) {
             case 'message':
                 msg = event.message.text;
