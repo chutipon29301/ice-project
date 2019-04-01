@@ -10,6 +10,7 @@ import { CreditUsage } from './credit-usage.entity';
 import { Group } from './group.entity';
 import { LockerInstance } from './locker-instance.entity';
 import { LockerUsage } from './locker-usage.entity';
+import { CanAccessRelation } from './can-access.entity';
 
 export enum Role {
     USER = 'USER',
@@ -89,8 +90,14 @@ export class User {
     @JoinTable()
     lockerUsages: LockerUsage[];
 
-    @ManyToMany(type => LockerInstance, lockerInstance => lockerInstance.accessibleUsers)
-    accessibleLockerInstance: LockerInstance[];
+    // @ManyToMany(type => LockerInstance, lockerInstance => lockerInstance.accessibleUsers)
+    // accessibleLockerInstance: LockerInstance[];
+
+    @OneToMany(
+        type => CanAccessRelation,
+        canAccessRelation => canAccessRelation.accessibleUser,
+    )
+    canAccesses: CanAccessRelation[];
 
     @ManyToMany(type => Group)
     @JoinTable()

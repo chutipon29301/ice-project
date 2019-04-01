@@ -6,13 +6,17 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { LockerInstanceRepositoryToken } from '../constant';
+import {
+    LockerInstanceRepositoryToken,
+    CanAccessRelationRepositoryToken,
+} from '../constant';
+import { CanAccessRelation } from '../entities/can-access.entity';
 import { LockerInstance } from '../entities/locker-instance.entity';
 import { ActionType, LockerUsage } from '../entities/locker-usage.entity';
 import { LockerUsageService } from '../locker-usage/locker-usage.service';
 import { LockerService } from '../locker/locker.service';
-import { UserService } from '../user/user.service';
 import { QrService } from '../qr/qr.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class LockerInstanceService {
@@ -24,30 +28,50 @@ export class LockerInstanceService {
         private readonly lockerService: LockerService,
         private readonly lockerUsageService: LockerUsageService,
         private readonly userService: UserService,
+        @Inject(CanAccessRelationRepositoryToken)
+        private readonly canAccessRelationRepository: Repository<
+            CanAccessRelation
+        >,
     ) {}
 
     public async create(
         accessCode: string,
         nationalID: string,
     ): Promise<LockerInstance> {
-        const locker = await this.qrService.findLockerByAccessCode(accessCode);
-        const activeLocker = await this.lockerService.findActiveLockerByID(
-            locker.id,
-        );
-        const user = await this.userService.getUserWithNationalID(nationalID);
-        const inUsedLockerInstance = await this.lockerInstanceRepository.findOne(
-            { where: { inUsed: true } },
-        );
-        if (activeLocker && user && !inUsedLockerInstance) {
-            const lockerInstance = new LockerInstance(
-                new Date(),
-                activeLocker,
-                user,
+        try {
+            const locker = await this.qrService.findLockerByAccessCode(
+                accessCode,
             );
-            this.lockerUsageService.create(ActionType.OPEN, lockerInstance);
+            if (!locker) {
+                throw new NotFoundException('Locker not found');
+            }
+            const activeLocker = await this.lockerService.findActiveLockerByID(
+                locker.id,
+            );
+            if (!activeLocker) {
+                throw new NotFoundException('Active locker not found');
+            }
+            const user = await this.userService.findUserWithNationalIDOrFail(
+                nationalID,
+            );
+            const inUsedLockerInstance = await this.lockerInstanceRepository.findOne(
+                { where: { inUsed: true } },
+            );
+            if (inUsedLockerInstance) {
+                throw new NotFoundException('Locker is inuse');
+            }
+            let lockerInstance = new LockerInstance(activeLocker, user);
+            lockerInstance = await this.lockerInstanceRepository.save(
+                lockerInstance,
+            );
+            const canAccessRelation = new CanAccessRelation(
+                user,
+                lockerInstance,
+            );
+            await this.canAccessRelationRepository.save(canAccessRelation);
             return lockerInstance;
-        } else {
-            throw new NotFoundException('Useable locker not found');
+        } catch (error) {
+            throw new NotFoundException(error.message);
         }
     }
 
