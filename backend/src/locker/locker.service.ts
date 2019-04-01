@@ -5,6 +5,7 @@ import {
     Injectable,
     NotFoundException,
     UnauthorizedException,
+    HttpException,
 } from '@nestjs/common';
 import { LocationService } from 'src/location/location.service';
 import { Repository } from 'typeorm';
@@ -33,8 +34,8 @@ export class LockerService {
         return await this.lockerRepository.find();
     }
 
-    public async findLockerByID(id: number): Promise<Locker> {
-        const locker = await this.lockerRepository.findOne(id);
+    public async findLockerByIDOrFail(id: number): Promise<Locker> {
+        const locker = await this.lockerRepository.findOneOrFail(id);
         return locker;
     }
 
@@ -75,24 +76,26 @@ export class LockerService {
     }
 
     public async registerLocker(id: number, value: RegisterLockerDto) {
-        const locker = await this.findLockerByID(id);
-        const location = await this.locationService.findLocationByID(
-            value.locationID,
-        );
-        if (!location) {
-            throw new NotFoundException('Location not found');
+        try {
+            const locker = await this.findLockerByIDOrFail(id);
+            const location = await this.locationService.findLocationByIDOrFail(
+                value.locationID,
+            );
+            if (locker.availability !== LockerAvailability.UNREGISTERED) {
+                throw new ConflictException('Locker has already been registered');
+            }
+            locker.availability = LockerAvailability.AVAILABLE;
+            locker.name = value.name;
+            locker.number = value.number;
+            locker.location = location;
+            await this.lockerRepository.save(locker);
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
         }
-        if (!locker) {
-            throw new NotFoundException('Locker not found');
-        }
-        if (locker.availability !== LockerAvailability.UNREGISTERED) {
-            throw new ConflictException('Locker has already been registered');
-        }
-        locker.availability = LockerAvailability.AVAILABLE;
-        locker.name = value.name;
-        locker.number = value.number;
-        locker.location = location;
-        await this.lockerRepository.save(locker);
     }
 
     public async edit(id: number, value: Partial<Locker>) {
@@ -144,11 +147,11 @@ export class LockerService {
     }
 
     public async isLockerActiveByLockerID(lockerID: number): Promise<boolean> {
-        const locker = await this.findLockerByID(lockerID);
-        if (locker) {
+        try {
+            const locker = await this.findLockerByIDOrFail(lockerID);
             return locker.availability === LockerAvailability.AVAILABLE;
-        } else {
-            throw new NotFoundException('Locker not found');
+        } catch (error) {
+            throw new NotFoundException(error.message);
         }
     }
 }

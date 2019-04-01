@@ -8,7 +8,7 @@ export class LocationService {
     constructor(
         @Inject(LocationRepositoryToken)
         private readonly locationRepository: Repository<Location>,
-    ) {}
+    ) { }
 
     public async create(
         description: string,
@@ -32,8 +32,8 @@ export class LocationService {
         await this.locationRepository.delete(id);
     }
 
-    public async findLocationByID(id: number): Promise<Location> {
-        const location = await this.locationRepository.findOne(id);
+    public async findLocationByIDOrFail(id: number): Promise<Location> {
+        const location = await this.locationRepository.findOneOrFail(id);
         return location;
     }
 }
