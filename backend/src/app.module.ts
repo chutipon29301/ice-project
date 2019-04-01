@@ -19,11 +19,12 @@ import { SanitizerMiddleware } from './middleware/sanitizer.middleware';
 import { QrModule } from './qr/qr.module';
 import { UserModule } from './user/user.module';
 import { ShareLockerModule } from './share-locker/share-locker.module';
+import { GlobalModule } from './global/global.module';
 import * as helmet from 'helmet';
 
 @Module({
     imports: [
-        ConfigModule,
+        GlobalModule,
         LineAuthModule,
         CryptoModule,
         AuthModule,

@@ -19,7 +19,6 @@ import { LineAuthService } from './line-auth.service';
                 },
             }),
         }),
-        ConfigModule,
         HttpModule,
         CryptoModule,
     ],
