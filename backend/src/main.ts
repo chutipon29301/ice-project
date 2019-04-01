@@ -8,6 +8,8 @@ import { join } from 'path';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
+    app.enableCors();
+
     app.useGlobalPipes(new ValidationPipe());
     app.useGlobalPipes(new SanitizationPipe());
     app.useStaticAssets(join(__dirname, '../public'));
