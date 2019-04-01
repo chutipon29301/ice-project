@@ -14,6 +14,6 @@ import { LockerService } from './locker.service';
     ],
     providers: [...lockerProviders, LockerService],
     controllers: [LockerController],
-    exports: [LockerService],
+    exports: [LockerService, LocationModule, LockerUsageModule],
 })
 export class LockerModule {}
