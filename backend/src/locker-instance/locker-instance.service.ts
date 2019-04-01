@@ -4,6 +4,7 @@ import {
     Injectable,
     NotFoundException,
     UnauthorizedException,
+    HttpException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import {
@@ -106,13 +107,16 @@ export class LockerInstanceService {
     public async findInUsedLockerInstanceBySerialNumber(
         serialNumber: string,
     ): Promise<LockerInstance> {
-        const locker = await this.lockerService.findLockerBySerialNumber(
-            serialNumber,
-        );
-        if (!locker) {
-            throw new NotFoundException('Locker not found');
+        try {
+            const locker = await this.lockerService.findLockerBySerialNumberOrFail(serialNumber);
+            return await this.findInUsedLockerInstanceByLockerID(locker.id);
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
         }
-        return await this.findInUsedLockerInstanceByLockerID(locker.id);
     }
 
     public async findLockerInstancesByNationalID(

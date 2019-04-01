@@ -28,7 +28,7 @@ export class LockerService {
         private readonly lockerUsageService: LockerUsageService,
         @Inject(forwardRef(() => LockerInstanceService))
         private readonly lockerInstanceService: LockerInstanceService,
-    ) {}
+    ) { }
 
     public async list(): Promise<Locker[]> {
         return await this.lockerRepository.find();
@@ -39,10 +39,10 @@ export class LockerService {
         return locker;
     }
 
-    public async findLockerBySerialNumber(
+    public async findLockerBySerialNumberOrFail(
         serialNumber: string,
     ): Promise<Locker> {
-        const locker = await this.lockerRepository.findOne({
+        const locker = await this.lockerRepository.findOneOrFail({
             where: { serialNumber },
         });
         return locker;
@@ -109,41 +109,51 @@ export class LockerService {
     public async getLockerCurrentStatus(
         serialNumber: string,
     ): Promise<LockerCurrentStatusResponseDto> {
-        const locker = await this.findLockerBySerialNumber(serialNumber);
-        if (!locker) {
-            throw new NotFoundException('Locker not found');
-        }
-        const lockerUsages = await this.lockerUsageService.findLockerUsageByLockerID(
-            locker.id,
-        );
-        if (lockerUsages.length !== 0) {
-            return {
-                isOpen: lockerUsages[0].actionType === ActionType.OPEN,
-                lockerNumber: locker.number,
-            };
-        } else {
-            return {
-                isOpen: false,
-                lockerNumber: locker.number,
-            };
+        try {
+            const locker = await this.findLockerBySerialNumberOrFail(serialNumber);
+            const lockerUsages = await this.lockerUsageService.findLockerUsageByLockerID(
+                locker.id,
+            );
+            if (lockerUsages.length !== 0) {
+                return {
+                    isOpen: lockerUsages[0].actionType === ActionType.OPEN,
+                    lockerNumber: locker.number,
+                };
+            } else {
+                return {
+                    isOpen: false,
+                    lockerNumber: locker.number,
+                };
+            }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
         }
     }
 
     public async lock(
         serialNumber: string,
     ): Promise<LockerCurrentStatusResponseDto> {
-        const locker = await this.findLockerBySerialNumber(serialNumber);
-        if (!locker) {
-            throw new NotFoundException('Locker not found');
+        try {
+            const locker = await this.findLockerBySerialNumberOrFail(serialNumber);
+            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerID(
+                locker.id,
+            );
+            if (!lockerInstance) {
+                throw new NotFoundException('Locker not found');
+            }
+            await this.lockerUsageService.create(ActionType.CLOSE, lockerInstance);
+            return await this.getLockerCurrentStatus(serialNumber);
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
         }
-        const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerID(
-            locker.id,
-        );
-        if (!lockerInstance) {
-            throw new NotFoundException('Locker not found');
-        }
-        await this.lockerUsageService.create(ActionType.CLOSE, lockerInstance);
-        return await this.getLockerCurrentStatus(serialNumber);
     }
 
     public async isLockerActiveByLockerID(lockerID: number): Promise<boolean> {
