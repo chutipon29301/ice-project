@@ -21,7 +21,7 @@ export class LocationService {
     }
 
     public async list(): Promise<Location[]> {
-        return await this.locationRepository.find();
+        return await this.locationRepository.find({});
     }
 
     public async update(id: number, value: Partial<Location>) {

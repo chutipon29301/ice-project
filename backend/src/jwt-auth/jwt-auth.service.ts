@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, HttpException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as moment from 'moment';
 import { UserService } from '../user/user.service';
@@ -10,11 +10,11 @@ export class JwtAuthService {
     constructor(
         private readonly jwtService: JwtService,
         private readonly userService: UserService,
-    ) {}
+    ) { }
 
     async generateTokenForLineID(lineID: string): Promise<JwtTokenInfo> {
-        const user = await this.userService.getUserWithLineID(lineID);
-        if (user) {
+        try {
+            const user = await this.userService.findUserWithLineIDOrFail(lineID);
             const payload: JwtToken = {
                 nationalID: user.nationalID,
             };
@@ -28,10 +28,12 @@ export class JwtAuthService {
                 expireDate,
                 token,
             };
-        } else {
-            throw new UnauthorizedException(
-                'User has not been registered in database',
-            );
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
         }
     }
 

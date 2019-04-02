@@ -31,11 +31,11 @@ export class QrService {
             } else {
                 throw new NotFoundException(error.message);
             }
-      m   }
+        }
     }
 
-    public async findLockerByAccessCode(id: string): Promise<Locker> {
-        const qrCode = await this.qrCodeRepository.findOne({
+    public async findLockerByAccessCodeOrFail(id: string): Promise<Locker> {
+        const qrCode = await this.qrCodeRepository.findOneOrFail({
             where: { id, expireDate: MoreThan(new Date()) },
             relations: ['locker'],
         });

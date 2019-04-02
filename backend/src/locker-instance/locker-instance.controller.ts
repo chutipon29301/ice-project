@@ -31,7 +31,7 @@ export class LockerInstanceController {
     })
     @Get(':id')
     async list(@Param('id') lockerID: number) {
-        return await this.lockerInstanceService.getAllInstance(lockerID);
+        return await this.lockerInstanceService.findAllInstance(lockerID);
     }
 
     @ApiOperation({

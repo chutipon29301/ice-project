@@ -139,12 +139,7 @@ export class LockerService {
     ): Promise<LockerCurrentStatusResponseDto> {
         try {
             const locker = await this.findLockerBySerialNumberOrFail(serialNumber);
-            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerID(
-                locker.id,
-            );
-            if (!lockerInstance) {
-                throw new NotFoundException('Locker not found');
-            }
+            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(locker.id);
             await this.lockerUsageService.create(ActionType.CLOSE, lockerInstance);
             return await this.getLockerCurrentStatus(serialNumber);
         } catch (error) {

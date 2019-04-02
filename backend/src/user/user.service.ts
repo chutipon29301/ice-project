@@ -15,7 +15,7 @@ export class UserService {
         @Inject(UserRepositoryToken)
         private readonly userRepository: Repository<User>,
         private readonly lineAuthService: LineAuthService,
-    ) {}
+    ) { }
 
     async listUser(): Promise<User[]> {
         const users = await this.userRepository.find();
@@ -66,19 +66,12 @@ export class UserService {
         return user;
     }
 
-    async getUserWithLineID(lineID: string): Promise<User> {
-        const user = await this.userRepository.findOne({
+    public async findUserWithLineIDOrFail(lineID: string): Promise<User> {
+        const user = await this.userRepository.findOneOrFail({
             where: {
                 authenticationID: lineID,
                 authenticationType: AuthenticationType.LINE,
-            },
-        });
-        return user;
-    }
-
-    async getUserWithNationalID(nationalID: string): Promise<User> {
-        const user = await this.userRepository.findOne({
-            where: { nationalID },
+            }
         });
         return user;
     }
@@ -94,10 +87,10 @@ export class UserService {
         nationalID: string,
         ...roles: Role[]
     ): Promise<boolean> {
-        const user = await this.getUserWithNationalID(nationalID);
-        if (user) {
+        try {
+            const user = await this.findUserWithNationalIDOrFail(nationalID);
             return roles.indexOf(user.role) !== -1;
-        } else {
+        } catch (_) {
             return false;
         }
     }

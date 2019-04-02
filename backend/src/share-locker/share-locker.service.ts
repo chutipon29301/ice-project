@@ -3,6 +3,7 @@ import {
     Inject,
     UnauthorizedException,
     NotFoundException,
+    HttpException,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
@@ -20,23 +21,24 @@ export class ShareLockerService {
         private readonly userService: UserService,
         private readonly configService: ConfigService,
         private readonly lockerInstanceService: LockerInstanceService,
-    ) {}
+    ) { }
 
     public async generateInvitationLink(lockerID: number, nationalID: string) {
-        const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerID(
-            lockerID,
-        );
-        if (!lockerInstance) {
-            throw new NotFoundException('Locker instance not found');
+        try {
+            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(lockerID,);
+            if (lockerInstance.ownerUser.nationalID !== nationalID) {
+                throw new UnauthorizedException('Not owner user');
+            }
+            const userInvitation = new UserInvitation(lockerInstance);
+            await this.userInvitationRepository.save(userInvitation);
+            return `${this.configService.liffServerURL}/share?accessCode=${userInvitation.id}`;
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
         }
-        if (lockerInstance.ownerUser.nationalID !== nationalID) {
-            throw new UnauthorizedException('Not owner user');
-        }
-        const userInvitation = new UserInvitation(lockerInstance);
-        await this.userInvitationRepository.save(userInvitation);
-        return `${this.configService.liffServerURL}/share?accessCode=${
-            userInvitation.id
-        }`;
     }
 
     public async addUserPermission(nationalID: string, accessCode: string) {
@@ -47,8 +49,8 @@ export class ShareLockerService {
         if (!userInvitation) {
             throw new UnauthorizedException('Invalid invitation code');
         }
-        const user = await this.userService.getUserWithNationalID(nationalID);
-        const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerID(
+        const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+        const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
             userInvitation.lockerID,
         );
         // lockerInstance.accessibleUsers.push(user);
