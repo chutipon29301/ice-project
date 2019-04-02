@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, HttpException } from '@nestjs/common';
 import { Repository, MoreThan, LessThan } from 'typeorm';
 import { ConfigService } from '../config/config.service';
 import { QRCodeRepositoryToken } from '../constant';
@@ -13,23 +13,25 @@ export class QrService {
         private readonly qrCodeRepository: Repository<QRCode>,
         private readonly configService: ConfigService,
         private readonly lockerService: LockerService,
-    ) {}
+    ) { }
 
     public async generateRedirectURL(serialNumber: string): Promise<string> {
-        const locker = await this.lockerService.findActiveLockerBySerialNumber(
-            serialNumber,
-        );
-        if (locker) {
+        try {
+            const locker = await this.lockerService.findActiveLockerBySerialNumberOrFail(
+                serialNumber,
+            );
             const qr = new QRCode(locker);
             await this.qrCodeRepository.save(qr);
             return `${this.configService.liffServerURL}/unlock?accessCode=${
                 qr.id
-            }`;
-        } else {
-            throw new NotFoundException(
-                `Cannot generate link: Locker with serial number ${serialNumber} not found`,
-            );
-        }
+                }`;
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
+      m   }
     }
 
     public async findLockerByAccessCode(id: string): Promise<Locker> {

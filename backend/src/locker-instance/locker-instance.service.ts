@@ -40,24 +40,10 @@ export class LockerInstanceService {
         nationalID: string,
     ): Promise<LockerInstance> {
         try {
-            const locker = await this.qrService.findLockerByAccessCode(
-                accessCode,
-            );
-            if (!locker) {
-                throw new NotFoundException('Locker not found');
-            }
-            const activeLocker = await this.lockerService.findActiveLockerByID(
-                locker.id,
-            );
-            if (!activeLocker) {
-                throw new NotFoundException('Active locker not found');
-            }
-            const user = await this.userService.findUserWithNationalIDOrFail(
-                nationalID,
-            );
-            const inUsedLockerInstance = await this.lockerInstanceRepository.findOne(
-                { where: { inUsed: true } },
-            );
+            const locker = await this.qrService.findLockerByAccessCode(accessCode);
+            const activeLocker = await this.lockerService.findActiveLockerByIDOrFail(locker.id);
+            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+            const inUsedLockerInstance = await this.lockerInstanceRepository.findOne({ where: { inUsed: true } });
             if (inUsedLockerInstance) {
                 throw new NotFoundException('Locker is inuse');
             }

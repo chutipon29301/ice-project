@@ -48,16 +48,16 @@ export class LockerService {
         return locker;
     }
 
-    public async findActiveLockerByID(id: number): Promise<Locker | null> {
-        return await this.lockerRepository.findOne({
+    public async findActiveLockerByIDOrFail(id: number): Promise<Locker | null> {
+        return await this.lockerRepository.findOneOrFail({
             where: { id, availability: LockerAvailability.AVAILABLE },
         });
     }
 
-    public async findActiveLockerBySerialNumber(
+    public async findActiveLockerBySerialNumberOrFail(
         serialNumber: string,
     ): Promise<Locker | null> {
-        return await this.lockerRepository.findOne({
+        return await this.lockerRepository.findOneOrFail({
             where: { serialNumber, availability: LockerAvailability.AVAILABLE },
         });
     }
