@@ -55,7 +55,7 @@ export class Locker {
     @OneToMany(type => LockerInstance, lockerInstance => lockerInstance.locker)
     lockerInstances: LockerInstance[];
 
-    @ManyToMany(type => Group)
+    @ManyToMany(type => Group, group => group.lockers)
     @JoinTable()
     groups: Group[];
 
