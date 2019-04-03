@@ -19,7 +19,7 @@ import { ApiUseTags } from '@nestjs/swagger';
 @ApiUseTags('Auth')
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(private readonly authService: AuthService) { }
 
     @ApiOperation({
         title:
@@ -37,13 +37,15 @@ export class AuthController {
         @Query('error') error: string,
         @Query('errorCode') errorCode: string,
         @Query('errorMessage') errorMessage: string,
-        // @Res() res: Response,
-    ): Promise<string> {
+        @Res() res: Response,
+    ) {
         if (error != null || errorCode != null || errorMessage != null) {
             throw new UnauthorizedException(errorMessage);
         }
         if (await this.authService.validateState(state)) {
-            return code;
+            res.redirect(this.authService.getLiffCallbackWithAccessCode(code));
+        } else {
+            throw new UnauthorizedException('User not authorize');
         }
     }
 

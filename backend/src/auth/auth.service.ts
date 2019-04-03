@@ -26,6 +26,10 @@ export class AuthService {
         return this.lineAuthService.lineAuthPageURL(this.lineCallbackURL);
     }
 
+    public getLiffCallbackWithAccessCode(accessCode: string): string {
+        return `${this.configService.liffServerURL}/line-landing=${accessCode}`;
+    }
+
     public async validateState(encryptedState: string): Promise<boolean> {
         const state = State.from(
             this.cryptoService.AES.decrypt(
