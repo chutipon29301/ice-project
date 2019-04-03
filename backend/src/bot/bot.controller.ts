@@ -10,7 +10,7 @@ import { LineUserEventDto } from './dto/line-user-event.dto';
 export class BotController {
     constructor(private readonly botService: BotService) {}
 
-    @Post('replyline')
+    @Post('replyLine')
     async replyMsg(@Body() body: LineUserEventDto) {
         this.botService.lineBotReplyMsg(body);
     }
