@@ -28,6 +28,7 @@ export class GroupController {
         const group = await this.groupService.create(body.name);
         return group;
     }
+
     @Patch(':id')
     async edit(
         @Param('id', new ParseIntPipe()) id: number,
@@ -35,4 +36,7 @@ export class GroupController {
     ) {
         await this.groupService.edit(id, body.name);
     }
+
+
+
 }

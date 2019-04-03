@@ -8,6 +8,7 @@ import {
 import { Locker } from './locker.entity';
 import { User } from './user.entity';
 
+
 @Entity()
 export class Group {
     constructor(name: string) {
@@ -19,11 +20,10 @@ export class Group {
     @Column()
     name: string;
 
-    @ManyToMany(type => User)
+    @ManyToMany(type => User, user => user.groups)
     @JoinTable()
     users: User[];
 
-    @ManyToMany(type => Locker)
     @JoinTable()
     lockers: Locker[];
 }
