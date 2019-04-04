@@ -27,7 +27,7 @@ export class AuthService {
     }
 
     public getLiffCallbackWithAccessCode(accessCode: string): string {
-        return `${this.configService.liffServerURL}/line-landing=${accessCode}`;
+        return `${this.configService.liffServerURL}/auth/line-landing=${accessCode}`;
     }
 
     public async validateState(encryptedState: string): Promise<boolean> {
