@@ -8,7 +8,14 @@ export const setAuthentication = isAuthenticate => {
   };
 };
 
+export const deleteTokenAndExpiration = () => {
+  localStorage.removeItem("idToken");
+  localStorage.removeItem("expireIn");
+};
+
 export const setTokenAndExpiration = (idToken, expireIn) => {
+  localStorage.setItem("idToken", idToken);
+  localStorage.setItem("expireIn", expireIn);
   return {
     type: SET_TOKEN_AND_EXPIRATION,
     payload: { idToken, expireIn }

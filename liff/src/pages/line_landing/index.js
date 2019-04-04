@@ -1,6 +1,6 @@
 import React from "react";
 import Axios from "axios";
-import { setTokenAndExpiration } from "../../auth/ducks";
+import { setTokenAndExpiration, setAuthentication } from "../../auth/ducks";
 import { connect } from "react-redux";
 
 class LineLanding extends React.Component {
@@ -15,11 +15,17 @@ class LineLanding extends React.Component {
     } = await Axios.post("/auth/lineToken", { code });
     setTokenAndExpiration(idToken, expireIn);
     try {
+      console.log("I am trying to authen me self from line-landing");
       const res = await Axios.post("/auth/myToken/line", {
         lineToken: idToken
       });
+      if (res.data) {
+        setAuthentication(true);
+        history.push("/");
+      }
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
   render() {
@@ -38,8 +44,9 @@ const initAxiosLineErrorHandling = history => {
       return response;
     },
     error => {
+      console.log("I AM NOT REGISTERED!");
       if (error.response.status === 401) {
-        history.push("/registration");
+        history.push("/auth/registration");
       }
       return error;
     }

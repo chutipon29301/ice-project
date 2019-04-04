@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import Axios from "axios";
 
-const Registration = ({ idToken }) => {
+const Registration = ({ idToken, history }) => {
   const [nationalID, setNationalID] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -21,7 +21,9 @@ const Registration = ({ idToken }) => {
       phone,
       authenticationID: idToken
     });
-    console.log(res);
+    if (res.data) {
+      history.push("/");
+    }
   };
   return (
     <div className="bg-primary" style={{ height: "100vh" }}>
