@@ -86,7 +86,7 @@ export class User {
     })
     status: UserStatus;
 
-    @OneToMany(type => LockerUsage, lockerUsage => lockerUsage.users)
+    @OneToMany(type => LockerUsage, lockerUsage => lockerUsage.user)
     @JoinTable()
     lockerUsages: LockerUsage[];
 
