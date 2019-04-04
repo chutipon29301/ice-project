@@ -49,6 +49,14 @@ export class LockerUsage {
     ])
     lockerInstance: LockerInstance;
 
+    @Column({
+        nullable: true,
+    })
+    nationalID: string;
+
     @ManyToOne(type => User, user => user.lockerUsages, { nullable: true })
+    @JoinColumn({
+        name: 'nationalID', referencedColumnName: 'nationalID'
+    })
     users: User;
 }

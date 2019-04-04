@@ -133,14 +133,11 @@ export class LockerInstanceService {
     }
 
     public async unlock(
-        accessCode: string,
         nationalID: string,
-    ): Promise<LockerUsage[]> {
+        accessCode: string,
+    ) {
         try {
             const locker = await this.qrService.findLockerByAccessCodeOrFail(accessCode);
-            if (!locker) {
-                throw new NotFoundException('Locker not found');
-            }
             const activeLocker = await this.lockerService.isLockerActiveByLockerID(
                 locker.id,
             );
@@ -148,11 +145,20 @@ export class LockerInstanceService {
                 throw new NotFoundException('Not found "ACTIVE" Locker');
             }
             const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(locker.id);
-            this.lockerUsageService.create(ActionType.OPEN, lockerInstance);
-            return lockerInstance.lockerUsages;
+            const canAccessUser = await this.canAccessRelationRepository.findOne({
+                startTime: lockerInstance.startTime.toISOString(),
+                lockerID: lockerInstance.lockerID,
+                nationalID,
+            });
+            if (canAccessUser) {
+                await this.lockerUsageService.create(ActionType.OPEN, lockerInstance);
+                // this.lockerService.
+            } else {
+                throw new UnauthorizedException('User is not allowed to access this locker');
+            }
         } catch (error) {
             if (error instanceof HttpException) {
-                throw error
+                throw error;
             } else {
                 throw new NotFoundException(error.message);
             }

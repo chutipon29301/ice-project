@@ -54,9 +54,9 @@ export class LockerInstanceController {
         @User() user: JwtToken,
         @Body() body: UnlockLockerInstanceDto,
     ) {
-        return this.lockerInstanceService.unlock(
-            body.accessCode,
+        return await this.lockerInstanceService.unlock(
             user.nationalID,
+            body.accessCode,
         );
     }
 
