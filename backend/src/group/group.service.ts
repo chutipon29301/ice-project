@@ -1,4 +1,10 @@
-import { ConflictException, Inject, Injectable, HttpException, NotFoundException } from '@nestjs/common';
+import {
+    ConflictException,
+    Inject,
+    Injectable,
+    HttpException,
+    NotFoundException,
+} from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { GroupRepositoryToken } from '../constant';
@@ -10,7 +16,7 @@ export class GroupService {
         @Inject(GroupRepositoryToken)
         private readonly groupRepository: Repository<Group>,
         private readonly userService: UserService,
-    ) { }
+    ) {}
 
     async list(): Promise<Group[]> {
         return await this.groupRepository.find();
@@ -45,7 +51,9 @@ export class GroupService {
             throw new ConflictException('User already in group');
         } else {
             try {
-                const user = this.userService.findUserWithNationalIDOrFail(nationalID);
+                const user = this.userService.findUserWithNationalIDOrFail(
+                    nationalID,
+                );
                 this.groupRepository
                     .createQueryBuilder()
                     .relation(Group, 'users')

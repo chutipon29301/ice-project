@@ -21,17 +21,21 @@ export class ShareLockerService {
         private readonly userService: UserService,
         private readonly configService: ConfigService,
         private readonly lockerInstanceService: LockerInstanceService,
-    ) { }
+    ) {}
 
     public async generateInvitationLink(lockerID: number, nationalID: string) {
         try {
-            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(lockerID,);
+            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
+                lockerID,
+            );
             if (lockerInstance.ownerUser.nationalID !== nationalID) {
                 throw new UnauthorizedException('Not owner user');
             }
             const userInvitation = new UserInvitation(lockerInstance);
             await this.userInvitationRepository.save(userInvitation);
-            return `${this.configService.liffServerURL}/share?accessCode=${userInvitation.id}`;
+            return `${this.configService.liffServerURL}/share?accessCode=${
+                userInvitation.id
+            }`;
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
@@ -49,7 +53,9 @@ export class ShareLockerService {
         if (!userInvitation) {
             throw new UnauthorizedException('Invalid invitation code');
         }
-        const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+        const user = await this.userService.findUserWithNationalIDOrFail(
+            nationalID,
+        );
         const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
             userInvitation.lockerID,
         );

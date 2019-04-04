@@ -56,7 +56,8 @@ export class LockerUsage {
 
     @ManyToOne(type => User, user => user.lockerUsages, { nullable: true })
     @JoinColumn({
-        name: 'nationalID', referencedColumnName: 'nationalID'
+        name: 'nationalID',
+        referencedColumnName: 'nationalID',
     })
     users: User;
 }

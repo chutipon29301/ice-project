@@ -33,17 +33,25 @@ export class LockerInstanceService {
         private readonly canAccessRelationRepository: Repository<
             CanAccessRelation
         >,
-    ) { }
+    ) {}
 
     public async create(
         accessCode: string,
         nationalID: string,
     ): Promise<LockerInstance> {
         try {
-            const locker = await this.qrService.findLockerByAccessCodeOrFail(accessCode);
-            const activeLocker = await this.lockerService.findActiveLockerByIDOrFail(locker.id);
-            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
-            await this.lockerInstanceRepository.findOneOrFail({ where: { inUsed: true } });
+            const locker = await this.qrService.findLockerByAccessCodeOrFail(
+                accessCode,
+            );
+            const activeLocker = await this.lockerService.findActiveLockerByIDOrFail(
+                locker.id,
+            );
+            const user = await this.userService.findUserWithNationalIDOrFail(
+                nationalID,
+            );
+            await this.lockerInstanceRepository.findOneOrFail({
+                where: { inUsed: true },
+            });
             let lockerInstance = new LockerInstance(activeLocker, user);
             lockerInstance = await this.lockerInstanceRepository.save(
                 lockerInstance,
@@ -70,20 +78,24 @@ export class LockerInstanceService {
         lockerID: number,
         startTime: Date,
     ): Promise<LockerInstance> {
-        const lockerInstance = await this.lockerInstanceRepository.findOneOrFail({
-            where: { lockerID, startTime },
-            relations: ['lockerUsages'],
-        });
+        const lockerInstance = await this.lockerInstanceRepository.findOneOrFail(
+            {
+                where: { lockerID, startTime },
+                relations: ['lockerUsages'],
+            },
+        );
         return lockerInstance;
     }
 
     public async findInUsedLockerInstanceByLockerIDOrFail(
         lockerID: number,
     ): Promise<LockerInstance> {
-        const lockerInstance = await this.lockerInstanceRepository.findOneOrFail({
-            where: { lockerID, inUsed: true },
-            relations: ['locker', 'ownerUser'],
-        });
+        const lockerInstance = await this.lockerInstanceRepository.findOneOrFail(
+            {
+                where: { lockerID, inUsed: true },
+                relations: ['locker', 'ownerUser'],
+            },
+        );
         return lockerInstance;
     }
 
@@ -107,7 +119,10 @@ export class LockerInstanceService {
 
     public async deleteInstance(lockerID: number, startTime: Date) {
         try {
-            const lockerInstance = await this.findInstanceOrFail(lockerID, startTime);
+            const lockerInstance = await this.findInstanceOrFail(
+                lockerID,
+                startTime,
+            );
             await this.lockerInstanceRepository.delete(lockerInstance);
         } catch (error) {
             throw new NotFoundException(error.message);
@@ -119,9 +134,16 @@ export class LockerInstanceService {
         lockerID: number,
     ) {
         try {
-            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
-            const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(lockerID);
-            const canAccessRelation = new CanAccessRelation(user, lockerInstance);
+            const user = await this.userService.findUserWithNationalIDOrFail(
+                nationalID,
+            );
+            const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(
+                lockerID,
+            );
+            const canAccessRelation = new CanAccessRelation(
+                user,
+                lockerInstance,
+            );
             await this.canAccessRelationRepository.save(canAccessRelation);
         } catch (error) {
             if (error instanceof HttpException) {
@@ -132,29 +154,37 @@ export class LockerInstanceService {
         }
     }
 
-    public async unlock(
-        nationalID: string,
-        accessCode: string,
-    ) {
+    public async unlock(nationalID: string, accessCode: string) {
         try {
-            const locker = await this.qrService.findLockerByAccessCodeOrFail(accessCode);
+            const locker = await this.qrService.findLockerByAccessCodeOrFail(
+                accessCode,
+            );
             const activeLocker = await this.lockerService.isLockerActiveByLockerID(
                 locker.id,
             );
             if (!activeLocker) {
                 throw new NotFoundException('Not found "ACTIVE" Locker');
             }
-            const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(locker.id);
-            const canAccessUser = await this.canAccessRelationRepository.findOne({
-                startTime: lockerInstance.startTime.toISOString(),
-                lockerID: lockerInstance.lockerID,
-                nationalID,
-            });
+            const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(
+                locker.id,
+            );
+            const canAccessUser = await this.canAccessRelationRepository.findOne(
+                {
+                    startTime: lockerInstance.startTime.toISOString(),
+                    lockerID: lockerInstance.lockerID,
+                    nationalID,
+                },
+            );
             if (canAccessUser) {
-                await this.lockerUsageService.create(ActionType.OPEN, lockerInstance);
+                await this.lockerUsageService.create(
+                    ActionType.OPEN,
+                    lockerInstance,
+                );
                 // this.lockerService.
             } else {
-                throw new UnauthorizedException('User is not allowed to access this locker');
+                throw new UnauthorizedException(
+                    'User is not allowed to access this locker',
+                );
             }
         } catch (error) {
             if (error instanceof HttpException) {

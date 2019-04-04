@@ -15,7 +15,7 @@ export class UserService {
         @Inject(UserRepositoryToken)
         private readonly userRepository: Repository<User>,
         private readonly lineAuthService: LineAuthService,
-    ) { }
+    ) {}
 
     async listUser(): Promise<User[]> {
         const users = await this.userRepository.find();
@@ -71,7 +71,7 @@ export class UserService {
             where: {
                 authenticationID: lineID,
                 authenticationType: AuthenticationType.LINE,
-            }
+            },
         });
         return user;
     }

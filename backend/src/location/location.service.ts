@@ -8,7 +8,7 @@ export class LocationService {
     constructor(
         @Inject(LocationRepositoryToken)
         private readonly locationRepository: Repository<Location>,
-    ) { }
+    ) {}
 
     public async create(
         description: string,

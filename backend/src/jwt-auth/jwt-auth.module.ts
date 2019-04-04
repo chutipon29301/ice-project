@@ -20,4 +20,4 @@ import { LineAuthModule } from '../line-auth/line-auth.module';
     providers: [JwtAuthService, LineAuthModule],
     exports: [JwtAuthService, LineAuthModule],
 })
-export class JwtAuthModule { }
+export class JwtAuthModule {}

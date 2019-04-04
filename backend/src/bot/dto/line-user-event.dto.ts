@@ -42,7 +42,6 @@ export class LineEventDto {
     @ToDate()
     timestamp: Date;
 
-    
     message: LineMessageDto;
 
     postback: LinePostbackDto;

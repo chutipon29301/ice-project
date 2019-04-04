@@ -27,7 +27,9 @@ export class AuthService {
     }
 
     public getLiffCallbackWithAccessCode(accessCode: string): string {
-        return `${this.configService.liffServerURL}/auth/line-landing=${accessCode}`;
+        return `${
+            this.configService.liffServerURL
+        }/auth/line-landing=${accessCode}`;
     }
 
     public async validateState(encryptedState: string): Promise<boolean> {
@@ -50,9 +52,7 @@ export class AuthService {
         const body = {
             grant_type: 'authorization_code',
             code,
-            redirect_uri: `${
-                this.configService.serverURL
-            }/auth/line/callback`,
+            redirect_uri: `${this.configService.serverURL}/auth/line/callback`,
             client_id: this.configService.lineChannelID,
             client_secret: this.configService.lineChannelSecret,
         };

@@ -6,6 +6,6 @@ import { ConfigModule } from '../config/config.module';
 @Module({
     imports: [DatabaseModule],
     providers: [ConfigModule],
-    exports: [DatabaseModule, ConfigModule]
+    exports: [DatabaseModule, ConfigModule],
 })
-export class GlobalModule { }
+export class GlobalModule {}
