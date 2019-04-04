@@ -31,6 +31,8 @@ nginx-data/*
 .vscode/*
 backend-old/*
 
+# Log
+yarn-error.log
 
 # Other files
 backend/src/bot/helpMe.jpeg
