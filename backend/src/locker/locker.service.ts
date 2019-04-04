@@ -150,9 +150,7 @@ export class LockerService {
             const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
                 locker.id,
             );
-            await this.lockerUsageService.lock(
-                lockerInstance,
-            );
+            await this.lockerUsageService.lock(lockerInstance);
             return await this.getLockerCurrentStatus(serialNumber);
         } catch (error) {
             if (error instanceof HttpException) {

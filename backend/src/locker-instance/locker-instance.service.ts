@@ -33,7 +33,7 @@ export class LockerInstanceService {
         private readonly canAccessRelationRepository: Repository<
             CanAccessRelation
         >,
-    ) { }
+    ) {}
 
     public async create(
         accessCode: string,
@@ -158,22 +158,38 @@ export class LockerInstanceService {
         }
     }
 
-    public async unlock(nationalID: string, accessCode: string): Promise<LockerUsage> {
+    public async unlock(
+        nationalID: string,
+        accessCode: string,
+    ): Promise<LockerUsage> {
         try {
-            const locker = await this.qrService.findLockerByAccessCodeOrFail(accessCode);
-            const activeLocker = await this.lockerService.isLockerActiveByLockerID(locker.id);
+            const locker = await this.qrService.findLockerByAccessCodeOrFail(
+                accessCode,
+            );
+            const activeLocker = await this.lockerService.isLockerActiveByLockerID(
+                locker.id,
+            );
             if (!activeLocker) {
                 throw new NotFoundException('Not found "ACTIVE" Locker');
             }
-            const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(locker.id);
-            const canAccessUser = await this.canAccessRelationRepository.findOne({
-                startTime: lockerInstance.startTime.toISOString(),
-                lockerID: lockerInstance.lockerID,
+            const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(
+                locker.id,
+            );
+            const canAccessUser = await this.canAccessRelationRepository.findOne(
+                {
+                    startTime: lockerInstance.startTime.toISOString(),
+                    lockerID: lockerInstance.lockerID,
+                    nationalID,
+                },
+            );
+            const user = await this.userService.findUserWithNationalIDOrFail(
                 nationalID,
-            });
-            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+            );
             if (canAccessUser) {
-                return await this.lockerUsageService.unlock(lockerInstance, user);
+                return await this.lockerUsageService.unlock(
+                    lockerInstance,
+                    user,
+                );
             } else {
                 throw new UnauthorizedException(
                     'User is not allowed to access this locker',

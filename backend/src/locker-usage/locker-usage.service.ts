@@ -12,9 +12,7 @@ export class LockerUsageService {
         private readonly lockerUsageRepository: Repository<LockerUsage>,
     ) {}
 
-    public async lock(
-        lockerInstance: LockerInstance,
-    ): Promise <LockerUsage> {
+    public async lock(lockerInstance: LockerInstance): Promise<LockerUsage> {
         const lockerUsage = new LockerUsage(ActionType.CLOSE, lockerInstance);
         return await this.lockerUsageRepository.save(lockerUsage);
     }

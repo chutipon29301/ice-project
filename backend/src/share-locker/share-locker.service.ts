@@ -9,7 +9,6 @@ import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
 import { UserInvitationRepositoryToken } from '../constant';
 import { UserInvitation } from '../entities/user-invitation.entity';
-
 import { LockerInstanceService } from '../locker-instance/locker-instance.service';
 import { ConfigService } from '../config/config.service';
 
@@ -25,7 +24,9 @@ export class ShareLockerService {
 
     public async generateInvitationLink(lockerID: number, nationalID: string) {
         try {
-            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(lockerID);
+            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
+                lockerID,
+            );
             if (lockerInstance.ownerUser.nationalID !== nationalID) {
                 throw new UnauthorizedException('Not owner user');
             }
@@ -45,13 +46,17 @@ export class ShareLockerService {
 
     public async addUserPermission(nationalID: string, accessCode: string) {
         try {
-            const userInvitation = await this.userInvitationRepository.findOneOrFail({
-                where: { id: accessCode, isUsed: false },
-                relations: ['lockerInstance'],
-            });
+            const userInvitation = await this.userInvitationRepository.findOneOrFail(
+                {
+                    where: { id: accessCode, isUsed: false },
+                    relations: ['lockerInstance'],
+                },
+            );
             userInvitation.isUsed = true;
             await this.userInvitationRepository.save(userInvitation);
-            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+            const user = await this.userService.findUserWithNationalIDOrFail(
+                nationalID,
+            );
             const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
                 userInvitation.lockerID,
             );

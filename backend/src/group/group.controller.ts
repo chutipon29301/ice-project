@@ -36,7 +36,4 @@ export class GroupController {
     ) {
         await this.groupService.edit(id, body.name);
     }
-
-
-
 }

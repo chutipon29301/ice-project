@@ -8,7 +8,6 @@ import {
 import { Locker } from './locker.entity';
 import { User } from './user.entity';
 
-
 @Entity()
 export class Group {
     constructor(name: string) {
