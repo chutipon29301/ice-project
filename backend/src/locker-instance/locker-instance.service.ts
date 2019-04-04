@@ -33,7 +33,7 @@ export class LockerInstanceService {
         private readonly canAccessRelationRepository: Repository<
             CanAccessRelation
         >,
-    ) {}
+    ) { }
 
     public async create(
         accessCode: string,
@@ -63,7 +63,11 @@ export class LockerInstanceService {
             await this.canAccessRelationRepository.save(canAccessRelation);
             return lockerInstance;
         } catch (error) {
-            throw new NotFoundException(error.message);
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
         }
     }
 
@@ -154,33 +158,22 @@ export class LockerInstanceService {
         }
     }
 
-    public async unlock(nationalID: string, accessCode: string) {
+    public async unlock(nationalID: string, accessCode: string): Promise<LockerUsage> {
         try {
-            const locker = await this.qrService.findLockerByAccessCodeOrFail(
-                accessCode,
-            );
-            const activeLocker = await this.lockerService.isLockerActiveByLockerID(
-                locker.id,
-            );
+            const locker = await this.qrService.findLockerByAccessCodeOrFail(accessCode);
+            const activeLocker = await this.lockerService.isLockerActiveByLockerID(locker.id);
             if (!activeLocker) {
                 throw new NotFoundException('Not found "ACTIVE" Locker');
             }
-            const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(
-                locker.id,
-            );
-            const canAccessUser = await this.canAccessRelationRepository.findOne(
-                {
-                    startTime: lockerInstance.startTime.toISOString(),
-                    lockerID: lockerInstance.lockerID,
-                    nationalID,
-                },
-            );
+            const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(locker.id);
+            const canAccessUser = await this.canAccessRelationRepository.findOne({
+                startTime: lockerInstance.startTime.toISOString(),
+                lockerID: lockerInstance.lockerID,
+                nationalID,
+            });
+            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
             if (canAccessUser) {
-                await this.lockerUsageService.create(
-                    ActionType.OPEN,
-                    lockerInstance,
-                );
-                // this.lockerService.
+                return await this.lockerUsageService.unlock(lockerInstance, user);
             } else {
                 throw new UnauthorizedException(
                     'User is not allowed to access this locker',

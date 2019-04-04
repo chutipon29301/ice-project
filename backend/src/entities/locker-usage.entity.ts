@@ -59,5 +59,5 @@ export class LockerUsage {
         name: 'nationalID',
         referencedColumnName: 'nationalID',
     })
-    users: User;
+    user: User;
 }

@@ -150,8 +150,7 @@ export class LockerService {
             const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
                 locker.id,
             );
-            await this.lockerUsageService.create(
-                ActionType.CLOSE,
+            await this.lockerUsageService.lock(
                 lockerInstance,
             );
             return await this.getLockerCurrentStatus(serialNumber);

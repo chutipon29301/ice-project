@@ -25,9 +25,7 @@ export class ShareLockerService {
 
     public async generateInvitationLink(lockerID: number, nationalID: string) {
         try {
-            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
-                lockerID,
-            );
+            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(lockerID);
             if (lockerInstance.ownerUser.nationalID !== nationalID) {
                 throw new UnauthorizedException('Not owner user');
             }
@@ -46,19 +44,23 @@ export class ShareLockerService {
     }
 
     public async addUserPermission(nationalID: string, accessCode: string) {
-        const userInvitation = await this.userInvitationRepository.findOne({
-            where: { id: accessCode, isUsed: false },
-            relations: ['lockerInstance'],
-        });
-        if (!userInvitation) {
-            throw new UnauthorizedException('Invalid invitation code');
+        try {
+            const userInvitation = await this.userInvitationRepository.findOneOrFail({
+                where: { id: accessCode, isUsed: false },
+                relations: ['lockerInstance'],
+            });
+            userInvitation.isUsed = true;
+            await this.userInvitationRepository.save(userInvitation);
+            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
+                userInvitation.lockerID,
+            );
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
         }
-        const user = await this.userService.findUserWithNationalIDOrFail(
-            nationalID,
-        );
-        const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
-            userInvitation.lockerID,
-        );
-        // lockerInstance.accessibleUsers.push(user);
     }
 }
