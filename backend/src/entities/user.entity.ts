@@ -95,6 +95,10 @@ export class User {
     @JoinTable()
     lockerUsages: LockerUsage[];
 
+    @OneToMany(type => CreditUsage, creditUsage => creditUsage.user)
+    @JoinTable()
+    creditUsages: CreditUsage[];
+
     // @ManyToMany(type => LockerInstance, lockerInstance => lockerInstance.accessibleUsers)
     // accessibleLockerInstance: LockerInstance[];
 
@@ -114,6 +118,4 @@ export class User {
     )
     ownerOfLockerInstance: LockerInstance[];
 
-    @OneToMany(type => CreditUsage, creditUsage => creditUsage.user)
-    creditUsages: CreditUsage[];
 }
