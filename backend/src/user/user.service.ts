@@ -56,7 +56,6 @@ export class UserService {
         lastName: string,
         phone: string,
         authenticationID: string,
-        authenticationType: AuthenticationType,
     ): Promise<User> {
         const user = new User(
             nationalID,
@@ -64,7 +63,7 @@ export class UserService {
             lastName,
             Role.ADMIN,
             authenticationID,
-            authenticationType,
+            AuthenticationType.LINE,
             phone,
             UserStatus.ACTIVE,
         );

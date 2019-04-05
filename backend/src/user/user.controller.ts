@@ -39,7 +39,6 @@ export class UserController {
             body.lastName,
             body.phone,
             body.authenticationID,
-            body.authenticationType,
         );
         return user;
     }
