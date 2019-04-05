@@ -12,6 +12,7 @@ import { Group } from '../entities/group.entity';
 
 @Injectable()
 export class GroupService {
+
     constructor(
         @Inject(GroupRepositoryToken)
         private readonly groupRepository: Repository<Group>,
@@ -62,4 +63,5 @@ export class GroupService {
             }
         }
     }
+
 }

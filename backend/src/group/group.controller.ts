@@ -41,9 +41,7 @@ export class GroupController {
 
     @Delete(':id')
     async delete(@Param('id') id: number) {
-        console.log('************************' + id);
         const group = await this.groupService.delete(id);
-
         return group;
     }
 
