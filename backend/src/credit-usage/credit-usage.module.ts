@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CreditUsageService } from './credit-usage.service';
 import { CreditUsageController } from './credit-usage.controller';
 import { creditUsageProviders } from './credit-usage.provider';
-import { UserModule } from '../user/user.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
     imports: [UserModule],
@@ -11,5 +11,6 @@ import { UserModule } from '../user/user.module';
         ...creditUsageProviders,
     ],
     controllers: [CreditUsageController],
+    exports: [CreditUsageService]
 })
-export class CreditUsageModule { }
+export class CreditUsageModule {}
