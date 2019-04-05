@@ -16,6 +16,17 @@ body {
   padding: 12px !important;
 }
 
+.mb-0 {
+  margin-bottom: 0px !important;
+}
+
+p.text-center {
+  text-align: center;
+}
+.is-bold {
+  font-weight: bold;
+  letter-spacing: 0.154353px;
+}
 .card-titletext {
   font-size: 12px;
   color: black;
@@ -117,6 +128,65 @@ ul.ant-card-actions {
 
 .am-list-item .am-input-label {
   margin-right: 12px !important;
+}
+
+.is-white {
+  color: white;
+}
+
+.bg-dark-primary {
+  background-color: #2979ff;
+}
+
+.p-12 {
+  padding: 12px;
+}
+
+.card-tab-left {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 52px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card-tab-right {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 52px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.locker-details-container {
+  color: black;
+  letter-spacing: 0.154353px;
+  font-size: 16px;
+  padding: 12px;
+}
+
+div.center-only-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button.report {
+  width: 64%;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border-width: 0px;
+  background-color: #0d6cb0;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 @keyframes App-logo-spin {

@@ -1,11 +1,11 @@
 import React from "react";
 import { WhiteSpace, Modal, NavBar } from "antd-mobile";
-import { Card, Icon, Row, Col } from "antd";
+import { Card, Row, Col, Icon } from "antd";
 import facultyOfEngineering from "../../assets/facultyOfEngineeringSign.jpeg";
 import Goku from "../../assets/goku.jpg";
 
 const Alert = Modal.alert;
-const MyLocker = () => {
+const MyLocker = ({ history }) => {
   return (
     <div className="bg-primary">
       <NavBar mode="dark"> My Locker </NavBar>
@@ -45,7 +45,21 @@ const MyLocker = () => {
       <WhiteSpace size="lg" />
       <Card
         style={{ width: "88vw", marginLeft: "6vw", marginRight: "6vw" }}
-        cover={<img alt="example" src={facultyOfEngineering} />}
+        cover={
+          <div style={{ position: "relative" }}>
+            <div
+              className="card-tab-right"
+              onClick={() => history.push("/my-locker/1")}
+            >
+              <Icon type="right" style={{ color: "white" }} />
+            </div>
+            <img
+              alt="example"
+              src={facultyOfEngineering}
+              style={{ width: "100%" }}
+            />
+          </div>
+        }
         actions={[
           <button
             className="button default bg-danger"
@@ -94,7 +108,21 @@ const MyLocker = () => {
       <WhiteSpace size="lg" />
       <Card
         style={{ width: "88vw", marginLeft: "6vw", marginRight: "6vw" }}
-        cover={<img alt="example" src={facultyOfEngineering} />}
+        cover={
+          <div style={{ position: "relative" }}>
+            <div
+              className="card-tab-right"
+              onClick={() => history.push("/my-locker/1")}
+            >
+              <Icon type="right" style={{ color: "white" }} />
+            </div>
+            <img
+              alt="example"
+              src={facultyOfEngineering}
+              style={{ width: "100%" }}
+            />
+          </div>
+        }
         actions={[
           <button
             className="button default bg-danger"
