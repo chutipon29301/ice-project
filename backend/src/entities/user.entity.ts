@@ -99,9 +99,6 @@ export class User {
     @JoinTable()
     creditUsages: CreditUsage[];
 
-    // @ManyToMany(type => LockerInstance, lockerInstance => lockerInstance.accessibleUsers)
-    // accessibleLockerInstance: LockerInstance[];
-
     @OneToMany(
         type => CanAccessRelation,
         canAccessRelation => canAccessRelation.accessibleUser,
