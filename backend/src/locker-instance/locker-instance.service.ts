@@ -5,7 +5,6 @@ import {
     NotFoundException,
     UnauthorizedException,
     HttpException,
-    ConflictException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import {
@@ -19,6 +18,7 @@ import { LockerUsageService } from '../locker-usage/locker-usage.service';
 import { LockerService } from '../locker/locker.service';
 import { QrService } from '../qr/qr.service';
 import { UserService } from '../user/user.service';
+import { CreditUsageService } from 'src/credit-usage/credit-usage.service';
 
 @Injectable()
 export class LockerInstanceService {
@@ -30,6 +30,7 @@ export class LockerInstanceService {
         private readonly lockerService: LockerService,
         private readonly lockerUsageService: LockerUsageService,
         private readonly userService: UserService,
+        private readonly creditUsageService: CreditUsageService,
         @Inject(CanAccessRelationRepositoryToken)
         private readonly canAccessRelationRepository: Repository<
             CanAccessRelation
@@ -50,21 +51,18 @@ export class LockerInstanceService {
             const user = await this.userService.findUserWithNationalIDOrFail(
                 nationalID,
             );
-            const inUsedLockerInstance = await this.lockerInstanceRepository.findOne({
-                where: { inUsed: true, lockerID: locker.id },
+            await this.lockerInstanceRepository.findOneOrFail({
+                where: { inUsed: true },
             });
-            if (inUsedLockerInstance) {
-                throw new ConflictException('Locker is not available');
-            }
             let lockerInstance = new LockerInstance(activeLocker, user);
-            await this.lockerInstanceRepository.save(lockerInstance);
-            lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(activeLocker.id);
+            lockerInstance = await this.lockerInstanceRepository.save(
+                lockerInstance,
+            );
             const canAccessRelation = new CanAccessRelation(
                 user,
                 lockerInstance,
             );
             await this.canAccessRelationRepository.save(canAccessRelation);
-            await this.lockerUsageService.unlock(lockerInstance, user);
             return lockerInstance;
         } catch (error) {
             if (error instanceof HttpException) {
@@ -228,6 +226,7 @@ export class LockerInstanceService {
             lockerInstance.endTime = new Date();
             lockerInstance.inUsed = false;
             await this.lockerInstanceRepository.save(lockerInstance);
+            this.creditUsageService.calculateTimeCharge(lockerInstance.startTime,lockerInstance.endTime,nationalID)
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;

@@ -7,14 +7,16 @@ import { UserModule } from '../user/user.module';
 import { QrModule } from '../qr/qr.module';
 import { LockerUsageModule } from '../locker-usage/locker-usage.module';
 import { LocationModule } from '../location/location.module';
+import { CreditUsageModule } from 'src/credit-usage/credit-usage.module';
 
 @Module({
-    imports: [forwardRef(() => LockerModule), UserModule, QrModule],
+    imports: [forwardRef(() => LockerModule), UserModule, QrModule, CreditUsageModule],
     providers: [
         ...lockerInstanceProviders,
         LockerInstanceService,
         LockerUsageModule,
         LocationModule,
+        CreditUsageModule,
     ],
     controllers: [LockerInstanceController],
     exports: [
@@ -25,4 +27,4 @@ import { LocationModule } from '../location/location.module';
         UserModule,
     ],
 })
-export class LockerInstanceModule {}
+export class LockerInstanceModule { }
