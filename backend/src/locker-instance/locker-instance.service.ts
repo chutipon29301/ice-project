@@ -5,6 +5,7 @@ import {
     NotFoundException,
     UnauthorizedException,
     HttpException,
+    ConflictException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import {
@@ -49,18 +50,21 @@ export class LockerInstanceService {
             const user = await this.userService.findUserWithNationalIDOrFail(
                 nationalID,
             );
-            await this.lockerInstanceRepository.findOneOrFail({
-                where: { inUsed: true },
+            const inUsedLockerInstance = await this.lockerInstanceRepository.findOne({
+                where: { inUsed: true, lockerID: locker.id },
             });
+            if (inUsedLockerInstance) {
+                throw new ConflictException('Locker is not available');
+            }
             let lockerInstance = new LockerInstance(activeLocker, user);
-            lockerInstance = await this.lockerInstanceRepository.save(
-                lockerInstance,
-            );
+            await this.lockerInstanceRepository.save(lockerInstance);
+            lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(activeLocker.id);
             const canAccessRelation = new CanAccessRelation(
                 user,
                 lockerInstance,
             );
             await this.canAccessRelationRepository.save(canAccessRelation);
+            await this.lockerUsageService.unlock(lockerInstance, user);
             return lockerInstance;
         } catch (error) {
             if (error instanceof HttpException) {
