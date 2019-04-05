@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 class LineLanding extends React.Component {
   async componentDidMount() {
-    const { history, setTokenAndExpiration } = this.props;
+    const { history, setTokenAndExpiration, initialURL } = this.props;
     initAxiosLineErrorHandling(history);
     const location = window.location.href;
     const indexOfEqual = location.indexOf("=");
@@ -15,13 +15,12 @@ class LineLanding extends React.Component {
     } = await Axios.post("/auth/lineToken", { code });
     setTokenAndExpiration(idToken, expireIn);
     try {
-      console.log("I am trying to authen me self from line-landing");
       const res = await Axios.post("/auth/myToken/line", {
         lineToken: idToken
       });
       if (res.data) {
         setAuthentication(true);
-        history.push("/");
+        history.push("/" + initialURL);
       }
     } catch (error) {
       console.log(error);
@@ -33,8 +32,12 @@ class LineLanding extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  initialURL: state.liff.initialURL
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { setTokenAndExpiration }
 )(LineLanding);
 
