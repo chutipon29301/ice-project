@@ -19,7 +19,7 @@ export class Group {
     @Column()
     name: string;
 
-    @ManyToMany(type => User, user => user.groups, {cascade: true})
+    @ManyToMany(type => User, user => user.groups)
     @JoinTable()
     users: User[];
 

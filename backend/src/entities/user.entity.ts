@@ -109,6 +109,7 @@ export class User {
     canAccesses: CanAccessRelation[];
 
     @ManyToMany(type => Group, group => group.users)
+    @JoinTable()
     groups: Group[];
 
     @OneToMany(

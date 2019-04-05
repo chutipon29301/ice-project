@@ -9,7 +9,6 @@ import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { GroupRepositoryToken } from '../constant';
 import { Group } from '../entities/group.entity';
-import { error } from 'util';
 
 @Injectable()
 export class GroupService {
@@ -40,8 +39,7 @@ export class GroupService {
     public async delete(id: number) {
         try {
             await this.groupRepository.delete(id);
-        }
-        catch{
+        } catch (error) {
             throw new ConflictException(error);
         }
     }
