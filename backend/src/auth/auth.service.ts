@@ -83,6 +83,7 @@ export class AuthService {
         if (decodedLineToken) {
             return this.jwtAuthService.generateTokenForLineID(
                 decodedLineToken.sub,
+                decodedLineToken.picture
             );
         } else {
             throw new UnauthorizedException('Invalid line token');

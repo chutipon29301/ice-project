@@ -86,6 +86,11 @@ export class User {
     })
     status: UserStatus;
 
+    @Column({
+        nullable: true,
+    })
+    profileImage: string;
+
     @OneToMany(type => LockerUsage, lockerUsage => lockerUsage.user)
     @JoinTable()
     lockerUsages: LockerUsage[];

@@ -13,7 +13,7 @@ import {
 } from '../constant';
 import { CanAccessRelation } from '../entities/can-access.entity';
 import { LockerInstance } from '../entities/locker-instance.entity';
-import { ActionType, LockerUsage } from '../entities/locker-usage.entity';
+import { LockerUsage } from '../entities/locker-usage.entity';
 import { LockerUsageService } from '../locker-usage/locker-usage.service';
 import { LockerService } from '../locker/locker.service';
 import { QrService } from '../qr/qr.service';
@@ -33,7 +33,7 @@ export class LockerInstanceService {
         private readonly canAccessRelationRepository: Repository<
             CanAccessRelation
         >,
-    ) {}
+    ) { }
 
     public async create(
         accessCode: string,
@@ -103,13 +103,17 @@ export class LockerInstanceService {
         return lockerInstance;
     }
 
-    public async findLockerInstancesByNationalID(
+    public async findInUsedLockerInstanceByNationalID(
         nationalID: string,
     ): Promise<LockerInstance[]> {
         try {
             await this.userService.findUserWithNationalIDOrFail(nationalID);
             const lockerInstances = await this.lockerInstanceRepository.find({
-                where: { userID: nationalID, inUsed: true },
+                where: {
+                    userID: nationalID,
+                    inUsed: true,
+                },
+                relations: ['locker', 'locker.location', 'ownerUser'],
             });
             return lockerInstances;
         } catch (error) {
@@ -195,6 +199,31 @@ export class LockerInstanceService {
                     'User is not allowed to access this locker',
                 );
             }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
+        }
+    }
+
+    public async returnInstance(nationalID: string, accessCode: string) {
+        try {
+            const locker = await this.qrService.findLockerByAccessCodeOrFail(
+                accessCode,
+            );
+            const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(
+                locker.id,
+            );
+            if (lockerInstance.userID !== nationalID) {
+                throw new UnauthorizedException(
+                    'Not owner of in used locker instance',
+                );
+            }
+            lockerInstance.endTime = new Date();
+            lockerInstance.inUsed = false;
+            await this.lockerInstanceRepository.save(lockerInstance);
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;

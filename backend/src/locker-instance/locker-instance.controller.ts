@@ -21,7 +21,7 @@ export class LockerInstanceController {
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('myLocker')
     async getMyLocker(@User() user: JwtToken): Promise<LockerInstance[]> {
-        return await this.lockerInstanceService.findLockerInstancesByNationalID(
+        return await this.lockerInstanceService.findInUsedLockerInstanceByNationalID(
             user.nationalID,
         );
     }
@@ -45,6 +45,17 @@ export class LockerInstanceController {
         return await this.lockerInstanceService.create(
             body.accessCode,
             user.nationalID,
+        );
+    }
+
+    @Post('return')
+    async returnInstance(
+        @User() user: JwtToken,
+        @Body() body: LockerInstanceDto,
+    ) {
+        await this.lockerInstanceService.returnInstance(
+            user.nationalID,
+            body.accessCode,
         );
     }
 
