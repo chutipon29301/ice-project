@@ -30,8 +30,10 @@ export class LockerService {
         private readonly lockerInstanceService: LockerInstanceService,
     ) { }
 
-    public async list(): Promise<Locker[]> {
-        return await this.lockerRepository.find();
+    public async findLockerAndLocation(): Promise<Locker[]> {
+        return await this.lockerRepository.find({
+            relations: ['location'],
+        });
     }
 
     public async findLockerByIDOrFail(id: number): Promise<Locker> {

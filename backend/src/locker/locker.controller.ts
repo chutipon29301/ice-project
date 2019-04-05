@@ -22,7 +22,6 @@ import { LockerSecretDto } from './dto/locker-secret.dto';
 import { RegisterLockerDto } from './dto/register-locker.dto';
 import { LockerService } from './locker.service';
 import { Locker } from '../entities/locker.entity';
-import { throws } from 'assert';
 
 @ApiUseTags('Locker')
 @Controller('locker')
@@ -35,7 +34,7 @@ export class LockerController {
     @Roles(Role.SUPERUSER, Role.ADMIN, Role.USER)
     @Get()
     async list(): Promise<ListLockerResponseDto> {
-        const lockers = await this.lockerService.list();
+        const lockers = await this.lockerService.findLockerAndLocation();
         return { lockers };
     }
 
