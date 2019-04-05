@@ -1,4 +1,4 @@
-import { Inject, Injectable, HttpException, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, HttpException, NotFoundException, ConflictException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UserRepositoryToken } from '../constant';
 import {
@@ -30,6 +30,10 @@ export class UserService {
         phone: string,
         authenticationID: string,
     ): Promise<User> {
+        const existingUser = await this.findUserWithNationalID(nationalID);
+        if (existingUser) {
+            throw new ConflictException('User is already registered to the system');
+        }
         const lineToken = this.lineAuthService.decode(authenticationID);
         const user = new User(
             nationalID,
@@ -82,6 +86,11 @@ export class UserService {
         const user = await this.userRepository.findOneOrFail({
             where: { nationalID },
         });
+        return user;
+    }
+
+    public async findUserWithNationalID(nationalID: string): Promise<User> {
+        const user = await this.userRepository.findOne(nationalID);
         return user;
     }
 
