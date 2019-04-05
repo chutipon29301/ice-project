@@ -8,8 +8,11 @@ export class CreditUsage {
         this.user = user;
     }
 
-    @ManyToOne(type => User, { primary: true, cascade: true })
-    @JoinColumn({ referencedColumnName: 'nationalID' })
+    @PrimaryColumn()
+    nationalID: string;
+
+    @ManyToOne(type => User, user => user.creditUsages, { cascade: true })
+    @JoinColumn({ name: 'nationalID', referencedColumnName: 'nationalID' })
     user: User;
 
     @PrimaryColumn({
