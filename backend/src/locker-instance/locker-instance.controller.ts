@@ -20,19 +20,18 @@ export class LockerInstanceController {
 
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('myLocker')
-    async getMyLocker(@User() user: JwtToken): Promise<{ lockers: LockerInstance[] }> {
-        const lockers = await this.lockerInstanceService.findInUsedLockerInstanceByNationalID(
+    async getMyLocker(@User() user: JwtToken): Promise<{ lockerInstances: LockerInstance[] }> {
+        const lockerInstances = await this.lockerInstanceService.findInUsedLockerInstanceByNationalID(
             user.nationalID,
         );
-        return { lockers };
+        return { lockerInstances };
     }
 
-    @ApiOperation({
-        title: 'Get locker used history',
-    })
-    @Get(':id')
-    async list(@Param('id') lockerID: number) {
-        return await this.lockerInstanceService.findAllInstance(lockerID);
+    @Roles(Role.ADMIN, Role.SUPERUSER)
+    @Get('inUsedLocker')
+    async getInUsedLocker(): Promise<{ lockerInstances: LockerInstance[] }> {
+        const lockerInstances = await this.lockerInstanceService.findInUsedLockerInstance();
+        return { lockerInstances };
     }
 
     @ApiOperation({

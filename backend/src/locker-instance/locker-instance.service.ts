@@ -71,13 +71,6 @@ export class LockerInstanceService {
         }
     }
 
-    public async findAllInstance(lockerID: number): Promise<LockerInstance[]> {
-        const lockerInstances = await this.lockerInstanceRepository.find({
-            where: { lockerId: lockerID },
-        });
-        return lockerInstances;
-    }
-
     public async findInstanceOrFail(
         lockerID: number,
         startTime: Date,
@@ -101,6 +94,13 @@ export class LockerInstanceService {
             },
         );
         return lockerInstance;
+    }
+
+    public async findInUsedLockerInstance(): Promise<LockerInstance[]> {
+        const lockerInstances = await this.lockerInstanceRepository.find({
+            where: { inUsed: true },
+        });
+        return lockerInstances;
     }
 
     public async findInUsedLockerInstanceByNationalID(
