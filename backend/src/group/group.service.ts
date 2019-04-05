@@ -9,6 +9,7 @@ import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { GroupRepositoryToken } from '../constant';
 import { Group } from '../entities/group.entity';
+import { error } from 'util';
 
 @Injectable()
 export class GroupService {
@@ -16,7 +17,7 @@ export class GroupService {
         @Inject(GroupRepositoryToken)
         private readonly groupRepository: Repository<Group>,
         private readonly userService: UserService,
-    ) {}
+    ) { }
 
     async list(): Promise<Group[]> {
         return await this.groupRepository.find();
@@ -37,34 +38,29 @@ export class GroupService {
     }
 
     public async delete(id: number) {
-        await this.groupRepository.delete(id);
+        try {
+            await this.groupRepository.delete(id);
+        }
+        catch{
+            throw new ConflictException(error);
+        }
     }
 
-    public async add(nationalID: string, groupID: number) {
-        // const group = await this.groupRepository.find({ relations: ["users"] });
-        const group = await this.groupRepository
-            .createQueryBuilder()
-            .leftJoinAndSelect('group.users', 'user')
-            .where('user.nationalID = :nationalID', { nationalID })
-            .getOne();
-        if (group) {
-            throw new ConflictException('User already in group');
-        } else {
-            try {
-                const user = this.userService.findUserWithNationalIDOrFail(
-                    nationalID,
-                );
-                this.groupRepository
-                    .createQueryBuilder()
-                    .relation(Group, 'users')
-                    .of(groupID)
-                    .add(user);
-            } catch (error) {
-                if (error instanceof HttpException) {
-                    throw error;
-                } else {
-                    throw new NotFoundException(error.message);
+    public async addUserGroup(nationalID: string, groupID: number) {
+        try {
+            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+            const group = await this.groupRepository.findOneOrFail({
+                where: {
+                    id: groupID
                 }
+            });
+            group.users = [user];
+            await this.groupRepository.save(group);
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
             }
         }
     }
