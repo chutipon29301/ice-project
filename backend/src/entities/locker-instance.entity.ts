@@ -17,7 +17,6 @@ export class LockerInstance {
     constructor(locker: Locker, ownerUser: User) {
         this.locker = locker;
         this.ownerUser = ownerUser;
-        // this.accessibleUsers = [ownerUser];
     }
 
     @PrimaryColumn()
@@ -47,25 +46,6 @@ export class LockerInstance {
     })
     endTime: Date;
 
-    // @ManyToMany(type => User, user => user.accessibleLockerInstance)
-    // @JoinTable({
-    //     name: 'can_access',
-    //     joinColumns: [{
-    //         name: 'lockerID',
-    //         referencedColumnName: 'lockerID',
-    //     }, {
-    //         name: 'startTime',
-    //         referencedColumnName: 'startTime',
-    //     }],
-    //     inverseJoinColumns: [{
-    //         name: 'nationalID',
-    //         referencedColumnName: 'nationalID',
-    //     }],
-    // })
-    // accessibleUsers: User[];
-
-    // @ManyToOne(type => CanAccessEntity, canAccess => canAccess.lockerInstance)
-    // @JoinColumn([{ name: 'lockerID', referencedColumnName: 'id' }])
     @OneToMany(
         type => CanAccessRelation,
         canAccessRelation => canAccessRelation.accessibleLockerInstance,
