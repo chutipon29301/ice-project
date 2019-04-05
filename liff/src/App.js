@@ -2,13 +2,20 @@ import React, { Component } from "react";
 import "./App.css";
 import MainRouter from "./routes";
 import { connect } from "react-redux";
-import { setLiff } from "./reducers/liff";
+import { setLiff, setInitialURL } from "./reducers/liff";
 
 const liff = window.liff;
 
 class App extends Component {
-  componentDidMount() {
+  componentWillMount() {
     window.addEventListener("load", this.initialize);
+    const { setInitialURL } = this.props;
+    if (!window.location.href.includes("/auth/line-landing")) {
+      const path = window.location.href.split("/")[3];
+      localStorage.setItem("path", path);
+      setInitialURL(path);
+    }
+    setInitialURL(localStorage.getItem("path"));
   }
   initialize = () => {
     liff.init(data => {
@@ -26,7 +33,8 @@ class App extends Component {
 }
 
 const mapDispatchToProps = {
-  setLiff
+  setLiff,
+  setInitialURL
 };
 
 export default connect(

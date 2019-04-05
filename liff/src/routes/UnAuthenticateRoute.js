@@ -5,22 +5,25 @@ import { Route, Redirect } from "react-router-dom";
 const UnAuthenticateRoute = ({
   component: Component,
   isAuthenticate,
+  initialURL,
   ...rest
-}) => (
-  <Route
-    {...rest}
-    render={props => {
-      if (!isAuthenticate) {
-        return <Component {...props} />;
-      } else {
-        return <Redirect to="/" />;
-      }
-    }}
-  />
-);
+}) =>
+   (
+    <Route
+      {...rest}
+      render={props => {
+        if (!isAuthenticate) {
+          return <Component {...props} />;
+        } else {
+          return <Redirect to={"/" + initialURL} />;
+        }
+      }}
+    />
+  );
 
 const mapStateToProps = state => ({
-  isAuthenticate: state.authentication.isAuthenticate
+  isAuthenticate: state.authentication.isAuthenticate,
+  initialURL: state.liff.initialURL
 });
 
 export default connect(mapStateToProps)(UnAuthenticateRoute);

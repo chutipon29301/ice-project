@@ -27,7 +27,10 @@ const LockerDetails = ({ history }) => {
   return (
     <div className="locker-details">
       <div style={{ position: "relative" }}>
-        <div className="card-tab-left" onClick={() => history.push("/")}>
+        <div
+          className="card-tab-left"
+          onClick={() => history.push("/my-locker")}
+        >
           <Icon type="left" style={{ color: "white" }} />
         </div>
         <img
