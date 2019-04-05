@@ -16,14 +16,15 @@ import { UnlockLockerInstanceDto } from './dto/unlock-locker-instance.dto';
 export class LockerInstanceController {
     constructor(
         private readonly lockerInstanceService: LockerInstanceService,
-    ) {}
+    ) { }
 
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('myLocker')
-    async getMyLocker(@User() user: JwtToken): Promise<LockerInstance[]> {
-        return await this.lockerInstanceService.findInUsedLockerInstanceByNationalID(
+    async getMyLocker(@User() user: JwtToken): Promise<{ lockers: LockerInstance[] }> {
+        const lockers = await this.lockerInstanceService.findInUsedLockerInstanceByNationalID(
             user.nationalID,
         );
+        return { lockers };
     }
 
     @ApiOperation({
