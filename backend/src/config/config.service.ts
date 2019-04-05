@@ -56,6 +56,15 @@ export class ConfigService {
         }
     }
 
+    get adminServerURL(): string {
+        const url = process.env.ADMIN_SERVER_URL;
+        if (url) {
+            return url;
+        } else {
+            throw new Error(`Unable to read "ADMIN_SERVER_URL" environment`);
+        }
+    }
+
     get lineChannelID(): string {
         const id = process.env.CHANNEL_ID;
         if (id) {
