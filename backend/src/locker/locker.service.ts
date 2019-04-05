@@ -28,7 +28,7 @@ export class LockerService {
         private readonly lockerUsageService: LockerUsageService,
         @Inject(forwardRef(() => LockerInstanceService))
         private readonly lockerInstanceService: LockerInstanceService,
-    ) {}
+    ) { }
 
     public async list(): Promise<Locker[]> {
         return await this.lockerRepository.find();
@@ -62,6 +62,21 @@ export class LockerService {
         return await this.lockerRepository.findOneOrFail({
             where: { serialNumber, availability: LockerAvailability.AVAILABLE },
         });
+    }
+
+    public async findLockerInstanceHistoryByLockerID(lockerID: number): Promise<Locker> {
+        try {
+            const locker = await this.lockerRepository.findOneOrFail(lockerID, {
+                relations: ['lockerInstances', 'lockerInstances.ownerUser'],
+            });
+            return locker;
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
+        }
     }
 
     public async create(secret: string): Promise<Locker> {

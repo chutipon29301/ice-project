@@ -21,11 +21,13 @@ import { LockerLockDto } from './dto/locker-lock.dto';
 import { LockerSecretDto } from './dto/locker-secret.dto';
 import { RegisterLockerDto } from './dto/register-locker.dto';
 import { LockerService } from './locker.service';
+import { Locker } from '../entities/locker.entity';
+import { throws } from 'assert';
 
 @ApiUseTags('Locker')
 @Controller('locker')
 export class LockerController {
-    constructor(private readonly lockerService: LockerService) {}
+    constructor(private readonly lockerService: LockerService) { }
 
     @ApiOperation({
         title: 'List all locker',
@@ -45,6 +47,14 @@ export class LockerController {
         @Query('serialNumber') serialNumber: string,
     ): Promise<LockerCurrentStatusResponseDto> {
         return await this.lockerService.getLockerCurrentStatus(serialNumber);
+    }
+
+    @Roles(Role.ADMIN, Role.SUPERUSER)
+    @Get('history/:id')
+    async getHistory(
+        @Param('id', new ParseIntPipe()) lockerID: number,
+    ): Promise<Locker> {
+        return this.lockerService.findLockerInstanceHistoryByLockerID(lockerID);
     }
 
     @ApiOperation({
