@@ -114,5 +114,4 @@ export class User {
         lockerInstance => lockerInstance.ownerUser,
     )
     ownerOfLockerInstance: LockerInstance[];
-
 }

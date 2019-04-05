@@ -20,7 +20,7 @@ export class ShareLockerService {
         private readonly userService: UserService,
         private readonly configService: ConfigService,
         private readonly lockerInstanceService: LockerInstanceService,
-    ) { }
+    ) {}
 
     public async generateInvitationLink(lockerID: number, nationalID: string) {
         try {
@@ -34,7 +34,7 @@ export class ShareLockerService {
             await this.userInvitationRepository.save(userInvitation);
             return `${this.configService.liffServerURL}/share?accessCode=${
                 userInvitation.id
-                }`;
+            }`;
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
@@ -55,8 +55,13 @@ export class ShareLockerService {
             userInvitation.isUsed = true;
             await this.userInvitationRepository.save(userInvitation);
             await this.userService.findUserWithNationalIDOrFail(nationalID);
-            await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail( userInvitation.lockerID );
-            this.lockerInstanceService.addPermissionFromNationalIDAndLockerID(nationalID, userInvitation.lockerID);
+            await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
+                userInvitation.lockerID,
+            );
+            this.lockerInstanceService.addPermissionFromNationalIDAndLockerID(
+                nationalID,
+                userInvitation.lockerID,
+            );
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;

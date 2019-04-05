@@ -15,15 +15,20 @@ export class JwtAuthService {
     constructor(
         private readonly jwtService: JwtService,
         private readonly userService: UserService,
-    ) { }
+    ) {}
 
-    async generateTokenForLineID(lineID: string, picture?: string): Promise<JwtTokenInfo> {
+    async generateTokenForLineID(
+        lineID: string,
+        picture?: string,
+    ): Promise<JwtTokenInfo> {
         try {
             const user = await this.userService.findUserWithLineIDOrFail(
                 lineID,
             );
             if (picture) {
-                await this.userService.edit(user.nationalID, { profileImage: picture });
+                await this.userService.edit(user.nationalID, {
+                    profileImage: picture,
+                });
             }
             const payload: JwtToken = {
                 nationalID: user.nationalID,

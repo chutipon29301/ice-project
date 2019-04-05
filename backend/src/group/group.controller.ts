@@ -18,7 +18,7 @@ import { AddUserGroupDto } from './dto/add-user-group.dto';
 @ApiUseTags('Group')
 @Controller('group')
 export class GroupController {
-    constructor(private readonly groupService: GroupService) { }
+    constructor(private readonly groupService: GroupService) {}
 
     @Get()
     async list(): Promise<{ groups: Group[] }> {
@@ -47,8 +47,10 @@ export class GroupController {
 
     @Post('addUserToGroup')
     async addUserToGroup(@Body() body: AddUserGroupDto) {
-        const group = await this.groupService.addUserGroup(body.nationalID, body.groupID);
+        const group = await this.groupService.addUserGroup(
+            body.nationalID,
+            body.groupID,
+        );
         return group;
     }
-
 }

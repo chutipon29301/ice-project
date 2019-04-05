@@ -1,9 +1,5 @@
 import { Provider } from '@nestjs/common';
-import {
-    
-    DbConnectionToken,
-    CreditUsageRepositoryToken,
-} from '../constant';
+import { DbConnectionToken, CreditUsageRepositoryToken } from '../constant';
 import { Connection } from 'typeorm';
 import { CreditUsage } from 'src/entities/credit-usage.entity';
 

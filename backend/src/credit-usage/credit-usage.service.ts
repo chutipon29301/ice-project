@@ -11,30 +11,41 @@ export class CreditUsageService {
         @Inject(CreditUsageRepositoryToken)
         private readonly creditUsageRepository: Repository<CreditUsage>,
         private readonly userService: UserService,
-    ) { }
+    ) {}
     public async getMyTotalCredit(nationalID: string) {
         await this.creditUsageRepository.findOneOrFail({ where: nationalID });
         const { totalCredit } = await this.creditUsageRepository
             .createQueryBuilder('credit')
             .select('SUM(credit.nationalID)', 'sum')
-            .where("credit.nationalID = :nationalID", { id: nationalID })
+            .where('credit.nationalID = :nationalID', { id: nationalID })
             .getRawOne();
-        console.log({ totalCredit })
+        console.log({ totalCredit });
         return { totalCredit };
     }
 
-    public async addCredit(amount: number, nationalID: string):Promise<CreditUsage> {
-        const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+    public async addCredit(
+        amount: number,
+        nationalID: string,
+    ): Promise<CreditUsage> {
+        const user = await this.userService.findUserWithNationalIDOrFail(
+            nationalID,
+        );
         const creditUse = new CreditUsage(amount, user);
         this.creditUsageRepository.save(creditUse);
         return creditUse;
     }
 
-    public async calculateTimeCharge(startTime: Date, endTime: Date, nationalID: string):Promise<CreditUsage> {
+    public async calculateTimeCharge(
+        startTime: Date,
+        endTime: Date,
+        nationalID: string,
+    ): Promise<CreditUsage> {
         const totalTimeUsed = endTime.getTime() - startTime.getTime();
         const chargingFee = -0.5;
-        const amountCharge = moment(totalTimeUsed).subtract(15, "minutes").minutes()*chargingFee;
-        return await this.addCredit(amountCharge,nationalID);
+        const amountCharge =
+            moment(totalTimeUsed)
+                .subtract(15, 'minutes')
+                .minutes() * chargingFee;
+        return await this.addCredit(amountCharge, nationalID);
     }
-
 }

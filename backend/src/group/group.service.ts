@@ -12,12 +12,11 @@ import { Group } from '../entities/group.entity';
 
 @Injectable()
 export class GroupService {
-
     constructor(
         @Inject(GroupRepositoryToken)
         private readonly groupRepository: Repository<Group>,
         private readonly userService: UserService,
-    ) { }
+    ) {}
 
     async list(): Promise<Group[]> {
         return await this.groupRepository.find();
@@ -47,11 +46,13 @@ export class GroupService {
 
     public async addUserGroup(nationalID: string, groupID: number) {
         try {
-            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+            const user = await this.userService.findUserWithNationalIDOrFail(
+                nationalID,
+            );
             const group = await this.groupRepository.findOneOrFail({
                 where: {
-                    id: groupID
-                }
+                    id: groupID,
+                },
             });
             group.users = [user];
             await this.groupRepository.save(group);
@@ -63,5 +64,4 @@ export class GroupService {
             }
         }
     }
-
 }

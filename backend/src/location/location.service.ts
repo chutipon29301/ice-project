@@ -8,7 +8,7 @@ export class LocationService {
     constructor(
         @Inject(LocationRepositoryToken)
         private readonly locationRepository: Repository<Location>,
-    ) { }
+    ) {}
 
     public async create(
         description: string,
@@ -24,7 +24,9 @@ export class LocationService {
         return await this.locationRepository.find();
     }
 
-    public async findLockerInLocationByLocationID(locationID: number): Promise<Location> {
+    public async findLockerInLocationByLocationID(
+        locationID: number,
+    ): Promise<Location> {
         const location = await this.locationRepository.findOne(locationID, {
             relations: ['lockers'],
         });

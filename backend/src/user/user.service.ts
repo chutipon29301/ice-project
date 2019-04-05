@@ -1,4 +1,10 @@
-import { Inject, Injectable, HttpException, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+    Inject,
+    Injectable,
+    HttpException,
+    NotFoundException,
+    ConflictException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UserRepositoryToken } from '../constant';
 import {
@@ -11,12 +17,11 @@ import { LineAuthService } from '../line-auth/line-auth.service';
 
 @Injectable()
 export class UserService {
-
     constructor(
         @Inject(UserRepositoryToken)
         private readonly userRepository: Repository<User>,
         private readonly lineAuthService: LineAuthService,
-    ) { }
+    ) {}
 
     public async listUser(): Promise<User[]> {
         const users = await this.userRepository.find();
@@ -32,7 +37,9 @@ export class UserService {
     ): Promise<User> {
         const existingUser = await this.findUserWithNationalID(nationalID);
         if (existingUser) {
-            throw new ConflictException('User is already registered to the system');
+            throw new ConflictException(
+                'User is already registered to the system',
+            );
         }
         const lineToken = this.lineAuthService.decode(authenticationID);
         const user = new User(
@@ -81,7 +88,9 @@ export class UserService {
         return user;
     }
 
-    public async findUserWithNationalIDOrFail(nationalID: string): Promise<User> {
+    public async findUserWithNationalIDOrFail(
+        nationalID: string,
+    ): Promise<User> {
         const user = await this.userRepository.findOneOrFail({
             where: { nationalID },
         });
@@ -105,7 +114,10 @@ export class UserService {
         }
     }
 
-    public async edit(nationalID: string, updateValue: Partial<User>): Promise<User> {
+    public async edit(
+        nationalID: string,
+        updateValue: Partial<User>,
+    ): Promise<User> {
         try {
             const user = await this.findUserWithNationalIDOrFail(nationalID);
             await this.userRepository.update(nationalID, updateValue);

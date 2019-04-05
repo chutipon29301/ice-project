@@ -6,11 +6,8 @@ import { UserModule } from 'src/user/user.module';
 
 @Module({
     imports: [UserModule],
-    providers: [
-        CreditUsageService,
-        ...creditUsageProviders,
-    ],
+    providers: [CreditUsageService, ...creditUsageProviders],
     controllers: [CreditUsageController],
-    exports: [CreditUsageService]
+    exports: [CreditUsageService],
 })
 export class CreditUsageModule {}

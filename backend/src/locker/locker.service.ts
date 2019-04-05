@@ -28,7 +28,7 @@ export class LockerService {
         private readonly lockerUsageService: LockerUsageService,
         @Inject(forwardRef(() => LockerInstanceService))
         private readonly lockerInstanceService: LockerInstanceService,
-    ) { }
+    ) {}
 
     public async findLockerAndLocation(): Promise<Locker[]> {
         return await this.lockerRepository.find({
@@ -66,7 +66,9 @@ export class LockerService {
         });
     }
 
-    public async findLockerInstanceHistoryByLockerID(lockerID: number): Promise<Locker> {
+    public async findLockerInstanceHistoryByLockerID(
+        lockerID: number,
+    ): Promise<Locker> {
         try {
             const locker = await this.lockerRepository.findOneOrFail(lockerID, {
                 relations: ['lockerInstances', 'lockerInstances.ownerUser'],
