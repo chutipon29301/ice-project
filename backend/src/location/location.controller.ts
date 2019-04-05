@@ -18,13 +18,21 @@ import { LocationService } from './location.service';
 @ApiUseTags('Location')
 @Controller('location')
 export class LocationController {
-    constructor(private readonly locationService: LocationService) {}
+    constructor(private readonly locationService: LocationService) { }
 
     @Roles(Role.SUPERUSER, Role.ADMIN, Role.USER)
     @Get()
     async list(): Promise<{ locations: Location[] }> {
         const locations = await this.locationService.list();
         return { locations };
+    }
+
+    @Roles(Role.ADMIN, Role.SUPERUSER)
+    @Get(':id/lockers')
+    async findLockersInLocation(
+        @Param('id', new ParseIntPipe()) locationID: number,
+    ): Promise<Location> {
+        return await this.locationService.findLockerInLocationByLocationID(locationID);
     }
 
     @Roles(Role.SUPERUSER, Role.ADMIN)
