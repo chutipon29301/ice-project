@@ -26,8 +26,13 @@ export class AuthController {
             'Request short token from line for user,admin,superuser to register',
     })
     @Get('lineLoginPage')
-    public async lineAuth(@Res() res: Response) {
+    async lineAuth(@Res() res: Response) {
         res.redirect(this.authService.getLineAuthenticationPageURL());
+    }
+
+    @Get('lineLoginPageAdmin')
+    async adminLineLoginPage(@Res() res: Response) {
+        res.redirect(this.authService.getAdminLineAuthenticationPageURL());
     }
 
     @Get('line/callback')
@@ -49,9 +54,28 @@ export class AuthController {
         }
     }
 
+    @Get('line/admin/callback')
+    async adminLineCallback(
+        @Query('code') code: string,
+        @Query('state') state: string,
+        @Query('error') error: string,
+        @Query('errorCode') errorCode: string,
+        @Query('errorMessage') errorMessage: string,
+        @Res() res: Response,
+    ) {
+        if (error != null || errorCode != null || errorMessage != null) {
+            throw new UnauthorizedException(errorMessage);
+        }
+        if (await this.authService.validateState(state)) {
+            res.redirect(this.authService.getAdminCallbackWithAccessCode(code));
+        } else {
+            throw new UnauthorizedException('User not authorize');
+        }
+    }
+
     @ApiOperation({
         title:
-            'Request long token(AUTHENTICATION_ID) from line for user,admin,superuser to complete register',
+            'Request long token(AUTHENTICATION_ID) from line for user, admin, superuser to complete register',
     })
     @Post('lineToken')
     async lineAuthToken(
@@ -62,7 +86,7 @@ export class AuthController {
 
     @ApiOperation({
         title:
-            'Request our internal server jwt token for user,admin,superuser (for bearer)',
+            'Request our internal server jwt token for user, admin, superuser (for bearer)',
     })
     @Post('myToken/line')
     async getJwtTokenFromLineToken(

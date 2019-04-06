@@ -12,6 +12,7 @@ import { LineAuthService } from '../line-auth/line-auth.service';
 @Injectable()
 export class AuthService {
     private readonly lineCallbackURL: string = '/auth/line/callback';
+    private readonly lineAdminCallbackURL: string = '/auth/line/callback';
     private readonly passPhase = 'Hello World!';
 
     constructor(
@@ -20,16 +21,24 @@ export class AuthService {
         private readonly cryptoService: CryptoService,
         private readonly configService: ConfigService,
         private readonly httpService: HttpService,
-    ) {}
+    ) { }
 
     public getLineAuthenticationPageURL(): string {
         return this.lineAuthService.lineAuthPageURL(this.lineCallbackURL);
     }
 
+    public getAdminLineAuthenticationPageURL(): string {
+        return this.lineAuthService.lineAuthPageURL(this.lineAdminCallbackURL);
+    }
+
     public getLiffCallbackWithAccessCode(accessCode: string): string {
         return `${
             this.configService.liffServerURL
-        }/auth/line-landing=${accessCode}`;
+            }/auth/line-landing?code=${accessCode}`;
+    }
+
+    public getAdminCallbackWithAccessCode(accessCode: string): string {
+        return `${this.configService.adminServerURL}/callback?code=${accessCode}`;
     }
 
     public async validateState(encryptedState: string): Promise<boolean> {
