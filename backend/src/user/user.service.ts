@@ -64,16 +64,24 @@ export class UserService {
         phone: string,
         authenticationID: string,
     ): Promise<User> {
+        const existingUser = await this.findUserWithNationalID(nationalID);
+        if (existingUser) {
+            throw new ConflictException(
+                'User is already registered to the system',
+            );
+        }
+        const lineToken = this.lineAuthService.decode(authenticationID);
         const user = new User(
             nationalID,
             firstName,
             lastName,
             Role.ADMIN,
-            authenticationID,
+            lineToken.sub,
             AuthenticationType.LINE,
             phone,
             UserStatus.ACTIVE,
         );
+        user.profileImage = lineToken.picture;
         await this.userRepository.save(user);
         return user;
     }
