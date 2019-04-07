@@ -7,6 +7,7 @@ import {
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
+    JoinColumn,
 } from 'typeorm';
 import { Group } from './group.entity';
 import { Location } from './location.entity';
@@ -49,7 +50,13 @@ export class Locker {
     })
     availability: LockerAvailability;
 
+    @Column()
+    locationID: number;
+
     @ManyToOne(type => Location, location => location.lockers)
+    @JoinColumn({
+        name: 'locationID'
+    })
     location: Location;
 
     @OneToMany(type => LockerInstance, lockerInstance => lockerInstance.locker)
