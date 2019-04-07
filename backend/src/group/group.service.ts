@@ -66,4 +66,23 @@ export class GroupService {
             }
         }
     }
+
+    public async addUserGroup(nationalID: string, groupID: number) {
+      try {
+          const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+          const group = await this.groupRepository.findOneOrFail({
+              where: {
+                  id: groupID
+              }
+          });
+          group.users = [user];
+          await this.groupRepository.save(group);
+      } catch (error) {
+          if (error instanceof HttpException) {
+              throw error;
+          } else {
+              throw new NotFoundException(error.message);
+          }
+      }
+  }
 }

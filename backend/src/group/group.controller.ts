@@ -13,7 +13,11 @@ import { CreateGroupDto } from './dto/create-group.dto';
 import { EditGroupDto } from './dto/edit-group.dto';
 import { ApiUseTags } from '@nestjs/swagger';
 import { GroupService } from './group.service';
+<<<<<<< HEAD
 import { AddUserGroupDto } from './dto/add-user-group.dto';
+=======
+import { userGroupDto } from './dto/user-group.dto';
+>>>>>>> fix(feat->group): fix add user-group and delete group
 
 @ApiUseTags('Group')
 @Controller('group')
@@ -46,11 +50,8 @@ export class GroupController {
     }
 
     @Post('addUserToGroup')
-    async addUserToGroup(@Body() body: AddUserGroupDto) {
-        const group = await this.groupService.addUserGroup(
-            body.nationalID,
-            body.groupID,
-        );
+    async addUserToGroup(@Body() body: userGroupDto) {
+        const group = await this.groupService.addUserGroup(body.nationalID, body.groupID);
         return group;
     }
 }
