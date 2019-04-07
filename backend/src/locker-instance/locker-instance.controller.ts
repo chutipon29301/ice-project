@@ -16,7 +16,7 @@ import { UnlockLockerInstanceDto } from './dto/unlock-locker-instance.dto';
 export class LockerInstanceController {
     constructor(
         private readonly lockerInstanceService: LockerInstanceService,
-    ) { }
+    ) {}
 
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('myLocker')
@@ -41,7 +41,9 @@ export class LockerInstanceController {
     async getSharedLockerInstances(
         @User() user: JwtToken,
     ): Promise<{ lockerInstances: LockerInstance[] }> {
-        const lockerInstances = await this.lockerInstanceService.findCanAccessLockerByNationalID(user.nationalID);
+        const lockerInstances = await this.lockerInstanceService.findCanAccessLockerByNationalID(
+            user.nationalID,
+        );
         return { lockerInstances };
     }
 

@@ -55,7 +55,7 @@ export class Locker {
 
     @ManyToOne(type => Location, location => location.lockers)
     @JoinColumn({
-        name: 'locationID'
+        name: 'locationID',
     })
     location: Location;
 

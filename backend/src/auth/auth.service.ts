@@ -21,7 +21,7 @@ export class AuthService {
         private readonly cryptoService: CryptoService,
         private readonly configService: ConfigService,
         private readonly httpService: HttpService,
-    ) { }
+    ) {}
 
     public getLineAuthenticationPageURL(): string {
         return this.lineAuthService.lineAuthPageURL(this.lineCallbackURL);
@@ -34,11 +34,13 @@ export class AuthService {
     public getLiffCallbackWithAccessCode(accessCode: string): string {
         return `${
             this.configService.liffServerURL
-            }/auth/line-landing?code=${accessCode}`;
+        }/auth/line-landing?code=${accessCode}`;
     }
 
     public getAdminCallbackWithAccessCode(accessCode: string): string {
-        return `${this.configService.adminServerURL}/callback?code=${accessCode}`;
+        return `${
+            this.configService.adminServerURL
+        }/callback?code=${accessCode}`;
     }
 
     public async validateState(encryptedState: string): Promise<boolean> {
