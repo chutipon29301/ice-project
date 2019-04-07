@@ -58,7 +58,7 @@ export class ShareLockerService {
             await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
                 userInvitation.lockerID,
             );
-            this.lockerInstanceService.addPermissionFromNationalIDAndLockerID(
+            await this.lockerInstanceService.addPermissionFromNationalIDAndLockerID(
                 nationalID,
                 userInvitation.lockerID,
             );
