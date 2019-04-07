@@ -12,7 +12,7 @@ import { LineAuthService } from '../line-auth/line-auth.service';
 @Injectable()
 export class AuthService {
     private readonly lineCallbackURL: string = '/auth/line/callback';
-    private readonly lineAdminCallbackURL: string = '/auth/line/callback';
+    private readonly lineAdminCallbackURL: string = '/auth/line/admin/callback';
     private readonly passPhase = 'Hello World!';
 
     constructor(
