@@ -35,7 +35,7 @@ export class LockerInstanceService {
         private readonly canAccessRelationRepository: Repository<
             CanAccessRelation
         >,
-    ) {}
+    ) { }
 
     public async create(
         accessCode: string,
@@ -118,6 +118,33 @@ export class LockerInstanceService {
                 relations: ['locker', 'locker.location', 'ownerUser'],
             });
             return lockerInstances;
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
+        }
+    }
+
+    public async findCanAccessLockerByNationalID(
+        nationalID: string,
+    ): Promise<LockerInstance[]> {
+        try {
+            await this.userService.findUserWithNationalIDOrFail(nationalID);
+            const canAccessLockerInstances = await this.canAccessRelationRepository.find({
+                where: {
+                    nationalID,
+                    accessibleLockerInstance: {
+                        inUsed: true,
+                    }
+                },
+                relations: ['accessibleLockerInstance',
+                    'accessibleLockerInstance.locker',
+                    'accessibleLockerInstance.locker.location',
+                    'accessibleLockerInstance.ownerUser'],
+            });
+            return canAccessLockerInstances.map(canAccessRelation => canAccessRelation.accessibleLockerInstance);
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
