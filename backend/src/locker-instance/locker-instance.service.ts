@@ -92,31 +92,26 @@ export class LockerInstanceService {
         }
     }
 
-    public async findInUsedLockerInstance(): Promise<LockerInstance[]> {
-        const lockerInstances = await this.lockerInstanceRepository.find({
-            where: { inUsed: true },
-        });
-        return lockerInstances;
-    }
-
-    public async findInUsedLockerInstanceByNationalID(nationalID: string): Promise<LockerInstance[]> {
-        try {
-            await this.userService.findUser({ key: { nationalID } });
-            const lockerInstances = await this.lockerInstanceRepository.find({
-                where: {
-                    userID: nationalID,
-                    inUsed: true,
-                },
-                relations: ['locker', 'locker.location', 'ownerUser'],
-            });
-            return lockerInstances;
-        } catch (error) {
-            if (error instanceof HttpException) {
-                throw error;
-            } else {
-                throw new NotFoundException(error.message);
-            }
+    public async findInstances({
+        key,
+        joinWith = [],
+        nestedJoin = [],
+    }: {
+        key?: {
+            inUsed?: boolean,
+            inUsedByNationalID?: string,
+        };
+        joinWith?: Array<keyof LockerInstance>;
+        nestedJoin?: string[];
+    }): Promise<LockerInstance[]> {
+        const relations: string[] = [...joinWith, ...nestedJoin];
+        if (key.inUsed) {
+            return await this.lockerInstanceRepository.find({ where: { inUsed: key.inUsed } });
         }
+        if (key.inUsedByNationalID) {
+            return await this.lockerInstanceRepository.find({ where: { userID: key.inUsedByNationalID, inUsed: true }, relations });
+        }
+        return await this.lockerInstanceRepository.find({ relations });
     }
 
     public async findCanAccessLockerByNationalID(nationalID: string): Promise<LockerInstance[]> {
