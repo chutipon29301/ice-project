@@ -30,6 +30,7 @@ export class LockerService {
         key: {
             lockerID?: number;
             serialNumber?: string;
+            activeLockerID?: number;
         };
         throwError?: boolean;
         relations?: Array<keyof Locker>;
@@ -54,20 +55,13 @@ export class LockerService {
                 });
             }
         }
-        throw new Error('Key must be specify');
+        throw new Error('One of the key must be specify');
     }
 
     public async findLockerAndLocation(): Promise<Locker[]> {
         return await this.lockerRepository.find({
             relations: ['location'],
         });
-    }
-
-    public async findLockerBySerialNumberOrFail(serialNumber: string): Promise<Locker> {
-        const locker = await this.lockerRepository.findOneOrFail({
-            where: { serialNumber },
-        });
-        return locker;
     }
 
     public async findActiveLockerByIDOrFail(id: number): Promise<Locker | null> {
@@ -141,7 +135,7 @@ export class LockerService {
 
     public async getLockerCurrentStatus(serialNumber: string): Promise<LockerCurrentStatusResponseDto> {
         try {
-            const locker = await this.findLockerBySerialNumberOrFail(serialNumber);
+            const locker = await this.findLocker({ key: { serialNumber } });
             const lockerUsages = await this.lockerUsageService.findLockerUsageByLockerID(locker.id);
             if (lockerUsages.length !== 0) {
                 return {
@@ -165,7 +159,7 @@ export class LockerService {
 
     public async lock(serialNumber: string): Promise<LockerCurrentStatusResponseDto> {
         try {
-            const locker = await this.findLockerBySerialNumberOrFail(serialNumber);
+            const locker = await this.findLocker({ key: { serialNumber } });
             const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(locker.id);
             await this.lockerUsageService.lock(lockerInstance);
             return await this.getLockerCurrentStatus(serialNumber);
