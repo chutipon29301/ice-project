@@ -52,10 +52,34 @@ export class AuthService {
         const body = {
             grant_type: 'authorization_code',
             code,
-            redirect_uri: `${this.configService.serverURL}/auth/line/callback`,
+            redirect_uri: `${this.configService.serverURL}${this.lineCallbackURL}`,
             client_id: this.configService.lineChannelID,
             client_secret: this.configService.lineChannelSecret,
         };
+        return await this.getLineAccessTokenRequest(body);
+    }
+
+    public async getAdminAccessToken(code: string): Promise<LineAccessToken> {
+        const body = {
+            grant_type: 'authorization_code',
+            code,
+            redirect_uri: `${this.configService.serverURL}${this.lineAdminCallbackURL}`,
+            client_id: this.configService.lineChannelID,
+            client_secret: this.configService.lineChannelSecret,
+        };
+        return await this.getLineAccessTokenRequest(body);
+    }
+
+    public async getJwtTokenFromLineToken(lineToken: string): Promise<JwtTokenInfo> {
+        const decodedLineToken = this.lineAuthService.decode(lineToken);
+        if (decodedLineToken) {
+            return this.jwtAuthService.generateTokenForLineID(decodedLineToken.sub, decodedLineToken.picture);
+        } else {
+            throw new UnauthorizedException('Invalid line token');
+        }
+    }
+
+    private async getLineAccessTokenRequest(body: any): Promise<LineAccessToken> {
         try {
             const result = await this.httpService
                 .request<LineAccessTokenRequestResponse>({
@@ -73,15 +97,6 @@ export class AuthService {
             };
         } catch (error) {
             throw new UnauthorizedException(error.response.data);
-        }
-    }
-
-    public async getJwtTokenFromLineToken(lineToken: string): Promise<JwtTokenInfo> {
-        const decodedLineToken = this.lineAuthService.decode(lineToken);
-        if (decodedLineToken) {
-            return this.jwtAuthService.generateTokenForLineID(decodedLineToken.sub, decodedLineToken.picture);
-        } else {
-            throw new UnauthorizedException('Invalid line token');
         }
     }
 }

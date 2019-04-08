@@ -72,6 +72,11 @@ export class AuthController {
         return this.authService.getAccessToken(body.code);
     }
 
+    @Post('adminLineToken')
+    async lineAdminAuthToken(@Body() body: RequestTokenDto): Promise<LineAccessToken> {
+        return this.authService.getAdminAccessToken(body.code);
+    }
+
     @ApiOperation({
         title: 'Request our internal server jwt token for user, admin, superuser (for bearer)',
     })
