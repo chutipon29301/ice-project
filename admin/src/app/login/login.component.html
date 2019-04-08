@@ -1,3 +1,4 @@
+<div class = "blue-back">
 <div id = "r-bar">
   <div id = "r-logo">
   </div>
@@ -9,11 +10,9 @@
 <h1 id="title" class = "noselect">Admin Website</h1>
 
 
-
-       <form (ngSubmit)="onSignin(f)" #f="ngForm">
-           <input id="username" type="text" name="username" placeholder="Username" ngModel required>
-           <input id="password" type="password" name="password" placeholder="Password" ngModel required>
-          <button id="b1"[disabled]="!f.valid"> Login </button>
-       </form>
-      <button id = "b2"> Sign up </button>
-      <p id = "forget">Forget Password</p>
+      <button type="button"  (click)="onSignin($event)" class="line-button">
+        <span class="line-button__icon">
+        </span>
+        <span class="line-button__text">Sign in with Line</span>
+      </button>
+</div>

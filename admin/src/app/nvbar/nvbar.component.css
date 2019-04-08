@@ -29,11 +29,6 @@
     background-color: #F5F6F8;
   }
 
-  @media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}
-  }
-
   #thr{
     position: absolute;
     top: 60px;
@@ -41,7 +36,7 @@
 
   #bhr{
     position: absolute;
-    bottom: 434px;
+    top: 334px;
   }
 
   #lgtitle{
@@ -116,10 +111,10 @@
 
   #v2{
     width: 15.5px;
-    height: 15px;
+    height: 15.5px;
     margin-right: 5px;
-    display: inline-block;
-    background: url(./../../resources/v2.png);
+    display: inline-block;                
+    background: url(./../../resources/location.png);
   }
 
   #close{

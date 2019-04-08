@@ -1,0 +1,90 @@
+<div id = "locomponent">
+
+  <div class="top"></div>
+      <div id = "title">Locations
+      </div>
+      <div id="add" (click)="openadd($event)"></div>
+            <hr id = "bottommar">
+
+    <div id = "locontainer">
+
+    <div class="top"></div>
+      <div id = "ilocontainer">
+          <div *ngFor="let location of locations; let i = index">
+              <div id = "location">
+
+                <div id = "plocation"></div>
+                <div id = "namelocation">{{location.description}}</div>
+                <div id = "lat">Lat. {{location.lat}}</div>
+                <div id = "lng">Lng. {{location.lng}}</div>
+                <div id = "id">id. {{location.id}}</div>
+                <button id = "edit" (click)="openedit(fe,location.id)"> Edit </button>
+                <button id = "remove" (click)="onRemove(location.id)"> Remove </button>
+                <hr id = "bottomhr">
+                
+            </div>
+    </div>
+  </div>
+</div>
+
+<div id="addModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close" (click)="closeadd($event)">&times;</span>
+    <div class="mtitle">Add Location</div>
+    <form (ngSubmit)="onAdd(f)" #f="ngForm">
+    <div id = "i1">
+      <mat-form-field appearance="legacy">
+        <mat-label>Description</mat-label>
+        <input matInput required ngModel name="dis">
+      </mat-form-field>
+    </div>
+    <div id = "i2">
+        <mat-form-field appearance="legacy">
+          <mat-label>Latitude</mat-label>
+          <input  matInput required ngModel type="number" name="lat">
+        </mat-form-field>
+      </div>
+      <div id = "i3">
+        <mat-form-field appearance="legacy">
+          <mat-label>Longitude</mat-label>
+          <input matInput required ngModel type="number" name="lng">
+        </mat-form-field>
+      </div>
+      <button id = "madd" [disabled]="!f.valid"> Add </button>
+   </form>
+  </div>
+
+</div>
+
+<div id="editModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close" (click)="closeedit($event)">&times;</span>
+    <div class="mtitle">Edit Location</div>
+    <form (ngSubmit)="onEdit(fe)" #fe="ngForm">
+    <div id = "i1">
+      <mat-form-field appearance="legacy">
+        <mat-label>Description</mat-label>
+        <input matInput required ngModel name="dis">
+      </mat-form-field>
+    </div>
+    <div id = "i2">
+        <mat-form-field appearance="legacy">
+          <mat-label>Latitude</mat-label>
+          <input  matInput required ngModel type="number" name="lat">
+        </mat-form-field>
+      </div>
+      <div id = "i3">
+        <mat-form-field appearance="legacy">
+          <mat-label>Longitude</mat-label>
+          <input matInput required ngModel type="number" name="lng">
+        </mat-form-field>
+      </div>
+      <button id = "medit" [disabled]="!fe.valid"> Edit </button>
+   </form>
+  </div>
+
+</div>

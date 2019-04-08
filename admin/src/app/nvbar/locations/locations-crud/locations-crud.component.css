@@ -1,21 +1,27 @@
-#lcomponent{
-    width: 635px;
-    height: 605px;
+#locomponent{
+    width: calc(98vw - 286px);
+    height: calc(96vh - 30px);
     background: #FFFFFF;
     box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
     border-radius: 4px;
     position: relative;
 }
 
-#plockers{
-    position: absolute;
-    width: 53px;
-    height: 53px;
-    margin-top: 3px;
-    margin-right: 5px;
-    left: 20px;
-    top: 12px;
-    background: url(./../../../../resources/lockers.png);
+#locontainer{
+    margin-left: 20px;
+    margin-right: 20px; 
+    background: #F0F7FF;
+/* card shadow */
+box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
+border-radius: 4px;
+height: calc(92vh - 113.6px);
+}
+
+#ilocontainer{
+    overflow-y: scroll;
+    margin-left: 8px;
+    margin-right: 20px; 
+    height: calc(89vh - 133.6px);
 }
 
 #title{
@@ -34,29 +40,25 @@
     height: 20px;
 }
 
-#lcontainer{
-    margin-left: 20px;
-    margin-right: 20px; 
-    background: #F0F7FF;
-/* card shadow */
-box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
-border-radius: 4px;
-height: 490px;
-}
-
-#ilcontainer{
-    overflow-y: scroll;
-    margin-left: 10px;
-    margin-right: 20px; 
-    height: 450px;
-}
-
 #bottommar{
     margin-bottom: 20px;
 }
 
+#plocation{
+    position: absolute;
+    width: 53px;
+    height: 53px;
+    margin-top: 3px;
+    margin-right: 10px;
+    left: 20px;
+    top: 12px;
+    background-size: contain;
+    background-size: cover;
+    vertical-align: middle;
+    background: url(./../../../../resources/plocation.png);
+}
 
-#locker{
+#location{
     width: 100%;
     height: 83px;
     position: relative;
@@ -67,7 +69,7 @@ height: 490px;
     bottom: 0px;
 }
 
-#namelock{
+#namelocation{
     position: absolute;
     top: 12px;
     left: 80px;
@@ -80,7 +82,7 @@ height: 490px;
     color: #000000;
 }
 
-#numlock{
+#lat{
     left: 80px;
     top: 40px;
     position: absolute;
@@ -93,8 +95,8 @@ height: 490px;
     color: #706A6A;
 }
 
-#avalock{
-    left: 150px;
+#lng{
+    left: 230px;
     top: 40px;
     position: absolute;
     font-style: normal;
@@ -103,11 +105,11 @@ height: 490px;
     line-height: normal;
     letter-spacing: 0.154353px;
     
-    color: #07A833;
+    color: #706A6A;
 }
 
-#unavalock{
-    left: 130px;
+#id{
+    left: 380px;
     top: 40px;
     position: absolute;
     font-style: normal;
@@ -116,8 +118,9 @@ height: 490px;
     line-height: normal;
     letter-spacing: 0.154353px;
     
-    color: #FF0000;;
+    color: rgb(76, 73, 73);
 }
+
 
 #remove{
     position: absolute;
@@ -155,6 +158,16 @@ height: 490px;
     text-align: center;
     letter-spacing: 0.154353px;
     text-decoration-line: underline;
+}
+
+#add{   
+    display: inline-block;
+    position: absolute;
+    right: 30px;
+    top: 15px;
+    width: 32px;
+    height: 32px;
+    background: url(./../../../../resources/add.png);
 }
 
 /* The Modal (background) */
@@ -201,7 +214,12 @@ height: 490px;
     cursor: pointer;
   }
 
-  #medit{
+  mat-form-field{
+      width: 80%;
+      font-size: 20px;
+  }
+
+  #madd{
     position: absolute;
     bottom: 40px;
     right: 90px;
@@ -220,22 +238,23 @@ height: 490px;
     text-decoration-line: underline;
 }
 
-    mat-form-field{
-        width: 80%;
-        font-size: 20px;
-    }
-
-
-
-@media screen and (max-height: 697px) {
-    #lcomponent {
-        height: 80vh;
-    }
-    #lcontainer {
-        height: 77%;
-    }
-    #ilcontainer{
-        height: 87%;
-    }
+#medit{
+    position: absolute;
+    bottom: 40px;
+    right: 90px;
+    height: 48px;
+    width: 92px;
+    background: rgb(44, 136, 228);
+    color: #FFFFFF;
+    border: 0;
+    border-radius: 20px;
+    font-style: normal;
+    font-weight: 550;
+    font-size: 16px;
+    line-height: normal;
+    text-align: center;
+    letter-spacing: 0.154353px;
+    text-decoration-line: underline;
 }
   
+

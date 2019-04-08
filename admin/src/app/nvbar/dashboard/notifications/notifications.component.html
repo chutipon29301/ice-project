@@ -2,7 +2,7 @@
 
     <div class="top"></div>
       <div id = "title">
-        Problem Notifications
+        Lockers To Be Added
       </div>
       <hr id = "bottommar">
 
@@ -11,10 +11,53 @@
           <div class="top"></div>
             <div id = "incontainer">
 
+                <div *ngFor="let unadded of unregistered; let i = index">
+                    <div id = "locker">
+                    <div id = "plockers"></div>
+                    <div id = "idlock">ID: {{unadded.id}}</div>
+                    <div id = "seriallock">SN: {{unadded.serialNumber}}</div>
+                    <button id = "add" (click)="openadd($event,unadded.id)" > activate </button>
+                    <hr id = "bottomhr">
+                  </div>
+              </div>
+
             </div>
       
         </div>
 
+        <div id="addModal" class="modal">
 
+            <!-- Modal content -->
+            <div class="modal-content">
+              <span class="close" (click)="closeadd($event)">&times;</span>
+              <div class="mtitle">Activate Locker</div>
+              <form (ngSubmit)="onAdd(fe)" #fe="ngForm">
+              <div id = "i1">
+                <mat-form-field appearance="legacy">
+                  <mat-label>Name</mat-label>
+                  <input matInput required ngModel name="name">
+                </mat-form-field>
+              </div>
+              <div id = "i2">
+                  <mat-form-field appearance="legacy">
+                    <mat-label>Location ID</mat-label>
+                    <mat-select required ngModel name="locationID">
+                        <mat-option *ngFor="let id of locationsid" [value]="id">
+                          {{id}}
+                        </mat-option>
+                      </mat-select>
+                  </mat-form-field>
+                </div>
+                <div id = "i3">
+                  <mat-form-field appearance="legacy">
+                    <mat-label>Number</mat-label>
+                    <input matInput required ngModel name="number" minlength="3" maxlength="3">
+                  </mat-form-field>
+                </div>
+                <button id = "madd" [disabled]="!fe.valid"> Activate </button>
+             </form>
+            </div>
+          
+          </div>
   
 </div>

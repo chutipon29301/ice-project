@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { AuthServerService } from './../shared/auth.server.service';
+import { Router } from '@angular/router';
+import { Settings } from './../shared/settings';
 
 @Component({
   selector: 'app-login',
@@ -8,15 +11,14 @@ import { NgForm } from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+  constructor(private authServerService: AuthServerService) { }
   ngOnInit() {
+    if (localStorage.getItem('LineToken')) {
+      this.authServerService.checkToken(localStorage.getItem('LineToken'));
+    }
   }
 
   onSignin(form: NgForm) {
-    const username = form.value.username;
-    const password = form.value.password;
-   // this.Userdata.signinUser(username, password);
+    window.location.replace('http://' + Settings.server + '/auth/lineLoginPageAdmin');
   }
-
-
 }

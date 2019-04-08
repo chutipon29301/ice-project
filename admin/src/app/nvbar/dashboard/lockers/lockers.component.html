@@ -2,7 +2,6 @@
 
   <div class="top"></div>
       <div id = "title">Lockers Status
-          <div id = "add" (click)="open($event)"></div>
       </div>
             <hr id = "bottommar">
 
@@ -10,16 +9,17 @@
 
     <div class="top"></div>
       <div id = "ilcontainer">
-          <div *ngFor="let locker of lockers; let i = index">
+          <div *ngFor="let locker of registered; let i = index">
             <div id = "locker">
             <div id = "plockers"></div>
             <div id = "namelock">{{locker.name}}</div>
             <div id = "numlock">No. {{locker.number}}</div>
-            <div id = "avalock" *ngIf= "locker.available; else unavailable" >Available</div>
+            <div id = "avalock" *ngIf= "locker.availability == 'AVAILABLE'; else unavailable" >Available</div>
             <ng-template #unavailable>
               <div id = "unavalock" >Unavailable</div>
             </ng-template>
-            <button id = "remove" > Remove </button>
+            <button id = "edit" (click)="openedit(f,locker.id)"> Edit </button>
+            <button id = "remove" (click)="onRemove(locker.id)" > Remove </button>
             <hr id = "bottomhr">
           </div>
       </div>
@@ -29,13 +29,39 @@
 
 </div>
 
-<div id="myModal" class="modal">
+<div id="editModal" class="modal">
 
     <!-- Modal content -->
     <div class="modal-content">
-      <span class="close" (click)="close($event)">&times;</span>
-      <p>Some text in the Modal..</p>
+      <span class="close" (click)="closeedit($event)">&times;</span>
+      <div class="mtitle">Edit Locker</div>
+      <form (ngSubmit)="onEdit(f)" #f="ngForm">
+      <div id = "i1">
+        <mat-form-field appearance="legacy">
+          <mat-label>Name</mat-label>
+          <input matInput required ngModel name="name">
+        </mat-form-field>
+      </div>
+      <div id = "i2">
+          <mat-form-field appearance="legacy">
+              <mat-label>Location ID</mat-label>
+              <mat-select required ngModel name="locationID">
+                  <mat-option *ngFor="let id of locationsid" [value]="id">
+                    {{id}}
+                  </mat-option>
+                </mat-select>
+          </mat-form-field>
+        </div>
+        <div id = "i3">
+          <mat-form-field appearance="legacy">
+            <mat-label>Number</mat-label>
+            <input matInput required ngModel name="number" minlength="3" maxlength="3">
+          </mat-form-field>
+        </div>
+        <button id = "medit" [disabled]="!f.valid"> Edit </button>
+     </form>
     </div>
   
   </div>
+
 

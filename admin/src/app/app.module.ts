@@ -9,10 +9,22 @@ import { DashboardComponent } from './nvbar/dashboard/dashboard.component';
 import { UsersComponent } from './nvbar/users/users.component';
 import { LockersComponent } from './nvbar/dashboard/lockers/lockers.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatButtonModule, MatCheckboxModule} from '@angular/material';
+import {MatButtonModule, MatCheckboxModule, MatInputModule} from '@angular/material';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatListModule} from '@angular/material/list';
 import { NotificationsComponent } from './nvbar/dashboard/notifications/notifications.component';
-
+import { LocationsComponent } from './nvbar/locations/locations.component';
+import { LocationsCrudComponent } from './nvbar/locations/locations-crud/locations-crud.component';
+import { LockerService } from './shared/locker.service';
+import { LocationService } from './shared/location.service';
+import { LocationServerService } from './shared/location.server.service';
+import { HttpClientModule } from '@angular/common/http';
+import { LockerServerService } from './shared/locker.server.service';
+import { AuthServerService } from './shared/auth.server.service';
+import { AuthLandComponent } from './auth-land/auth-land.component';
+import { AuthRegisterComponent } from './auth-register/auth-register.component';
+import { AuthGuard } from './shared/auth-guard.service';
+import {MatSelectModule} from '@angular/material/select';
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,7 +33,11 @@ import { NotificationsComponent } from './nvbar/dashboard/notifications/notifica
     DashboardComponent,
     UsersComponent,
     LockersComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    LocationsComponent,
+    LocationsCrudComponent,
+    AuthLandComponent,
+    AuthRegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -30,9 +46,13 @@ import { NotificationsComponent } from './nvbar/dashboard/notifications/notifica
     MatButtonModule,
     MatCheckboxModule,
     MatListModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule
   ],
-  providers: [],
+  providers: [LocationService, LockerService, LocationServerService, LockerServerService, AuthServerService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
