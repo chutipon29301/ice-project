@@ -8,7 +8,7 @@ import { LockerUsageService } from '../locker-usage/locker-usage.service';
 import { LockerService } from '../locker/locker.service';
 import { QrService } from '../qr/qr.service';
 import { UserService } from '../user/user.service';
-import { CreditUsageService } from 'src/credit-usage/credit-usage.service';
+import { CreditUsageService } from '../credit-usage/credit-usage.service';
 
 @Injectable()
 export class LockerInstanceService {
@@ -47,12 +47,40 @@ export class LockerInstanceService {
         }
     }
 
-    public async findInstanceOrFail(lockerID: number, startTime: Date): Promise<LockerInstance> {
-        const lockerInstance = await this.lockerInstanceRepository.findOneOrFail({
-            where: { lockerID, startTime },
-            relations: ['lockerUsages'],
-        });
-        return lockerInstance;
+    public async findInstance({
+        key,
+        throwError = true,
+        joinWith = [],
+        nestedJoin = [],
+    }: {
+        key: {
+            instance?: {
+                lockerID: number,
+                startTime: Date,
+            }
+        };
+        throwError?: boolean;
+        joinWith?: Array<keyof LockerInstance>;
+        nestedJoin?: string[];
+    }): Promise<LockerInstance> {
+        const relations: string[] = [...joinWith, ...nestedJoin];
+        try {
+            if (key.instance) {
+                const where: Partial<LockerInstance> = { lockerID: key.instance.lockerID, startTime: key.instance.startTime };
+                if (throwError) {
+                    return await this.lockerInstanceRepository.findOneOrFail({ where, relations });
+                } else {
+                    return await this.lockerInstanceRepository.findOne({ where, relations });
+                }
+            }
+            throw new Error('One of the key must be specify');
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
+        }
     }
 
     public async findInUsedLockerInstanceByLockerIDOrFail(lockerID: number): Promise<LockerInstance> {
@@ -119,7 +147,9 @@ export class LockerInstanceService {
 
     public async deleteInstance(lockerID: number, startTime: Date) {
         try {
-            const lockerInstance = await this.findInstanceOrFail(lockerID, startTime);
+            const lockerInstance = await this.findInstance({
+                key: { instance: { lockerID, startTime, } },
+            });
             await this.lockerInstanceRepository.delete(lockerInstance);
         } catch (error) {
             throw new NotFoundException(error.message);
