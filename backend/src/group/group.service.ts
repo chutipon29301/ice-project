@@ -12,7 +12,7 @@ export class GroupService {
         private readonly groupRepository: Repository<Group>,
         private readonly userService: UserService,
         private readonly lockerService: LockerService,
-    ) {}
+    ) { }
 
     async list(): Promise<Group[]> {
         return await this.groupRepository.find();
@@ -45,8 +45,8 @@ export class GroupService {
             const user = await this.userService.findUser({ key: { nationalID } });
             const group = await this.groupRepository.findOneOrFail({
                 where: {
-                    id: groupID,
-                },
+                    id: groupID
+                }
             });
             group.users = [user];
             await this.groupRepository.save(group);
@@ -58,23 +58,4 @@ export class GroupService {
             }
         }
     }
-
-    public async addUserGroup(nationalID: string, groupID: number) {
-      try {
-          const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
-          const group = await this.groupRepository.findOneOrFail({
-              where: {
-                  id: groupID
-              }
-          });
-          group.users = [user];
-          await this.groupRepository.save(group);
-      } catch (error) {
-          if (error instanceof HttpException) {
-              throw error;
-          } else {
-              throw new NotFoundException(error.message);
-          }
-      }
-  }
 }
