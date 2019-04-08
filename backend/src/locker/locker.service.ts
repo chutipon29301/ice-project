@@ -20,7 +20,7 @@ export class LockerService {
         private readonly lockerUsageService: LockerUsageService,
         @Inject(forwardRef(() => LockerInstanceService))
         private readonly lockerInstanceService: LockerInstanceService,
-    ) {}
+    ) { }
 
     public async findLocker({
         key,
@@ -57,6 +57,14 @@ export class LockerService {
             }
             if (key.activeLockerID) {
                 const where: Partial<Locker> = { id: key.activeLockerID, availability: LockerAvailability.AVAILABLE };
+                if (throwError) {
+                    return await this.lockerRepository.findOneOrFail({ where, relations });
+                } else {
+                    return await this.lockerRepository.findOne({ where, relations });
+                }
+            }
+            if (key.activeLockerSerialNumber) {
+                const where: Partial<Locker> = { serialNumber: key.activeLockerSerialNumber, availability: LockerAvailability.AVAILABLE };
                 if (throwError) {
                     return await this.lockerRepository.findOneOrFail({ where, relations });
                 } else {
