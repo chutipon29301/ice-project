@@ -40,7 +40,9 @@ export class Locker {
     })
     availability: LockerAvailability;
 
-    @Column()
+    @Column({
+        nullable: true,
+    })
     locationID: number;
 
     @ManyToOne(type => Location, location => location.lockers)
