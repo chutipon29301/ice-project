@@ -14,7 +14,32 @@ export class ShareLockerService {
         private readonly userService: UserService,
         private readonly configService: ConfigService,
         private readonly lockerInstanceService: LockerInstanceService,
-    ) {}
+    ) { }
+
+    public async findUserInvitation({
+        key,
+        throwError = true,
+        joinWith = [],
+        nestedJoin = [],
+    }: {
+        key: {
+            id?: string
+        };
+        throwError?: boolean;
+        joinWith?: Array<keyof UserInvitation>;
+        nestedJoin?: string[];
+    }): Promise<UserInvitation> {
+        const relations: string[] = [...joinWith, ...nestedJoin];
+        if (key.id) {
+            const where: Partial<UserInvitation> = { id: key.id, isUsed: false };
+            if (throwError) {
+                return await this.userInvitationRepository.findOneOrFail({ where, relations });
+            } else {
+                return await this.userInvitationRepository.findOne({ where, relations });
+            }
+        }
+        throw new Error('One of the key must be specify');
+    }
 
     public async generateInvitationLink(lockerID: number, nationalID: string) {
         try {
@@ -36,9 +61,8 @@ export class ShareLockerService {
 
     public async addUserPermission(nationalID: string, accessCode: string) {
         try {
-            const userInvitation = await this.userInvitationRepository.findOneOrFail({
-                where: { id: accessCode, isUsed: false },
-                relations: ['lockerInstance'],
+            const userInvitation = await this.findUserInvitation({
+                key: { id: accessCode },
             });
             userInvitation.isUsed = true;
             await this.userInvitationRepository.save(userInvitation);
