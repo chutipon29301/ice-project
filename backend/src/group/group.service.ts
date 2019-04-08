@@ -9,6 +9,7 @@ import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { GroupRepositoryToken } from '../constant';
 import { Group } from '../entities/group.entity';
+import { LockerService } from '../locker/locker.service';
 
 @Injectable()
 export class GroupService {
@@ -16,6 +17,7 @@ export class GroupService {
         @Inject(GroupRepositoryToken)
         private readonly groupRepository: Repository<Group>,
         private readonly userService: UserService,
+        private readonly lockerService: LockerService,
     ) {}
 
     async list(): Promise<Group[]> {

@@ -4,7 +4,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { BotModule } from './bot/bot.module';
-import { ConfigModule } from './config/config.module';
 import { CryptoModule } from './crypto/crypto.module';
 import { GroupModule } from './group/group.module';
 import { RoleGuard } from './guard/role.guard';
