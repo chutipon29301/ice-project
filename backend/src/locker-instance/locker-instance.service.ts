@@ -58,6 +58,7 @@ export class LockerInstanceService {
                 lockerID: number,
                 startTime: Date,
             }
+            inUsedLockerID?: number,
         };
         throwError?: boolean;
         joinWith?: Array<keyof LockerInstance>;
@@ -73,6 +74,14 @@ export class LockerInstanceService {
                     return await this.lockerInstanceRepository.findOne({ where, relations });
                 }
             }
+            if (key.inUsedLockerID) {
+                const where: Partial<LockerInstance> = { lockerID: key.inUsedLockerID, inUsed: true };
+                if (throwError) {
+                    return await this.lockerInstanceRepository.findOneOrFail({ where, relations });
+                } else {
+                    return await this.lockerInstanceRepository.findOne({ where, relations });
+                }
+            }
             throw new Error('One of the key must be specify');
         } catch (error) {
             if (error instanceof HttpException) {
@@ -81,14 +90,6 @@ export class LockerInstanceService {
                 throw new NotFoundException(error.message);
             }
         }
-    }
-
-    public async findInUsedLockerInstanceByLockerIDOrFail(lockerID: number): Promise<LockerInstance> {
-        const lockerInstance = await this.lockerInstanceRepository.findOneOrFail({
-            where: { lockerID, inUsed: true },
-            relations: ['locker', 'ownerUser'],
-        });
-        return lockerInstance;
     }
 
     public async findInUsedLockerInstance(): Promise<LockerInstance[]> {
@@ -159,7 +160,7 @@ export class LockerInstanceService {
     public async addPermissionFromNationalIDAndLockerID(nationalID: string, lockerID: number) {
         try {
             const user = await this.userService.findUser({ key: { nationalID } });
-            const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(lockerID);
+            const lockerInstance = await this.findInstance({ key: { inUsedLockerID: lockerID } });
             const canAccessRelation = new CanAccessRelation(user, lockerInstance);
             await this.canAccessRelationRepository.save(canAccessRelation);
         } catch (error) {
@@ -178,7 +179,7 @@ export class LockerInstanceService {
             if (!activeLocker) {
                 throw new NotFoundException('Not found "ACTIVE" Locker');
             }
-            const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(locker.id);
+            const lockerInstance = await this.findInstance({ key: { inUsedLockerID: locker.id } });
             const canAccessUser = await this.canAccessRelationRepository.findOne({
                 startTime: lockerInstance.startTime.toISOString(),
                 lockerID: lockerInstance.lockerID,
@@ -202,7 +203,7 @@ export class LockerInstanceService {
     public async returnInstance(nationalID: string, accessCode: string) {
         try {
             const locker = await this.qrService.findLockerByAccessCodeOrFail(accessCode);
-            const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(locker.id);
+            const lockerInstance = await this.findInstance({ key: { inUsedLockerID: locker.id } });
             if (lockerInstance.userID !== nationalID) {
                 throw new UnauthorizedException('Not owner of in used locker instance');
             }

@@ -155,7 +155,7 @@ export class LockerService {
     public async lock(serialNumber: string): Promise<LockerCurrentStatusResponseDto> {
         try {
             const locker = await this.findLocker({ key: { serialNumber } });
-            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(locker.id);
+            const lockerInstance = await this.lockerInstanceService.findInstance({key: {inUsedLockerID: locker.id}});
             await this.lockerUsageService.lock(lockerInstance);
             return await this.getLockerCurrentStatus(serialNumber);
         } catch (error) {

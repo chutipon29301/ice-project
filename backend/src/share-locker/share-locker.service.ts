@@ -14,12 +14,12 @@ export class ShareLockerService {
         private readonly userService: UserService,
         private readonly configService: ConfigService,
         private readonly lockerInstanceService: LockerInstanceService,
-    ) {}
+    ) { }
 
     public async generateInvitationLink(lockerID: number, nationalID: string) {
         try {
-            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(lockerID);
-            if (lockerInstance.ownerUser.nationalID !== nationalID) {
+            const lockerInstance = await this.lockerInstanceService.findInstance({ key: { inUsedLockerID: lockerID } });
+            if (lockerInstance.userID !== nationalID) {
                 throw new UnauthorizedException('Not owner user');
             }
             const userInvitation = new UserInvitation(lockerInstance);
@@ -43,7 +43,6 @@ export class ShareLockerService {
             userInvitation.isUsed = true;
             await this.userInvitationRepository.save(userInvitation);
             await this.userService.findUser({ key: { nationalID } });
-            await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(userInvitation.lockerID);
             await this.lockerInstanceService.addPermissionFromNationalIDAndLockerID(nationalID, userInvitation.lockerID);
         } catch (error) {
             if (error instanceof HttpException) {
