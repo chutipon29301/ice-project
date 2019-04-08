@@ -58,10 +58,14 @@ export class LockerService {
         throw new Error('One of the key must be specify');
     }
 
-    public async findLockerAndLocation(): Promise<Locker[]> {
-        return await this.lockerRepository.find({
-            relations: ['location'],
-        });
+    public async findLockers({
+        key = {},
+        relations = [],
+    }: {
+        key?: {},
+        relations?: Array<keyof Locker>,
+    }): Promise<Locker[]> {
+        return await this.lockerRepository.find({ relations });
     }
 
     public async findActiveLockerByIDOrFail(id: number): Promise<Locker | null> {

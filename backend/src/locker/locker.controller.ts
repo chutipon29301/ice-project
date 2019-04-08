@@ -16,7 +16,7 @@ import { Locker } from '../entities/locker.entity';
 @ApiUseTags('Locker')
 @Controller('locker')
 export class LockerController {
-    constructor(private readonly lockerService: LockerService) {}
+    constructor(private readonly lockerService: LockerService) { }
 
     @ApiOperation({
         title: 'List all locker',
@@ -24,7 +24,7 @@ export class LockerController {
     @Roles(Role.SUPERUSER, Role.ADMIN, Role.USER)
     @Get()
     async list(): Promise<ListLockerResponseDto> {
-        const lockers = await this.lockerService.findLockerAndLocation();
+        const lockers = await this.lockerService.findLockers({ relations: ['location'] });
         return { lockers };
     }
 
