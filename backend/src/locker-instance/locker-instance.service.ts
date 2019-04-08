@@ -120,6 +120,39 @@ export class LockerInstanceService {
         return await this.lockerInstanceRepository.find({ relations });
     }
 
+    public async findCanAccessRelation({
+        key,
+        throwError = true,
+        joinWith = [],
+        nestedJoin = [],
+    }: {
+        key: {
+            relation?: {
+                startTime: string;
+                lockerID: number;
+                nationalID: string;
+            }
+        },
+        throwError?: boolean;
+        joinWith?: Array<keyof CanAccessRelation>;
+        nestedJoin?: string[];
+    }): Promise<CanAccessRelation> {
+        const relations: string[] = [...joinWith, ...nestedJoin];
+        if (key.relation) {
+            const where: Partial<CanAccessRelation> | { startTime: string } = {
+                startTime: key.relation.startTime,
+                lockerID: key.relation.lockerID,
+                nationalID: key.relation.nationalID,
+            }
+            if (throwError) {
+                return await this.canAccessRelationRepository.findOneOrFail({ where, relations });
+            } else {
+                return await this.canAccessRelationRepository.findOne({ where, relations });
+            }
+        }
+        throw new Error('One of the key must be specify');
+    }
+
     public async findCanAccessRelations({
         key,
         joinWith = [],
@@ -177,13 +210,18 @@ export class LockerInstanceService {
                 throw new NotFoundException('Not found "ACTIVE" Locker');
             }
             const lockerInstance = await this.findInstance({ key: { inUsedLockerID: locker.id } });
-            const canAccessUser = await this.canAccessRelationRepository.findOne({
-                startTime: lockerInstance.startTime.toISOString(),
-                lockerID: lockerInstance.lockerID,
-                nationalID,
+            const canAccessRelation = await this.findCanAccessRelation({
+                key: {
+                    relation: {
+                        startTime: lockerInstance.startTime.toISOString(),
+                        lockerID: lockerInstance.lockerID,
+                        nationalID,
+                    }
+                },
+                throwError: false,
             });
             const user = await this.userService.findUser({ key: { nationalID } });
-            if (canAccessUser) {
+            if (canAccessRelation) {
                 return await this.lockerUsageService.unlock(lockerInstance, user);
             } else {
                 throw new UnauthorizedException('User is not allowed to access this locker');
