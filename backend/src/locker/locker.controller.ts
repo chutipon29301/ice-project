@@ -39,7 +39,13 @@ export class LockerController {
     @Roles(Role.ADMIN, Role.SUPERUSER)
     @Get('history/:id')
     async getHistory(@Param('id', new ParseIntPipe()) lockerID: number): Promise<Locker> {
-        return this.lockerService.findLockerInstanceHistoryByLockerID(lockerID);
+        return await this.lockerService.findLocker({
+            key: {
+                lockerID,
+            },
+            joinWith: ['lockerInstances'],
+            nestedJoin: ['lockerInstances.ownerUser'],
+        });
     }
 
     @ApiOperation({

@@ -38,31 +38,39 @@ export class LockerService {
         joinWith?: Array<keyof Locker>;
         nestedJoin?: string[];
     }): Promise<Locker> {
-        const relations: string[] = [...joinWith, ...nestedJoin];
-        if (key.lockerID) {
-            if (throwError) {
-                return await this.lockerRepository.findOneOrFail(key.lockerID, { relations });
+        try {
+            const relations: string[] = [...joinWith, ...nestedJoin];
+            if (key.lockerID) {
+                if (throwError) {
+                    return await this.lockerRepository.findOneOrFail(key.lockerID, { relations });
+                } else {
+                    return await this.lockerRepository.findOne(key.lockerID, { relations });
+                }
+            }
+            if (key.serialNumber) {
+                const where: Partial<Locker> = { serialNumber: key.serialNumber };
+                if (throwError) {
+                    return await this.lockerRepository.findOneOrFail({ where, relations });
+                } else {
+                    return await this.lockerRepository.findOne({ where, relations });
+                }
+            }
+            if (key.activeLockerID) {
+                const where: Partial<Locker> = { id: key.activeLockerID, availability: LockerAvailability.AVAILABLE };
+                if (throwError) {
+                    return await this.lockerRepository.findOneOrFail({ where, relations });
+                } else {
+                    return await this.lockerRepository.findOne({ where, relations });
+                }
+            }
+            throw new Error('One of the key must be specify');
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
             } else {
-                return await this.lockerRepository.findOne(key.lockerID, { relations });
+                throw new NotFoundException(error.message);
             }
         }
-        if (key.serialNumber) {
-            const where: Partial<Locker> = { serialNumber: key.serialNumber };
-            if (throwError) {
-                return await this.lockerRepository.findOneOrFail({ where, relations });
-            } else {
-                return await this.lockerRepository.findOne({ where, relations });
-            }
-        }
-        if (key.activeLockerID) {
-            const where: Partial<Locker> = { id: key.activeLockerID, availability: LockerAvailability.AVAILABLE };
-            if (throwError) {
-                return await this.lockerRepository.findOneOrFail({ where, relations });
-            } else {
-                return await this.lockerRepository.findOne({ where, relations });
-            }
-        }
-        throw new Error('One of the key must be specify');
     }
 
     public async findLockers({
@@ -76,21 +84,6 @@ export class LockerService {
     }): Promise<Locker[]> {
         const relations = [...joinWith, ...nestedJoin];
         return await this.lockerRepository.find({ relations });
-    }
-
-    public async findLockerInstanceHistoryByLockerID(lockerID: number): Promise<Locker> {
-        try {
-            const locker = await this.lockerRepository.findOneOrFail(lockerID, {
-                relations: ['lockerInstances', 'lockerInstances.ownerUser'],
-            });
-            return locker;
-        } catch (error) {
-            if (error instanceof HttpException) {
-                throw error;
-            } else {
-                throw new NotFoundException(error.message);
-            }
-        }
     }
 
     public async create(secret: string): Promise<Locker> {
