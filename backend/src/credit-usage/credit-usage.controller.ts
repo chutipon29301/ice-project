@@ -9,8 +9,7 @@ import { CreditSummary } from './dto/total-credit.dto';
 
 @Controller('credit-usage')
 export class CreditUsageController {
-
-    constructor(private readonly creditUsageService: CreditUsageService) { }
+    constructor(private readonly creditUsageService: CreditUsageService) {}
 
     @Get('myCredit')
     @Roles(Role.USER, Role.SUPERUSER)
@@ -26,5 +25,4 @@ export class CreditUsageController {
             totalCredit: myAddedCredit.amount,
         };
     }
-
 }

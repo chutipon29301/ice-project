@@ -23,7 +23,7 @@ export class LockerInstanceService {
         private readonly creditUsageService: CreditUsageService,
         @Inject(CanAccessRelationRepositoryToken)
         private readonly canAccessRelationRepository: Repository<CanAccessRelation>,
-    ) { }
+    ) {}
 
     public async create(accessCode: string, nationalID: string): Promise<LockerInstance> {
         try {
@@ -131,8 +131,8 @@ export class LockerInstanceService {
                 startTime: string;
                 lockerID: number;
                 nationalID: string;
-            }
-        },
+            };
+        };
         throwError?: boolean;
         joinWith?: Array<keyof CanAccessRelation>;
         nestedJoin?: string[];
@@ -143,7 +143,7 @@ export class LockerInstanceService {
                 startTime: key.relation.startTime,
                 lockerID: key.relation.lockerID,
                 nationalID: key.relation.nationalID,
-            }
+            };
             if (throwError) {
                 return await this.canAccessRelationRepository.findOneOrFail({ where, relations });
             } else {
@@ -167,11 +167,13 @@ export class LockerInstanceService {
         const relations: string[] = [...joinWith, ...nestedJoin];
         if (key.nationalID) {
             const canAccessRelations = await this.canAccessRelationRepository.find({
-                where: { nationalID: key.nationalID, },
+                where: { nationalID: key.nationalID },
                 relations,
             });
-            return canAccessRelations.filter((canAccessRelation) =>
-                canAccessRelation.accessibleLockerInstance.inUsed && canAccessRelation.accessibleLockerInstance.userID !== key.nationalID);
+            return canAccessRelations.filter(
+                canAccessRelation =>
+                    canAccessRelation.accessibleLockerInstance.inUsed && canAccessRelation.accessibleLockerInstance.userID !== key.nationalID,
+            );
         }
         return await this.canAccessRelationRepository.find({ relations });
     }
@@ -216,7 +218,7 @@ export class LockerInstanceService {
                         startTime: lockerInstance.startTime.toISOString(),
                         lockerID: lockerInstance.lockerID,
                         nationalID,
-                    }
+                    },
                 },
                 throwError: false,
             });
