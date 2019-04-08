@@ -10,7 +10,7 @@ export class UserService {
         @Inject(UserRepositoryToken)
         private readonly userRepository: Repository<User>,
         private readonly lineAuthService: LineAuthService,
-    ) {}
+    ) { }
 
     public async listUser(): Promise<User[]> {
         const users = await this.userRepository.find();
@@ -44,15 +44,18 @@ export class UserService {
     public async findUser({
         key,
         throwError = true,
-        relations = [],
+        joinWith = [],
+        nestedJoin = [],
     }: {
         key: {
             lineID?: string;
             nationalID?: string;
         };
         throwError?: boolean;
-        relations?: Array<keyof User>;
+        joinWith?: Array<keyof User>;
+        nestedJoin?: string[];
     }): Promise<User> {
+        const relations: string[] = [...joinWith, ...nestedJoin];
         if (key.lineID) {
             const where: Partial<User> = { authenticationID: key.lineID, authenticationType: AuthenticationType.LINE };
             if (throwError) {
