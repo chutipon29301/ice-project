@@ -18,7 +18,7 @@ export class UserService {
     }
 
     public async create(nationalID: string, firstName: string, lastName: string, phone: string, authenticationID: string): Promise<User> {
-        const existingUser = await this.findUserWithNationalID(nationalID);
+        const existingUser = await this.findUser({ key: { nationalID }, throwError: false });
         if (existingUser) {
             throw new ConflictException('User is already registered to the system');
         }
@@ -30,7 +30,7 @@ export class UserService {
     }
 
     public async createAdmin(nationalID: string, firstName: string, lastName: string, phone: string, authenticationID: string): Promise<User> {
-        const existingUser = await this.findUserWithNationalID(nationalID);
+        const existingUser = await this.findUser({ key: { nationalID }, throwError: false });
         if (existingUser) {
             throw new ConflictException('User is already registered to the system');
         }
@@ -41,31 +41,40 @@ export class UserService {
         return user;
     }
 
-    public async findUserWithLineIDOrFail(lineID: string): Promise<User> {
-        const user = await this.userRepository.findOneOrFail({
-            where: {
-                authenticationID: lineID,
-                authenticationType: AuthenticationType.LINE,
-            },
-        });
-        return user;
-    }
-
-    public async findUserWithNationalIDOrFail(nationalID: string): Promise<User> {
-        const user = await this.userRepository.findOneOrFail({
-            where: { nationalID },
-        });
-        return user;
-    }
-
-    public async findUserWithNationalID(nationalID: string): Promise<User> {
-        const user = await this.userRepository.findOne(nationalID);
-        return user;
+    public async findUser({
+        key,
+        throwError = true,
+        relations = [],
+    }: {
+        key: {
+            lineID?: string;
+            nationalID?: string;
+        };
+        throwError?: boolean;
+        relations?: Array<keyof User>;
+    }): Promise<User> {
+        if (key.lineID) {
+            const where: Partial<User> = { authenticationID: key.lineID, authenticationType: AuthenticationType.LINE };
+            if (throwError) {
+                return await this.userRepository.findOneOrFail({ where, relations });
+            } else {
+                return await this.userRepository.findOne({ where, relations });
+            }
+        }
+        if (key.nationalID) {
+            const where: Partial<User> = { nationalID: key.nationalID };
+            if (throwError) {
+                return await this.userRepository.findOneOrFail({ where, relations });
+            } else {
+                return await this.userRepository.findOne({ where, relations });
+            }
+        }
+        throw new Error('Key must be specify');
     }
 
     public async canUserActivateRole(nationalID: string, ...roles: Role[]): Promise<boolean> {
         try {
-            const user = await this.findUserWithNationalIDOrFail(nationalID);
+            const user = await this.findUser({ key: { nationalID } });
             return roles.indexOf(user.role) !== -1;
         } catch (_) {
             return false;
@@ -74,7 +83,7 @@ export class UserService {
 
     public async edit(nationalID: string, updateValue: Partial<User>): Promise<User> {
         try {
-            const user = await this.findUserWithNationalIDOrFail(nationalID);
+            const user = await this.findUser({ key: { nationalID } });
             await this.userRepository.update(nationalID, updateValue);
             return user;
         } catch (error) {

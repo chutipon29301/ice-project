@@ -24,7 +24,7 @@ export class CreditUsageService {
     }
 
     public async addCredit(amount: number, nationalID: string): Promise<CreditUsage> {
-        const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+        const user = await this.userService.findUser({ key: { nationalID } });
         const creditUse = new CreditUsage(amount, user);
         this.creditUsageRepository.save(creditUse);
         return creditUse;

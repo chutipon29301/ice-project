@@ -42,7 +42,7 @@ export class ShareLockerService {
             });
             userInvitation.isUsed = true;
             await this.userInvitationRepository.save(userInvitation);
-            await this.userService.findUserWithNationalIDOrFail(nationalID);
+            await this.userService.findUser({ key: { nationalID } });
             await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(userInvitation.lockerID);
             await this.lockerInstanceService.addPermissionFromNationalIDAndLockerID(nationalID, userInvitation.lockerID);
         } catch (error) {

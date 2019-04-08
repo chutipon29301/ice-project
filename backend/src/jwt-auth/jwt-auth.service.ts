@@ -11,7 +11,7 @@ export class JwtAuthService {
 
     async generateTokenForLineID(lineID: string, picture?: string): Promise<JwtTokenInfo> {
         try {
-            const user = await this.userService.findUserWithLineIDOrFail(lineID);
+            const user = await this.userService.findUser({ key: { lineID } });
             if (picture) {
                 await this.userService.edit(user.nationalID, {
                     profileImage: picture,

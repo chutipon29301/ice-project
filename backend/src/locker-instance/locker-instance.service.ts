@@ -29,7 +29,7 @@ export class LockerInstanceService {
         try {
             const locker = await this.qrService.findLockerByAccessCodeOrFail(accessCode);
             const activeLocker = await this.lockerService.findActiveLockerByIDOrFail(locker.id);
-            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+            const user = await this.userService.findUser({ key: { nationalID } });
             await this.lockerInstanceRepository.findOneOrFail({
                 where: { inUsed: true },
             });
@@ -72,7 +72,7 @@ export class LockerInstanceService {
 
     public async findInUsedLockerInstanceByNationalID(nationalID: string): Promise<LockerInstance[]> {
         try {
-            await this.userService.findUserWithNationalIDOrFail(nationalID);
+            await this.userService.findUser({ key: { nationalID } });
             const lockerInstances = await this.lockerInstanceRepository.find({
                 where: {
                     userID: nationalID,
@@ -92,7 +92,7 @@ export class LockerInstanceService {
 
     public async findCanAccessLockerByNationalID(nationalID: string): Promise<LockerInstance[]> {
         try {
-            await this.userService.findUserWithNationalIDOrFail(nationalID);
+            await this.userService.findUser({ key: { nationalID } });
             const canAccessLockerInstances = await this.canAccessRelationRepository.find({
                 where: {
                     nationalID,
@@ -128,7 +128,7 @@ export class LockerInstanceService {
 
     public async addPermissionFromNationalIDAndLockerID(nationalID: string, lockerID: number) {
         try {
-            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+            const user = await this.userService.findUser({ key: { nationalID } });
             const lockerInstance = await this.findInUsedLockerInstanceByLockerIDOrFail(lockerID);
             const canAccessRelation = new CanAccessRelation(user, lockerInstance);
             await this.canAccessRelationRepository.save(canAccessRelation);
@@ -154,7 +154,7 @@ export class LockerInstanceService {
                 lockerID: lockerInstance.lockerID,
                 nationalID,
             });
-            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+            const user = await this.userService.findUser({ key: { nationalID } });
             if (canAccessUser) {
                 return await this.lockerUsageService.unlock(lockerInstance, user);
             } else {

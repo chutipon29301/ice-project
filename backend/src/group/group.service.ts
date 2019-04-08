@@ -42,7 +42,7 @@ export class GroupService {
 
     public async addUserGroup(nationalID: string, groupID: number) {
         try {
-            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
+            const user = await this.userService.findUser({ key: { nationalID } });
             const group = await this.groupRepository.findOneOrFail({
                 where: {
                     id: groupID,
