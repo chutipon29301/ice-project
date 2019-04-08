@@ -23,7 +23,7 @@ export class LockerInstanceService {
         private readonly creditUsageService: CreditUsageService,
         @Inject(CanAccessRelationRepositoryToken)
         private readonly canAccessRelationRepository: Repository<CanAccessRelation>,
-    ) {}
+    ) { }
 
     public async create(accessCode: string, nationalID: string): Promise<LockerInstance> {
         try {
@@ -100,6 +100,7 @@ export class LockerInstanceService {
         key?: {
             inUsed?: boolean;
             inUsedByNationalID?: string;
+            accessibleLockerByNationalID?: string;
         };
         joinWith?: Array<keyof LockerInstance>;
         nestedJoin?: string[];
@@ -114,31 +115,30 @@ export class LockerInstanceService {
         return await this.lockerInstanceRepository.find({ relations });
     }
 
-    public async findCanAccessLockerByNationalID(nationalID: string): Promise<LockerInstance[]> {
-        try {
-            await this.userService.findUser({ key: { nationalID } });
-            const canAccessLockerInstances = await this.canAccessRelationRepository.find({
+    public async findCanAccessRelations({
+        key,
+        joinWith = [],
+        nestedJoin = [],
+    }: {
+        key?: {
+            nationalID?: string;
+        };
+        joinWith?: Array<keyof CanAccessRelation>;
+        nestedJoin?: string[];
+    }): Promise<CanAccessRelation[]> {
+        const relations: string[] = [...joinWith, ...nestedJoin];
+        if (key.nationalID) {
+            return await this.canAccessRelationRepository.find({
                 where: {
-                    nationalID,
+                    nationalID: key.nationalID,
                     accessibleLockerInstance: {
                         inUsed: true,
-                    },
+                    }
                 },
-                relations: [
-                    'accessibleLockerInstance',
-                    'accessibleLockerInstance.locker',
-                    'accessibleLockerInstance.locker.location',
-                    'accessibleLockerInstance.ownerUser',
-                ],
+                relations
             });
-            return canAccessLockerInstances.map(canAccessRelation => canAccessRelation.accessibleLockerInstance);
-        } catch (error) {
-            if (error instanceof HttpException) {
-                throw error;
-            } else {
-                throw new NotFoundException(error.message);
-            }
         }
+        return await this.canAccessRelationRepository.find({ relations });
     }
 
     public async deleteInstance(lockerID: number, startTime: Date) {

@@ -14,7 +14,7 @@ import { UnlockLockerInstanceDto } from './dto/unlock-locker-instance.dto';
 @ApiUseTags('Locker Instance')
 @Controller('locker-instance')
 export class LockerInstanceController {
-    constructor(private readonly lockerInstanceService: LockerInstanceService) {}
+    constructor(private readonly lockerInstanceService: LockerInstanceService) { }
 
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('myLocker')
@@ -39,8 +39,18 @@ export class LockerInstanceController {
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('sharedLockerInstances')
     async getSharedLockerInstances(@User() user: JwtToken): Promise<{ lockerInstances: LockerInstance[] }> {
-        const lockerInstances = await this.lockerInstanceService.findCanAccessLockerByNationalID(user.nationalID);
-        return { lockerInstances };
+        const canAccessRelations = await this.lockerInstanceService.findCanAccessRelations({
+            key: {
+                nationalID: user.nationalID,
+            },
+            joinWith: ['accessibleLockerInstance'],
+            nestedJoin: [
+                'accessibleLockerInstance.locker',
+                'accessibleLockerInstance.locker.location',
+                'accessibleLockerInstance.ownerUser',
+            ],
+        });
+        return { lockerInstances: canAccessRelations.map((canAccessRelation) => canAccessRelation.accessibleLockerInstance) };
     }
 
     @ApiOperation({
