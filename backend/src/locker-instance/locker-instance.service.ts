@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException, ConflictException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { LockerInstanceRepositoryToken, CanAccessRelationRepositoryToken } from '../constant';
 import { CanAccessRelation } from '../entities/can-access.entity';
@@ -30,11 +30,16 @@ export class LockerInstanceService {
             const locker = await this.qrService.findLockerByAccessCodeOrFail(accessCode);
             const activeLocker = await this.lockerService.findLocker({ key: { activeLockerID: locker.id } });
             const user = await this.userService.findUser({ key: { nationalID } });
-            await this.lockerInstanceRepository.findOneOrFail({
-                where: { inUsed: true },
+            const currentLockerInstance = await this.findInstance({
+                key: { inUsedLockerID: activeLocker.id },
+                throwError: false,
             });
+            if (currentLockerInstance) {
+                throw new ConflictException('Locker is in used');
+            }
             let lockerInstance = new LockerInstance(activeLocker, user);
-            lockerInstance = await this.lockerInstanceRepository.save(lockerInstance);
+            await this.lockerInstanceRepository.save(lockerInstance);
+            lockerInstance = await this.findInstance({ key: { inUsedLockerID: activeLocker.id } });
             const canAccessRelation = new CanAccessRelation(user, lockerInstance);
             await this.canAccessRelationRepository.save(canAccessRelation);
             return lockerInstance;
@@ -128,15 +133,12 @@ export class LockerInstanceService {
     }): Promise<CanAccessRelation[]> {
         const relations: string[] = [...joinWith, ...nestedJoin];
         if (key.nationalID) {
-            return await this.canAccessRelationRepository.find({
-                where: {
-                    nationalID: key.nationalID,
-                    accessibleLockerInstance: {
-                        inUsed: true,
-                    }
-                },
-                relations
+            const canAccessRelations = await this.canAccessRelationRepository.find({
+                where: { nationalID: key.nationalID, },
+                relations,
             });
+            return canAccessRelations.filter((canAccessRelation) =>
+                canAccessRelation.accessibleLockerInstance.inUsed && canAccessRelation.accessibleLockerInstance.userID !== key.nationalID);
         }
         return await this.canAccessRelationRepository.find({ relations });
     }
