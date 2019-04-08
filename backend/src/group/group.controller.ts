@@ -1,13 +1,4 @@
-import {
-    Body,
-    Controller,
-    Get,
-    Param,
-    ParseIntPipe,
-    Patch,
-    Post,
-    Delete,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Delete } from '@nestjs/common';
 import { Group } from '../entities/group.entity';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { EditGroupDto } from './dto/edit-group.dto';
@@ -32,10 +23,7 @@ export class GroupController {
     }
 
     @Patch(':id')
-    async edit(
-        @Param('id', new ParseIntPipe()) id: number,
-        @Body() body: EditGroupDto,
-    ) {
+    async edit(@Param('id', new ParseIntPipe()) id: number, @Body() body: EditGroupDto) {
         await this.groupService.edit(id, body.name);
     }
 
@@ -47,10 +35,7 @@ export class GroupController {
 
     @Post('addUserToGroup')
     async addUserToGroup(@Body() body: AddUserGroupDto) {
-        const group = await this.groupService.addUserGroup(
-            body.nationalID,
-            body.groupID,
-        );
+        const group = await this.groupService.addUserGroup(body.nationalID, body.groupID);
         return group;
     }
 }

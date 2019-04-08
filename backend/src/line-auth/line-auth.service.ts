@@ -24,37 +24,20 @@ export class LineAuthService {
         const state = new State(this.passPhase, redirectURL, optionalState);
         return `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${
             this.configService.lineChannelID
-        }&redirect_uri=${encodeURIComponent(
-            `${this.configService.serverURL}${redirectURL}`,
-        )}&state=${encodeURIComponent(
-            this.cryptoService.AES.encrypt(
-                state.toString(),
-                this.configService.lineChannelSecret,
-            ),
+        }&redirect_uri=${encodeURIComponent(`${this.configService.serverURL}${redirectURL}`)}&state=${encodeURIComponent(
+            this.cryptoService.AES.encrypt(state.toString(), this.configService.lineChannelSecret),
         )}&scope=${scope.join('%20')}&bot_prompt=aggressive`;
     }
 
-    async getAccessToken(
-        code: string,
-        encryptedState: string,
-    ): Promise<LineAccessToken> {
-        const state = State.from(
-            this.cryptoService.AES.decrypt(
-                decodeURIComponent(encryptedState),
-                this.configService.lineChannelSecret,
-            ),
-        );
+    async getAccessToken(code: string, encryptedState: string): Promise<LineAccessToken> {
+        const state = State.from(this.cryptoService.AES.decrypt(decodeURIComponent(encryptedState), this.configService.lineChannelSecret));
         if (!state.compareTo(this.passPhase)) {
-            throw new UnauthorizedException(
-                'Line authenticate wrong callback state',
-            );
+            throw new UnauthorizedException('Line authenticate wrong callback state');
         }
         const body = {
             grant_type: 'authorization_code',
             code,
-            redirect_uri: `${this.configService.serverURL}${
-                state.redirectURLString
-            }`,
+            redirect_uri: `${this.configService.serverURL}${state.redirectURLString}`,
             client_id: this.configService.lineChannelID,
             client_secret: this.configService.lineChannelSecret,
         };

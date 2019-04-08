@@ -6,8 +6,7 @@ import { Connection } from 'typeorm';
 export const lockerUsageProviders: Provider[] = [
     {
         provide: LockerUsageRepositoryToken,
-        useFactory: (connection: Connection) =>
-            connection.getRepository(LockerUsage),
+        useFactory: (connection: Connection) => connection.getRepository(LockerUsage),
         inject: [DbConnectionToken],
     },
 ];

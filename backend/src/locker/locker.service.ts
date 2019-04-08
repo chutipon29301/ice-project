@@ -1,12 +1,4 @@
-import {
-    ConflictException,
-    forwardRef,
-    Inject,
-    Injectable,
-    NotFoundException,
-    UnauthorizedException,
-    HttpException,
-} from '@nestjs/common';
+import { ConflictException, forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException } from '@nestjs/common';
 import { LocationService } from 'src/location/location.service';
 import { Repository } from 'typeorm';
 import { ConfigService } from '../config/config.service';
@@ -41,34 +33,26 @@ export class LockerService {
         return locker;
     }
 
-    public async findLockerBySerialNumberOrFail(
-        serialNumber: string,
-    ): Promise<Locker> {
+    public async findLockerBySerialNumberOrFail(serialNumber: string): Promise<Locker> {
         const locker = await this.lockerRepository.findOneOrFail({
             where: { serialNumber },
         });
         return locker;
     }
 
-    public async findActiveLockerByIDOrFail(
-        id: number,
-    ): Promise<Locker | null> {
+    public async findActiveLockerByIDOrFail(id: number): Promise<Locker | null> {
         return await this.lockerRepository.findOneOrFail({
             where: { id, availability: LockerAvailability.AVAILABLE },
         });
     }
 
-    public async findActiveLockerBySerialNumberOrFail(
-        serialNumber: string,
-    ): Promise<Locker | null> {
+    public async findActiveLockerBySerialNumberOrFail(serialNumber: string): Promise<Locker | null> {
         return await this.lockerRepository.findOneOrFail({
             where: { serialNumber, availability: LockerAvailability.AVAILABLE },
         });
     }
 
-    public async findLockerInstanceHistoryByLockerID(
-        lockerID: number,
-    ): Promise<Locker> {
+    public async findLockerInstanceHistoryByLockerID(lockerID: number): Promise<Locker> {
         try {
             const locker = await this.lockerRepository.findOneOrFail(lockerID, {
                 relations: ['lockerInstances', 'lockerInstances.ownerUser'],
@@ -99,13 +83,9 @@ export class LockerService {
     public async registerLocker(id: number, value: RegisterLockerDto) {
         try {
             const locker = await this.findLockerByIDOrFail(id);
-            const location = await this.locationService.findLocationByIDOrFail(
-                value.locationID,
-            );
+            const location = await this.locationService.findLocationByIDOrFail(value.locationID);
             if (locker.availability !== LockerAvailability.UNREGISTERED) {
-                throw new ConflictException(
-                    'Locker has already been registered',
-                );
+                throw new ConflictException('Locker has already been registered');
             }
             locker.availability = LockerAvailability.AVAILABLE;
             locker.name = value.name;
@@ -129,16 +109,10 @@ export class LockerService {
         await this.lockerRepository.delete(id);
     }
 
-    public async getLockerCurrentStatus(
-        serialNumber: string,
-    ): Promise<LockerCurrentStatusResponseDto> {
+    public async getLockerCurrentStatus(serialNumber: string): Promise<LockerCurrentStatusResponseDto> {
         try {
-            const locker = await this.findLockerBySerialNumberOrFail(
-                serialNumber,
-            );
-            const lockerUsages = await this.lockerUsageService.findLockerUsageByLockerID(
-                locker.id,
-            );
+            const locker = await this.findLockerBySerialNumberOrFail(serialNumber);
+            const lockerUsages = await this.lockerUsageService.findLockerUsageByLockerID(locker.id);
             if (lockerUsages.length !== 0) {
                 return {
                     isOpen: lockerUsages[0].actionType === ActionType.OPEN,
@@ -159,16 +133,10 @@ export class LockerService {
         }
     }
 
-    public async lock(
-        serialNumber: string,
-    ): Promise<LockerCurrentStatusResponseDto> {
+    public async lock(serialNumber: string): Promise<LockerCurrentStatusResponseDto> {
         try {
-            const locker = await this.findLockerBySerialNumberOrFail(
-                serialNumber,
-            );
-            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
-                locker.id,
-            );
+            const locker = await this.findLockerBySerialNumberOrFail(serialNumber);
+            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(locker.id);
             await this.lockerUsageService.lock(lockerInstance);
             return await this.getLockerCurrentStatus(serialNumber);
         } catch (error) {

@@ -1,11 +1,4 @@
-import {
-    Column,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    OneToMany,
-    PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { CanAccessRelation } from './can-access.entity';
 import { LockerUsage } from './locker-usage.entity';
 import { Locker } from './locker.entity';
@@ -46,10 +39,7 @@ export class LockerInstance {
     })
     endTime: Date;
 
-    @OneToMany(
-        type => CanAccessRelation,
-        canAccessRelation => canAccessRelation.accessibleLockerInstance,
-    )
+    @OneToMany(type => CanAccessRelation, canAccessRelation => canAccessRelation.accessibleLockerInstance)
     canAccesses: CanAccessRelation[];
 
     @Column()
@@ -62,10 +52,6 @@ export class LockerInstance {
     @OneToMany(type => LockerUsage, lockerUsage => lockerUsage.lockerInstance)
     lockerUsages: LockerUsage[];
 
-    @OneToMany(
-        type => UserInvitation,
-        userInvitation => userInvitation.lockerInstance,
-        { nullable: true },
-    )
+    @OneToMany(type => UserInvitation, userInvitation => userInvitation.lockerInstance, { nullable: true })
     userInvitations: UserInvitation[];
 }

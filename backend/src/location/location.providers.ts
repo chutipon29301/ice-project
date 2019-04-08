@@ -6,8 +6,7 @@ import { Location } from '../entities/location.entity';
 export const locationProviders: Provider[] = [
     {
         provide: LocationRepositoryToken,
-        useFactory: (connection: Connection) =>
-            connection.getRepository(Location),
+        useFactory: (connection: Connection) => connection.getRepository(Location),
         inject: [DbConnectionToken],
     },
 ];

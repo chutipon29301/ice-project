@@ -51,8 +51,6 @@ import * as helmet from 'helmet';
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(helmet(), SanitizerMiddleware, AuthHeaderParserMiddleware)
-            .forRoutes('*');
+        consumer.apply(helmet(), SanitizerMiddleware, AuthHeaderParserMiddleware).forRoutes('*');
     }
 }

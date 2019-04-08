@@ -1,12 +1,4 @@
-import {
-    Body,
-    Controller,
-    Get,
-    Post,
-    Query,
-    Res,
-    UnauthorizedException,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res, UnauthorizedException } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { Response } from 'express';
 import { LineAccessToken } from 'src/line-auth/dto/line-access-token.dto';
@@ -22,8 +14,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @ApiOperation({
-        title:
-            'Request short token from line for user,admin,superuser to register',
+        title: 'Request short token from line for user,admin,superuser to register',
     })
     @Get('lineLoginPage')
     async lineAuth(@Res() res: Response) {
@@ -74,24 +65,18 @@ export class AuthController {
     }
 
     @ApiOperation({
-        title:
-            'Request long token(AUTHENTICATION_ID) from line for user, admin, superuser to complete register',
+        title: 'Request long token(AUTHENTICATION_ID) from line for user, admin, superuser to complete register',
     })
     @Post('lineToken')
-    async lineAuthToken(
-        @Body() body: RequestTokenDto,
-    ): Promise<LineAccessToken> {
+    async lineAuthToken(@Body() body: RequestTokenDto): Promise<LineAccessToken> {
         return this.authService.getAccessToken(body.code);
     }
 
     @ApiOperation({
-        title:
-            'Request our internal server jwt token for user, admin, superuser (for bearer)',
+        title: 'Request our internal server jwt token for user, admin, superuser (for bearer)',
     })
     @Post('myToken/line')
-    async getJwtTokenFromLineToken(
-        @Body() body: LineUserTokenDto,
-    ): Promise<JwtTokenInfo> {
+    async getJwtTokenFromLineToken(@Body() body: LineUserTokenDto): Promise<JwtTokenInfo> {
         return await this.authService.getJwtTokenFromLineToken(body.lineToken);
     }
 }

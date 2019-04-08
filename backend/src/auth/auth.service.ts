@@ -32,30 +32,19 @@ export class AuthService {
     }
 
     public getLiffCallbackWithAccessCode(accessCode: string): string {
-        return `${
-            this.configService.liffServerURL
-        }/auth/line-landing?code=${accessCode}`;
+        return `${this.configService.liffServerURL}/auth/line-landing?code=${accessCode}`;
     }
 
     public getAdminCallbackWithAccessCode(accessCode: string): string {
-        return `${
-            this.configService.adminServerURL
-        }/callback?code=${accessCode}`;
+        return `${this.configService.adminServerURL}/callback?code=${accessCode}`;
     }
 
     public async validateState(encryptedState: string): Promise<boolean> {
-        const state = State.from(
-            this.cryptoService.AES.decrypt(
-                decodeURIComponent(encryptedState),
-                this.configService.lineChannelSecret,
-            ),
-        );
+        const state = State.from(this.cryptoService.AES.decrypt(decodeURIComponent(encryptedState), this.configService.lineChannelSecret));
         if (state.compareTo(this.passPhase)) {
             return true;
         } else {
-            throw new UnauthorizedException(
-                'Line authenticate wrong callback state',
-            );
+            throw new UnauthorizedException('Line authenticate wrong callback state');
         }
     }
 
@@ -87,15 +76,10 @@ export class AuthService {
         }
     }
 
-    public async getJwtTokenFromLineToken(
-        lineToken: string,
-    ): Promise<JwtTokenInfo> {
+    public async getJwtTokenFromLineToken(lineToken: string): Promise<JwtTokenInfo> {
         const decodedLineToken = this.lineAuthService.decode(lineToken);
         if (decodedLineToken) {
-            return this.jwtAuthService.generateTokenForLineID(
-                decodedLineToken.sub,
-                decodedLineToken.picture,
-            );
+            return this.jwtAuthService.generateTokenForLineID(decodedLineToken.sub, decodedLineToken.picture);
         } else {
             throw new UnauthorizedException('Invalid line token');
         }

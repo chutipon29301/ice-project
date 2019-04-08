@@ -10,9 +10,7 @@ describe('Location Controller', () => {
         }).compile();
     });
     it('should be defined', () => {
-        const controller: LocationController = module.get<LocationController>(
-            LocationController,
-        );
+        const controller: LocationController = module.get<LocationController>(LocationController);
         expect(controller).toBeDefined();
     });
 });

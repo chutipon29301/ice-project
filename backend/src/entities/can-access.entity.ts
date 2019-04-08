@@ -4,10 +4,7 @@ import { User } from './user.entity';
 
 @Entity()
 export class CanAccessRelation {
-    constructor(
-        accessibleUser: User,
-        accessibleLockerInstance: LockerInstance,
-    ) {
+    constructor(accessibleUser: User, accessibleLockerInstance: LockerInstance) {
         this.accessibleUser = accessibleUser;
         this.accessibleLockerInstance = accessibleLockerInstance;
     }
@@ -30,10 +27,7 @@ export class CanAccessRelation {
     @PrimaryColumn()
     startTime: Date;
 
-    @ManyToOne(
-        type => LockerInstance,
-        lockerInstance => lockerInstance.canAccesses,
-    )
+    @ManyToOne(type => LockerInstance, lockerInstance => lockerInstance.canAccesses)
     @JoinColumn([
         {
             name: 'lockerID',

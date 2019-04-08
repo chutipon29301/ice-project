@@ -14,18 +14,12 @@ import { UnlockLockerInstanceDto } from './dto/unlock-locker-instance.dto';
 @ApiUseTags('Locker Instance')
 @Controller('locker-instance')
 export class LockerInstanceController {
-    constructor(
-        private readonly lockerInstanceService: LockerInstanceService,
-    ) {}
+    constructor(private readonly lockerInstanceService: LockerInstanceService) {}
 
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('myLocker')
-    async getMyLocker(
-        @User() user: JwtToken,
-    ): Promise<{ lockerInstances: LockerInstance[] }> {
-        const lockerInstances = await this.lockerInstanceService.findInUsedLockerInstanceByNationalID(
-            user.nationalID,
-        );
+    async getMyLocker(@User() user: JwtToken): Promise<{ lockerInstances: LockerInstance[] }> {
+        const lockerInstances = await this.lockerInstanceService.findInUsedLockerInstanceByNationalID(user.nationalID);
         return { lockerInstances };
     }
 
@@ -38,12 +32,8 @@ export class LockerInstanceController {
 
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('sharedLockerInstances')
-    async getSharedLockerInstances(
-        @User() user: JwtToken,
-    ): Promise<{ lockerInstances: LockerInstance[] }> {
-        const lockerInstances = await this.lockerInstanceService.findCanAccessLockerByNationalID(
-            user.nationalID,
-        );
+    async getSharedLockerInstances(@User() user: JwtToken): Promise<{ lockerInstances: LockerInstance[] }> {
+        const lockerInstances = await this.lockerInstanceService.findCanAccessLockerByNationalID(user.nationalID);
         return { lockerInstances };
     }
 
@@ -51,45 +41,24 @@ export class LockerInstanceController {
         title: 'Create instance of locker when user start using locker',
     })
     @Post('createInstance')
-    async createInstance(
-        @User() user: JwtToken,
-        @Body() body: LockerInstanceDto,
-    ): Promise<LockerInstance> {
-        return await this.lockerInstanceService.create(
-            body.accessCode,
-            user.nationalID,
-        );
+    async createInstance(@User() user: JwtToken, @Body() body: LockerInstanceDto): Promise<LockerInstance> {
+        return await this.lockerInstanceService.create(body.accessCode, user.nationalID);
     }
 
     @Post('return')
-    async returnInstance(
-        @User() user: JwtToken,
-        @Body() body: LockerInstanceDto,
-    ) {
-        await this.lockerInstanceService.returnInstance(
-            user.nationalID,
-            body.accessCode,
-        );
+    async returnInstance(@User() user: JwtToken, @Body() body: LockerInstanceDto) {
+        await this.lockerInstanceService.returnInstance(user.nationalID, body.accessCode);
     }
 
     @Post('unlock')
     @Roles(Role.USER, Role.SUPERUSER)
-    async unlockLocker(
-        @User() user: JwtToken,
-        @Body() body: UnlockLockerInstanceDto,
-    ) {
-        return await this.lockerInstanceService.unlock(
-            user.nationalID,
-            body.accessCode,
-        );
+    async unlockLocker(@User() user: JwtToken, @Body() body: UnlockLockerInstanceDto) {
+        return await this.lockerInstanceService.unlock(user.nationalID, body.accessCode);
     }
 
     @Delete()
     @Roles(Role.ADMIN, Role.SUPERUSER)
     async deleteInstance(@Body() body: ListLockerInstanceDto) {
-        return await this.lockerInstanceService.deleteInstance(
-            body.lockerID,
-            body.startTime,
-        );
+        return await this.lockerInstanceService.deleteInstance(body.lockerID, body.startTime);
     }
 }

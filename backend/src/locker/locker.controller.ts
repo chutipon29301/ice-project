@@ -1,14 +1,4 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    ParseIntPipe,
-    Patch,
-    Post,
-    Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { Role } from '../entities/user.entity';
 import { Roles } from '../guard/role.decorator';
@@ -42,17 +32,13 @@ export class LockerController {
         title: 'Get locker current status',
     })
     @Get('status')
-    async getCurrentStatus(
-        @Query('serialNumber') serialNumber: string,
-    ): Promise<LockerCurrentStatusResponseDto> {
+    async getCurrentStatus(@Query('serialNumber') serialNumber: string): Promise<LockerCurrentStatusResponseDto> {
         return await this.lockerService.getLockerCurrentStatus(serialNumber);
     }
 
     @Roles(Role.ADMIN, Role.SUPERUSER)
     @Get('history/:id')
-    async getHistory(
-        @Param('id', new ParseIntPipe()) lockerID: number,
-    ): Promise<Locker> {
+    async getHistory(@Param('id', new ParseIntPipe()) lockerID: number): Promise<Locker> {
         return this.lockerService.findLockerInstanceHistoryByLockerID(lockerID);
     }
 
@@ -60,9 +46,7 @@ export class LockerController {
         title: 'Adding locker to system',
     })
     @Post()
-    async addLocker(
-        @Body() body: LockerSecretDto,
-    ): Promise<AddLockerResponseDto> {
+    async addLocker(@Body() body: LockerSecretDto): Promise<AddLockerResponseDto> {
         const locker = await this.lockerService.create(body.secret);
         return { id: locker.id, serial: locker.serialNumber };
     }
@@ -72,19 +56,13 @@ export class LockerController {
     })
     @Roles(Role.SUPERUSER, Role.ADMIN)
     @Post('register/:id')
-    async registerLocker(
-        @Param('id', new ParseIntPipe()) id: number,
-        @Body() body: RegisterLockerDto,
-    ) {
+    async registerLocker(@Param('id', new ParseIntPipe()) id: number, @Body() body: RegisterLockerDto) {
         await this.lockerService.registerLocker(id, body);
     }
 
     @Roles(Role.SUPERUSER, Role.ADMIN)
     @Patch(':id')
-    async edit(
-        @Param('id', new ParseIntPipe()) id: number,
-        @Body() body: EditLockerDto,
-    ) {
+    async edit(@Param('id', new ParseIntPipe()) id: number, @Body() body: EditLockerDto) {
         await this.lockerService.edit(id, body);
     }
 
@@ -98,9 +76,7 @@ export class LockerController {
         title: 'To lock locker',
     })
     @Post('lock')
-    async lock(
-        @Body() body: LockerLockDto,
-    ): Promise<LockerCurrentStatusResponseDto> {
+    async lock(@Body() body: LockerLockDto): Promise<LockerCurrentStatusResponseDto> {
         return await this.lockerService.lock(body.serialNumber);
     }
 }

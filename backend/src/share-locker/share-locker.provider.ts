@@ -6,8 +6,7 @@ import { UserInvitation } from '../entities/user-invitation.entity';
 export const shareLockerProviders: Provider[] = [
     {
         provide: UserInvitationRepositoryToken,
-        useFactory: (connection: Connection) =>
-            connection.getRepository(UserInvitation),
+        useFactory: (connection: Connection) => connection.getRepository(UserInvitation),
         inject: [DbConnectionToken],
     },
 ];

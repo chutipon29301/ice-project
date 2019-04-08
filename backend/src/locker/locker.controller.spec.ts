@@ -10,9 +10,7 @@ describe('Locker Controller', () => {
         }).compile();
     });
     it('should be defined', () => {
-        const controller: LockerController = module.get<LockerController>(
-            LockerController,
-        );
+        const controller: LockerController = module.get<LockerController>(LockerController);
         expect(controller).toBeDefined();
     });
 });

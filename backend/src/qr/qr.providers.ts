@@ -6,8 +6,7 @@ import { QRCode } from '../entities/qr-code.entity';
 export const qrProviders: Provider[] = [
     {
         provide: QRCodeRepositoryToken,
-        useFactory: (connection: Connection) =>
-            connection.getRepository(QRCode),
+        useFactory: (connection: Connection) => connection.getRepository(QRCode),
         inject: [DbConnectionToken],
     },
 ];

@@ -10,9 +10,7 @@ describe('CreditUsage Controller', () => {
         }).compile();
     });
     it('should be defined', () => {
-        const controller: CreditUsageController = module.get<
-            CreditUsageController
-        >(CreditUsageController);
+        const controller: CreditUsageController = module.get<CreditUsageController>(CreditUsageController);
         expect(controller).toBeDefined();
     });
 });

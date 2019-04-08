@@ -1,10 +1,4 @@
-import {
-    Injectable,
-    Inject,
-    UnauthorizedException,
-    NotFoundException,
-    HttpException,
-} from '@nestjs/common';
+import { Injectable, Inject, UnauthorizedException, NotFoundException, HttpException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
 import { UserInvitationRepositoryToken } from '../constant';
@@ -24,17 +18,13 @@ export class ShareLockerService {
 
     public async generateInvitationLink(lockerID: number, nationalID: string) {
         try {
-            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
-                lockerID,
-            );
+            const lockerInstance = await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(lockerID);
             if (lockerInstance.ownerUser.nationalID !== nationalID) {
                 throw new UnauthorizedException('Not owner user');
             }
             const userInvitation = new UserInvitation(lockerInstance);
             await this.userInvitationRepository.save(userInvitation);
-            return `${this.configService.liffServerURL}/share?accessCode=${
-                userInvitation.id
-            }`;
+            return `${this.configService.liffServerURL}/share?accessCode=${userInvitation.id}`;
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
@@ -46,22 +36,15 @@ export class ShareLockerService {
 
     public async addUserPermission(nationalID: string, accessCode: string) {
         try {
-            const userInvitation = await this.userInvitationRepository.findOneOrFail(
-                {
-                    where: { id: accessCode, isUsed: false },
-                    relations: ['lockerInstance'],
-                },
-            );
+            const userInvitation = await this.userInvitationRepository.findOneOrFail({
+                where: { id: accessCode, isUsed: false },
+                relations: ['lockerInstance'],
+            });
             userInvitation.isUsed = true;
             await this.userInvitationRepository.save(userInvitation);
             await this.userService.findUserWithNationalIDOrFail(nationalID);
-            await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(
-                userInvitation.lockerID,
-            );
-            await this.lockerInstanceService.addPermissionFromNationalIDAndLockerID(
-                nationalID,
-                userInvitation.lockerID,
-            );
+            await this.lockerInstanceService.findInUsedLockerInstanceByLockerIDOrFail(userInvitation.lockerID);
+            await this.lockerInstanceService.addPermissionFromNationalIDAndLockerID(nationalID, userInvitation.lockerID);
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;

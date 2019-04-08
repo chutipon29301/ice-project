@@ -10,9 +10,7 @@ describe('LockerInstance Controller', () => {
         }).compile();
     });
     it('should be defined', () => {
-        const controller: LockerInstanceController = module.get<
-            LockerInstanceController
-        >(LockerInstanceController);
+        const controller: LockerInstanceController = module.get<LockerInstanceController>(LockerInstanceController);
         expect(controller).toBeDefined();
     });
 });

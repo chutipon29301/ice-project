@@ -10,26 +10,9 @@ import { LocationModule } from '../location/location.module';
 import { CreditUsageModule } from 'src/credit-usage/credit-usage.module';
 
 @Module({
-    imports: [
-        forwardRef(() => LockerModule),
-        UserModule,
-        QrModule,
-        CreditUsageModule,
-    ],
-    providers: [
-        ...lockerInstanceProviders,
-        LockerInstanceService,
-        LockerUsageModule,
-        LocationModule,
-        CreditUsageModule,
-    ],
+    imports: [forwardRef(() => LockerModule), UserModule, QrModule, CreditUsageModule],
+    providers: [...lockerInstanceProviders, LockerInstanceService, LockerUsageModule, LocationModule, CreditUsageModule],
     controllers: [LockerInstanceController],
-    exports: [
-        LockerInstanceService,
-        LockerModule,
-        LocationModule,
-        QrModule,
-        UserModule,
-    ],
+    exports: [LockerInstanceService, LockerModule, LocationModule, QrModule, UserModule],
 })
 export class LockerInstanceModule {}

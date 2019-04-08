@@ -1,11 +1,4 @@
-import {
-    Controller,
-    Post,
-    Get,
-    Body,
-    Param,
-    ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { ShareLockerService } from './share-locker.service';
 import { Roles } from '../guard/role.decorator';
 import { Role } from '../entities/user.entity';
@@ -19,26 +12,14 @@ export class ShareLockerController {
 
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('generateLink/:id')
-    async generateInvitationLink(
-        @Param('id', new ParseIntPipe()) id: number,
-        @User() user: JwtToken,
-    ) {
-        const link = await this.shareLockerService.generateInvitationLink(
-            id,
-            user.nationalID,
-        );
+    async generateInvitationLink(@Param('id', new ParseIntPipe()) id: number, @User() user: JwtToken) {
+        const link = await this.shareLockerService.generateInvitationLink(id, user.nationalID);
         return { link };
     }
 
     @Roles(Role.USER, Role.SUPERUSER)
     @Post('addUserPermission')
-    async addUserPermission(
-        @User() user: JwtToken,
-        @Body() body: AddUserPermissionDto,
-    ) {
-        this.shareLockerService.addUserPermission(
-            user.nationalID,
-            body.accessCode,
-        );
+    async addUserPermission(@User() user: JwtToken, @Body() body: AddUserPermissionDto) {
+        this.shareLockerService.addUserPermission(user.nationalID, body.accessCode);
     }
 }

@@ -21,25 +21,13 @@ export class UserController {
 
     @Post('register')
     async registerUser(@Body() body: CreateUserEntityDto): Promise<User> {
-        const user = await this.userService.create(
-            body.nationalID,
-            body.firstName,
-            body.lastName,
-            body.phone,
-            body.authenticationID,
-        );
+        const user = await this.userService.create(body.nationalID, body.firstName, body.lastName, body.phone, body.authenticationID);
         return user;
     }
 
     @Post('registerAdmin')
     async registerAdmin(@Body() body: CreateAdminEntityDto): Promise<User> {
-        const user = await this.userService.createAdmin(
-            body.nationalID,
-            body.firstName,
-            body.lastName,
-            body.phone,
-            body.authenticationID,
-        );
+        const user = await this.userService.createAdmin(body.nationalID, body.firstName, body.lastName, body.phone, body.authenticationID);
         return user;
     }
 }

@@ -1,9 +1,4 @@
-import {
-    Injectable,
-    UnauthorizedException,
-    HttpException,
-    NotFoundException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException, HttpException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as moment from 'moment';
 import { UserService } from '../user/user.service';
@@ -12,19 +7,11 @@ import { JwtToken } from './dto/jwt-token.dto';
 
 @Injectable()
 export class JwtAuthService {
-    constructor(
-        private readonly jwtService: JwtService,
-        private readonly userService: UserService,
-    ) {}
+    constructor(private readonly jwtService: JwtService, private readonly userService: UserService) {}
 
-    async generateTokenForLineID(
-        lineID: string,
-        picture?: string,
-    ): Promise<JwtTokenInfo> {
+    async generateTokenForLineID(lineID: string, picture?: string): Promise<JwtTokenInfo> {
         try {
-            const user = await this.userService.findUserWithLineIDOrFail(
-                lineID,
-            );
+            const user = await this.userService.findUserWithLineIDOrFail(lineID);
             if (picture) {
                 await this.userService.edit(user.nationalID, {
                     profileImage: picture,

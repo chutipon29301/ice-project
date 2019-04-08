@@ -1,10 +1,6 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 import { sanitize } from 'class-sanitizer';
-import {
-    classToPlain,
-    ClassTransformOptions,
-    plainToClass,
-} from 'class-transformer';
+import { classToPlain, ClassTransformOptions, plainToClass } from 'class-transformer';
 
 @Injectable()
 export class SanitizationPipe implements PipeTransform<any> {
@@ -29,9 +25,7 @@ export class SanitizationPipe implements PipeTransform<any> {
         }
         const entity = plainToClass(metatype, value);
         sanitize(entity);
-        return this.isTransformEnabled
-            ? entity
-            : classToPlain(entity, this.transformOptions);
+        return this.isTransformEnabled ? entity : classToPlain(entity, this.transformOptions);
     }
 
     private toSanitizer(metatype: any): boolean {

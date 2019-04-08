@@ -10,9 +10,7 @@ describe('ShareLocker Controller', () => {
         }).compile();
     });
     it('should be defined', () => {
-        const controller: ShareLockerController = module.get<
-            ShareLockerController
-        >(ShareLockerController);
+        const controller: ShareLockerController = module.get<ShareLockerController>(ShareLockerController);
         expect(controller).toBeDefined();
     });
 });

@@ -16,14 +16,9 @@ declare global {
 
 @Injectable()
 export class RoleGuard implements CanActivate {
-    constructor(
-        private readonly reflector: Reflector,
-        private readonly userService: UserService,
-    ) {}
+    constructor(private readonly reflector: Reflector, private readonly userService: UserService) {}
 
-    canActivate(
-        context: ExecutionContext,
-    ): boolean | Promise<boolean> | Observable<boolean> {
+    canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
         const roles = this.reflector.get<Role[]>('roles', context.getHandler());
         if (!roles) {
             return true;

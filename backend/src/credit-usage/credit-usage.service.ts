@@ -23,23 +23,14 @@ export class CreditUsageService {
         return { totalCredit };
     }
 
-    public async addCredit(
-        amount: number,
-        nationalID: string,
-    ): Promise<CreditUsage> {
-        const user = await this.userService.findUserWithNationalIDOrFail(
-            nationalID,
-        );
+    public async addCredit(amount: number, nationalID: string): Promise<CreditUsage> {
+        const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
         const creditUse = new CreditUsage(amount, user);
         this.creditUsageRepository.save(creditUse);
         return creditUse;
     }
 
-    public async calculateTimeCharge(
-        startTime: Date,
-        endTime: Date,
-        nationalID: string,
-    ): Promise<CreditUsage> {
+    public async calculateTimeCharge(startTime: Date, endTime: Date, nationalID: string): Promise<CreditUsage> {
         const totalTimeUsed = endTime.getTime() - startTime.getTime();
         const chargingFee = -0.5;
         const amountCharge =

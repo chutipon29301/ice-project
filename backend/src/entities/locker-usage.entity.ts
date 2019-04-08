@@ -1,11 +1,4 @@
-import {
-    Column,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    OneToMany,
-    PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { LockerInstance } from './locker-instance.entity';
 import { User } from './user.entity';
 
@@ -38,15 +31,8 @@ export class LockerUsage {
     @PrimaryColumn()
     instanceDate: Date;
 
-    @ManyToOne(
-        type => LockerInstance,
-        lockerInstance => lockerInstance.lockerUsages,
-        { cascade: true },
-    )
-    @JoinColumn([
-        { name: 'lockerID', referencedColumnName: 'lockerID' },
-        { name: 'instanceDate', referencedColumnName: 'startTime' },
-    ])
+    @ManyToOne(type => LockerInstance, lockerInstance => lockerInstance.lockerUsages, { cascade: true })
+    @JoinColumn([{ name: 'lockerID', referencedColumnName: 'lockerID' }, { name: 'instanceDate', referencedColumnName: 'startTime' }])
     lockerInstance: LockerInstance;
 
     @Column({

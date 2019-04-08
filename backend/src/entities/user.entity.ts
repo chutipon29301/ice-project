@@ -1,11 +1,4 @@
-import {
-    Column,
-    Entity,
-    JoinTable,
-    ManyToMany,
-    OneToMany,
-    PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm';
 import { CreditUsage } from './credit-usage.entity';
 import { Group } from './group.entity';
 import { LockerInstance } from './locker-instance.entity';
@@ -99,19 +92,13 @@ export class User {
     @JoinTable()
     creditUsages: CreditUsage[];
 
-    @OneToMany(
-        type => CanAccessRelation,
-        canAccessRelation => canAccessRelation.accessibleUser,
-    )
+    @OneToMany(type => CanAccessRelation, canAccessRelation => canAccessRelation.accessibleUser)
     canAccesses: CanAccessRelation[];
 
     @ManyToMany(type => Group, group => group.users)
     @JoinTable()
     groups: Group[];
 
-    @OneToMany(
-        type => LockerInstance,
-        lockerInstance => lockerInstance.ownerUser,
-    )
+    @OneToMany(type => LockerInstance, lockerInstance => lockerInstance.ownerUser)
     ownerOfLockerInstance: LockerInstance[];
 }

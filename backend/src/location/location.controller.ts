@@ -1,13 +1,4 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    ParseIntPipe,
-    Patch,
-    Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { Location } from '../entities/location.entity';
 import { LocationEntityDto } from './dto/location-entity.dto';
 import { ApiUseTags } from '@nestjs/swagger';
@@ -29,12 +20,8 @@ export class LocationController {
 
     @Roles(Role.ADMIN, Role.SUPERUSER)
     @Get(':id/lockers')
-    async findLockersInLocation(
-        @Param('id', new ParseIntPipe()) locationID: number,
-    ): Promise<Location> {
-        return await this.locationService.findLockerInLocationByLocationID(
-            locationID,
-        );
+    async findLockersInLocation(@Param('id', new ParseIntPipe()) locationID: number): Promise<Location> {
+        return await this.locationService.findLockerInLocationByLocationID(locationID);
     }
 
     @Roles(Role.SUPERUSER, Role.ADMIN)
@@ -45,10 +32,7 @@ export class LocationController {
 
     @Roles(Role.SUPERUSER, Role.ADMIN)
     @Patch('/:id')
-    async edit(
-        @Param('id', new ParseIntPipe()) id: number,
-        @Body() body: LocationEntityDto,
-    ) {
+    async edit(@Param('id', new ParseIntPipe()) id: number, @Body() body: LocationEntityDto) {
         await this.locationService.update(id, body);
     }
 

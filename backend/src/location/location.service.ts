@@ -10,11 +10,7 @@ export class LocationService {
         private readonly locationRepository: Repository<Location>,
     ) {}
 
-    public async create(
-        description: string,
-        lat: number,
-        lng: number,
-    ): Promise<Location> {
+    public async create(description: string, lat: number, lng: number): Promise<Location> {
         const location = new Location(description, lat, lng);
         await this.locationRepository.save(location);
         return location;
@@ -24,9 +20,7 @@ export class LocationService {
         return await this.locationRepository.find();
     }
 
-    public async findLockerInLocationByLocationID(
-        locationID: number,
-    ): Promise<Location> {
+    public async findLockerInLocationByLocationID(locationID: number): Promise<Location> {
         const location = await this.locationRepository.findOne(locationID, {
             relations: ['lockers'],
         });

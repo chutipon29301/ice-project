@@ -97,9 +97,7 @@ export class ConfigService {
         if (endpoint) {
             return endpoint;
         } else {
-            throw new Error(
-                `Unable to read "LINE_MESSAGING_API_ENDPOINT" environment`,
-            );
+            throw new Error(`Unable to read "LINE_MESSAGING_API_ENDPOINT" environment`);
         }
     }
 
@@ -108,9 +106,7 @@ export class ConfigService {
         if (token) {
             return token;
         } else {
-            throw new Error(
-                `Unable to read "CHANNEL_ACCESS_TOKEN" environment`,
-            );
+            throw new Error(`Unable to read "CHANNEL_ACCESS_TOKEN" environment`);
         }
     }
 }

@@ -12,9 +12,7 @@ export class CreditUsageController {
     @Get('myCredit')
     @Roles(Role.USER)
     async getMyCredit(@User() user: JwtToken) {
-        const myCredit = await this.creditUsageService.getMyTotalCredit(
-            user.nationalID,
-        );
+        const myCredit = await this.creditUsageService.getMyTotalCredit(user.nationalID);
         return {
             totalCredit: myCredit.totalCredit,
         };
@@ -23,10 +21,7 @@ export class CreditUsageController {
     @Post('addCredit')
     @Roles(Role.USER, Role.ADMIN)
     async addCredit(@User() user: JwtToken, @Body() body: creditUsageTopUpDto) {
-        const myAddedCredit = await this.creditUsageService.addCredit(
-            body.amount,
-            user.nationalID,
-        );
+        const myAddedCredit = await this.creditUsageService.addCredit(body.amount, user.nationalID);
         return {
             totalCredit: myAddedCredit.amount,
         };

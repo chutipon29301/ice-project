@@ -1,11 +1,5 @@
 import * as moment from 'moment';
-import {
-    Column,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { LockerInstance } from './locker-instance.entity';
 
 @Entity()
@@ -23,10 +17,7 @@ export class UserInvitation {
     @Column()
     lockerID: number;
 
-    @ManyToOne(
-        type => LockerInstance,
-        lockerInstance => lockerInstance.userInvitations,
-    )
+    @ManyToOne(type => LockerInstance, lockerInstance => lockerInstance.userInvitations)
     @JoinColumn([{ name: 'lockerID', referencedColumnName: 'lockerID' }])
     lockerInstance: LockerInstance;
 

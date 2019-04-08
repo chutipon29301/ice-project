@@ -17,18 +17,13 @@ export class LockerUsageService {
         return await this.lockerUsageRepository.save(lockerUsage);
     }
 
-    public async unlock(
-        lockerInstance: LockerInstance,
-        user: User,
-    ): Promise<LockerUsage> {
+    public async unlock(lockerInstance: LockerInstance, user: User): Promise<LockerUsage> {
         const lockerUsage = new LockerUsage(ActionType.OPEN, lockerInstance);
         lockerUsage.user = user;
         return await this.lockerUsageRepository.save(lockerUsage);
     }
 
-    public async findLockerUsageByLockerID(
-        lockerID: number,
-    ): Promise<LockerUsage[]> {
+    public async findLockerUsageByLockerID(lockerID: number): Promise<LockerUsage[]> {
         return await this.lockerUsageRepository.find({
             where: { lockerID },
             order: { timeStamp: 'DESC' },

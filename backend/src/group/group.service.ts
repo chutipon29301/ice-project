@@ -1,10 +1,4 @@
-import {
-    ConflictException,
-    Inject,
-    Injectable,
-    HttpException,
-    NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Inject, Injectable, HttpException, NotFoundException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { GroupRepositoryToken } from '../constant';
@@ -48,9 +42,7 @@ export class GroupService {
 
     public async addUserGroup(nationalID: string, groupID: number) {
         try {
-            const user = await this.userService.findUserWithNationalIDOrFail(
-                nationalID,
-            );
+            const user = await this.userService.findUserWithNationalIDOrFail(nationalID);
             const group = await this.groupRepository.findOneOrFail({
                 where: {
                     id: groupID,

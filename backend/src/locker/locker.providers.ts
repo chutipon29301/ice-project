@@ -6,8 +6,7 @@ import { Locker } from '../entities/locker.entity';
 export const lockerProviders: Provider[] = [
     {
         provide: LockerRepositoryToken,
-        useFactory: (connection: Connection) =>
-            connection.getRepository(Locker),
+        useFactory: (connection: Connection) => connection.getRepository(Locker),
         inject: [DbConnectionToken],
     },
 ];
