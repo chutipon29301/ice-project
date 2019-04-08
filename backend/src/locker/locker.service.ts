@@ -20,17 +20,47 @@ export class LockerService {
         private readonly lockerUsageService: LockerUsageService,
         @Inject(forwardRef(() => LockerInstanceService))
         private readonly lockerInstanceService: LockerInstanceService,
-    ) {}
+    ) { }
+
+    public async findLocker({
+        key,
+        throwError = true,
+        relations = [],
+    }: {
+        key: {
+            lockerID?: number;
+            serialNumber?: string;
+        };
+        throwError?: boolean;
+        relations?: Array<keyof Locker>;
+    }): Promise<Locker> {
+        if (key.lockerID) {
+            if (throwError) {
+                return await this.lockerRepository.findOneOrFail(key.lockerID, { relations });
+            } else {
+                return await this.lockerRepository.findOne(key.lockerID, { relations });
+            }
+        }
+        if (key.serialNumber) {
+            if (throwError) {
+                return await this.lockerRepository.findOneOrFail({
+                    where: { serialNumber: key.serialNumber },
+                    relations,
+                });
+            } else {
+                return await this.lockerRepository.findOne({
+                    where: { serialNumber: key.serialNumber },
+                    relations,
+                });
+            }
+        }
+        throw new Error('Key must be specify');
+    }
 
     public async findLockerAndLocation(): Promise<Locker[]> {
         return await this.lockerRepository.find({
             relations: ['location'],
         });
-    }
-
-    public async findLockerByIDOrFail(id: number): Promise<Locker> {
-        const locker = await this.lockerRepository.findOneOrFail(id);
-        return locker;
     }
 
     public async findLockerBySerialNumberOrFail(serialNumber: string): Promise<Locker> {
@@ -82,7 +112,7 @@ export class LockerService {
 
     public async registerLocker(id: number, value: RegisterLockerDto) {
         try {
-            const locker = await this.findLockerByIDOrFail(id);
+            const locker = await this.findLocker({ key: { lockerID: id } });
             const location = await this.locationService.findLocationByIDOrFail(value.locationID);
             if (locker.availability !== LockerAvailability.UNREGISTERED) {
                 throw new ConflictException('Locker has already been registered');
@@ -150,7 +180,7 @@ export class LockerService {
 
     public async isLockerActiveByLockerID(lockerID: number): Promise<boolean> {
         try {
-            const locker = await this.findLockerByIDOrFail(lockerID);
+            const locker = await this.findLocker({ key: { lockerID } });
             return locker.availability === LockerAvailability.AVAILABLE;
         } catch (error) {
             throw new NotFoundException(error.message);
