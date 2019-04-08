@@ -16,7 +16,7 @@ import { Locker } from '../entities/locker.entity';
 @ApiUseTags('Locker')
 @Controller('locker')
 export class LockerController {
-    constructor(private readonly lockerService: LockerService) { }
+    constructor(private readonly lockerService: LockerService) {}
 
     @ApiOperation({
         title: 'List all locker',

@@ -10,8 +10,8 @@ export class userGroupDto {
     nationalID: string;
 
     @ApiModelProperty({
-      description: 'Group user belongs to',
-      required: true,
-  })
+        description: 'Group user belongs to',
+        required: true,
+    })
     groupID: number;
 }

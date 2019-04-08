@@ -14,7 +14,7 @@ export class ShareLockerService {
         private readonly userService: UserService,
         private readonly configService: ConfigService,
         private readonly lockerInstanceService: LockerInstanceService,
-    ) { }
+    ) {}
 
     public async generateInvitationLink(lockerID: number, nationalID: string) {
         try {

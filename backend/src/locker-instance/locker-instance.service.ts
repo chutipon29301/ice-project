@@ -23,7 +23,7 @@ export class LockerInstanceService {
         private readonly creditUsageService: CreditUsageService,
         @Inject(CanAccessRelationRepositoryToken)
         private readonly canAccessRelationRepository: Repository<CanAccessRelation>,
-    ) { }
+    ) {}
 
     public async create(accessCode: string, nationalID: string): Promise<LockerInstance> {
         try {
@@ -55,10 +55,10 @@ export class LockerInstanceService {
     }: {
         key: {
             instance?: {
-                lockerID: number,
-                startTime: Date,
-            }
-            inUsedLockerID?: number,
+                lockerID: number;
+                startTime: Date;
+            };
+            inUsedLockerID?: number;
         };
         throwError?: boolean;
         joinWith?: Array<keyof LockerInstance>;
@@ -98,8 +98,8 @@ export class LockerInstanceService {
         nestedJoin = [],
     }: {
         key?: {
-            inUsed?: boolean,
-            inUsedByNationalID?: string,
+            inUsed?: boolean;
+            inUsedByNationalID?: string;
         };
         joinWith?: Array<keyof LockerInstance>;
         nestedJoin?: string[];
@@ -144,7 +144,7 @@ export class LockerInstanceService {
     public async deleteInstance(lockerID: number, startTime: Date) {
         try {
             const lockerInstance = await this.findInstance({
-                key: { instance: { lockerID, startTime, } },
+                key: { instance: { lockerID, startTime } },
             });
             await this.lockerInstanceRepository.delete(lockerInstance);
         } catch (error) {

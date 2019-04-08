@@ -13,7 +13,7 @@ export class QrService {
         private readonly qrCodeRepository: Repository<QRCode>,
         private readonly configService: ConfigService,
         private readonly lockerService: LockerService,
-    ) { }
+    ) {}
 
     public async generateRedirectURL(serialNumber: string): Promise<string> {
         try {

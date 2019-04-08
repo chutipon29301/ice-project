@@ -20,7 +20,7 @@ export class LockerService {
         private readonly lockerUsageService: LockerUsageService,
         @Inject(forwardRef(() => LockerInstanceService))
         private readonly lockerInstanceService: LockerInstanceService,
-    ) { }
+    ) {}
 
     public async findLocker({
         key,
@@ -78,9 +78,9 @@ export class LockerService {
         joinWith = [],
         nestedJoin = [],
     }: {
-        key?: {},
-        joinWith?: Array<keyof Locker>,
-        nestedJoin?: string[],
+        key?: {};
+        joinWith?: Array<keyof Locker>;
+        nestedJoin?: string[];
     }): Promise<Locker[]> {
         const relations = [...joinWith, ...nestedJoin];
         return await this.lockerRepository.find({ relations });
@@ -155,7 +155,7 @@ export class LockerService {
     public async lock(serialNumber: string): Promise<LockerCurrentStatusResponseDto> {
         try {
             const locker = await this.findLocker({ key: { serialNumber } });
-            const lockerInstance = await this.lockerInstanceService.findInstance({key: {inUsedLockerID: locker.id}});
+            const lockerInstance = await this.lockerInstanceService.findInstance({ key: { inUsedLockerID: locker.id } });
             await this.lockerUsageService.lock(lockerInstance);
             return await this.getLockerCurrentStatus(serialNumber);
         } catch (error) {

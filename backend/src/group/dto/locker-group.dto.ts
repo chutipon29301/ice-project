@@ -10,8 +10,8 @@ export class lockerGroupDto {
     lockerID: number;
 
     @ApiModelProperty({
-      description: 'Group locker belongs to',
-      required: true,
-  })
+        description: 'Group locker belongs to',
+        required: true,
+    })
     groupID: number;
 }

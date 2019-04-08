@@ -14,17 +14,17 @@ import { UnlockLockerInstanceDto } from './dto/unlock-locker-instance.dto';
 @ApiUseTags('Locker Instance')
 @Controller('locker-instance')
 export class LockerInstanceController {
-    constructor(private readonly lockerInstanceService: LockerInstanceService) { }
+    constructor(private readonly lockerInstanceService: LockerInstanceService) {}
 
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('myLocker')
     async getMyLocker(@User() user: JwtToken): Promise<{ lockerInstances: LockerInstance[] }> {
         const lockerInstances = await this.lockerInstanceService.findInstances({
             key: {
-                inUsedByNationalID: user.nationalID
+                inUsedByNationalID: user.nationalID,
             },
             joinWith: ['locker', 'ownerUser'],
-            nestedJoin: ['locker.location']
+            nestedJoin: ['locker.location'],
         });
         return { lockerInstances };
     }

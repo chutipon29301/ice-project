@@ -10,7 +10,7 @@ export class UserService {
         @Inject(UserRepositoryToken)
         private readonly userRepository: Repository<User>,
         private readonly lineAuthService: LineAuthService,
-    ) { }
+    ) {}
 
     public async listUser(): Promise<User[]> {
         const users = await this.userRepository.find();
