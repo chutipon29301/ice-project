@@ -13,10 +13,11 @@ export class Group {
     @Column()
     name: string;
 
-    @ManyToMany(type => User, user => user.groups)
+    @ManyToMany(type => User, user => user.groups, {cascade: true})
     @JoinTable()
     users: User[];
 
+    @ManyToMany(type => Locker, locker => locker.groups, {cascade: true})
     @JoinTable()
     lockers: Locker[];
 }

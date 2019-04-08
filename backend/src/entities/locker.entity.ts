@@ -53,7 +53,6 @@ export class Locker {
     lockerInstances: LockerInstance[];
 
     @ManyToMany(type => Group, group => group.lockers)
-    @JoinTable()
     groups: Group[];
 
     @OneToMany(type => QRCode, qrCode => qrCode.locker, { nullable: true })
