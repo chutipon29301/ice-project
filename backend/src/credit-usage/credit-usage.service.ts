@@ -4,23 +4,24 @@ import { Repository } from 'typeorm';
 import { CreditUsage } from '../entities/credit-usage.entity';
 import { UserService } from '../user/user.service';
 import moment = require('moment');
+import { CreditSummary } from './dto/total-credit.dto';
 
 @Injectable()
 export class CreditUsageService {
+
     constructor(
         @Inject(CreditUsageRepositoryToken)
         private readonly creditUsageRepository: Repository<CreditUsage>,
         private readonly userService: UserService,
-    ) {}
-    public async getMyTotalCredit(nationalID: string) {
-        await this.creditUsageRepository.findOneOrFail({ where: nationalID });
-        const { totalCredit } = await this.creditUsageRepository
-            .createQueryBuilder('credit')
-            .select('SUM(credit.nationalID)', 'sum')
-            .where('credit.nationalID = :nationalID', { id: nationalID })
+    ) { }
+
+    public async currentCredit(nationalID: string): Promise<CreditSummary> {
+        const credit: CreditSummary = await this.creditUsageRepository
+            .createQueryBuilder('credit_usage')
+            .select('SUM(credit_usage.amount)', 'totalCredit')
+            .where('credit_usage.nationalID = :nationalID', { nationalID })
             .getRawOne();
-        console.log({ totalCredit });
-        return { totalCredit };
+        return credit;
     }
 
     public async addCredit(amount: number, nationalID: string): Promise<CreditUsage> {
@@ -33,10 +34,7 @@ export class CreditUsageService {
     public async calculateTimeCharge(startTime: Date, endTime: Date, nationalID: string): Promise<CreditUsage> {
         const totalTimeUsed = endTime.getTime() - startTime.getTime();
         const chargingFee = -0.5;
-        const amountCharge =
-            moment(totalTimeUsed)
-                .subtract(15, 'minutes')
-                .minutes() * chargingFee;
+        const amountCharge = Math.round(moment(totalTimeUsed).subtract(15, 'minutes').minutes() * chargingFee);
         return await this.addCredit(amountCharge, nationalID);
     }
 }
