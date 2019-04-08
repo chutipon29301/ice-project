@@ -25,7 +25,8 @@ export class LockerService {
     public async findLocker({
         key,
         throwError = true,
-        relations = [],
+        joinWith = [],
+        nestedJoin = [],
     }: {
         key: {
             lockerID?: number;
@@ -34,8 +35,10 @@ export class LockerService {
             activeLockerSerialNumber?: string;
         };
         throwError?: boolean;
-        relations?: Array<keyof Locker>;
+        joinWith?: Array<keyof Locker>;
+        nestedJoin?: string[];
     }): Promise<Locker> {
+        const relations: string[] = [...joinWith, ...nestedJoin];
         if (key.lockerID) {
             if (throwError) {
                 return await this.lockerRepository.findOneOrFail(key.lockerID, { relations });
@@ -64,11 +67,14 @@ export class LockerService {
 
     public async findLockers({
         key = {},
-        relations = [],
+        joinWith = [],
+        nestedJoin = [],
     }: {
         key?: {},
-        relations?: Array<keyof Locker>,
+        joinWith?: Array<keyof Locker>,
+        nestedJoin?: string[],
     }): Promise<Locker[]> {
+        const relations = [...joinWith, ...nestedJoin];
         return await this.lockerRepository.find({ relations });
     }
 

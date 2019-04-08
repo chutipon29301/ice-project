@@ -24,7 +24,7 @@ export class LockerController {
     @Roles(Role.SUPERUSER, Role.ADMIN, Role.USER)
     @Get()
     async list(): Promise<ListLockerResponseDto> {
-        const lockers = await this.lockerService.findLockers({ relations: ['location'] });
+        const lockers = await this.lockerService.findLockers({ joinWith: ['location'] });
         return { lockers };
     }
 
