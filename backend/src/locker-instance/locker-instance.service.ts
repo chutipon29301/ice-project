@@ -245,7 +245,7 @@ export class LockerInstanceService {
             lockerInstance.endTime = new Date();
             lockerInstance.inUsed = false;
             await this.lockerInstanceRepository.save(lockerInstance);
-            this.creditUsageService.calculateTimeCharge(lockerInstance.startTime, lockerInstance.endTime, nationalID);
+            await this.creditUsageService.calculateTimeCharge(lockerInstance.startTime, lockerInstance.endTime, nationalID);
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
