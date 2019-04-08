@@ -23,12 +23,12 @@ export class LockerInstanceService {
         private readonly creditUsageService: CreditUsageService,
         @Inject(CanAccessRelationRepositoryToken)
         private readonly canAccessRelationRepository: Repository<CanAccessRelation>,
-    ) {}
+    ) { }
 
     public async create(accessCode: string, nationalID: string): Promise<LockerInstance> {
         try {
             const locker = await this.qrService.findLockerByAccessCodeOrFail(accessCode);
-            const activeLocker = await this.lockerService.findActiveLockerByIDOrFail(locker.id);
+            const activeLocker = await this.lockerService.findLocker({ key: { activeLockerID: locker.id } });
             const user = await this.userService.findUser({ key: { nationalID } });
             await this.lockerInstanceRepository.findOneOrFail({
                 where: { inUsed: true },

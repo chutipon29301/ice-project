@@ -31,6 +31,7 @@ export class LockerService {
             lockerID?: number;
             serialNumber?: string;
             activeLockerID?: number;
+            activeLockerSerialNumber?: string;
         };
         throwError?: boolean;
         relations?: Array<keyof Locker>;
@@ -43,16 +44,19 @@ export class LockerService {
             }
         }
         if (key.serialNumber) {
+            const where: Partial<Locker> = { serialNumber: key.serialNumber };
             if (throwError) {
-                return await this.lockerRepository.findOneOrFail({
-                    where: { serialNumber: key.serialNumber },
-                    relations,
-                });
+                return await this.lockerRepository.findOneOrFail({ where, relations });
             } else {
-                return await this.lockerRepository.findOne({
-                    where: { serialNumber: key.serialNumber },
-                    relations,
-                });
+                return await this.lockerRepository.findOne({ where, relations });
+            }
+        }
+        if (key.activeLockerID) {
+            const where: Partial<Locker> = { id: key.activeLockerID, availability: LockerAvailability.AVAILABLE };
+            if (throwError) {
+                return await this.lockerRepository.findOneOrFail({ where, relations });
+            } else {
+                return await this.lockerRepository.findOne({ where, relations });
             }
         }
         throw new Error('One of the key must be specify');
@@ -66,12 +70,6 @@ export class LockerService {
         relations?: Array<keyof Locker>,
     }): Promise<Locker[]> {
         return await this.lockerRepository.find({ relations });
-    }
-
-    public async findActiveLockerByIDOrFail(id: number): Promise<Locker | null> {
-        return await this.lockerRepository.findOneOrFail({
-            where: { id, availability: LockerAvailability.AVAILABLE },
-        });
     }
 
     public async findActiveLockerBySerialNumberOrFail(serialNumber: string): Promise<Locker | null> {
