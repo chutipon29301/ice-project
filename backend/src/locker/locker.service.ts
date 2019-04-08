@@ -72,12 +72,6 @@ export class LockerService {
         return await this.lockerRepository.find({ relations });
     }
 
-    public async findActiveLockerBySerialNumberOrFail(serialNumber: string): Promise<Locker | null> {
-        return await this.lockerRepository.findOneOrFail({
-            where: { serialNumber, availability: LockerAvailability.AVAILABLE },
-        });
-    }
-
     public async findLockerInstanceHistoryByLockerID(lockerID: number): Promise<Locker> {
         try {
             const locker = await this.lockerRepository.findOneOrFail(lockerID, {

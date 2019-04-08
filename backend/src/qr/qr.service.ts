@@ -13,11 +13,11 @@ export class QrService {
         private readonly qrCodeRepository: Repository<QRCode>,
         private readonly configService: ConfigService,
         private readonly lockerService: LockerService,
-    ) {}
+    ) { }
 
     public async generateRedirectURL(serialNumber: string): Promise<string> {
         try {
-            const locker = await this.lockerService.findActiveLockerBySerialNumberOrFail(serialNumber);
+            const locker = await this.lockerService.findLocker({ key: { activeLockerSerialNumber: serialNumber } });
             const qr = new QRCode(locker);
             await this.qrCodeRepository.save(qr);
             return `${this.configService.liffServerURL}/unlock?accessCode=${qr.id}`;
