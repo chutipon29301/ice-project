@@ -3,6 +3,6 @@
 <hr>
 <div>
   <div id = "top"></div>
-  <app-lockers class = "clocker marginleft"></app-lockers>
-  <app-notifications class = "cnoti marginleft"></app-notifications>
+  <app-lockers [registered]="registered" [locationsid] = "locationsid" class = "clocker"></app-lockers>
+  <app-notifications [unregistered]="unregistered" [locationsid] = "locationsid"  class = "cnoti"></app-notifications>
 </div>

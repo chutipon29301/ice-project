@@ -1,13 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Locker } from './../../../shared/locker.model';
 import {SelectionModel} from '@angular/cdk/collections';
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
+import { NgForm } from '@angular/forms';
+import { LockerServerService } from './../../../shared/locker.server.service';
 
 @Component({
   selector: 'app-lockers',
@@ -16,70 +11,45 @@ export interface PeriodicElement {
 })
 
 export class LockersComponent implements OnInit {
-
-  lockers = [
-    {
-      name: 'Engineer',
-      number: 1,
-      available: true,
-    },
-    {
-      name: 'Medicine',
-      number: 2,
-      available: true,
-    },
-    {
-      name: 'Art',
-      number: 3,
-      available: false,
-    },
-    {
-      name: 'Engineer',
-      number: 1,
-      available: true,
-    },
-    {
-      name: 'Medicine',
-      number: 2,
-      available: true,
-    },
-    {
-      name: 'Art',
-      number: 3,
-      available: false,
-    },
-    {
-      name: 'Engineer',
-      number: 1,
-      available: true,
-    },
-    {
-      name: 'Medicine',
-      number: 2,
-      available: true,
-    },
-    {
-      name: 'Art',
-      number: 3,
-      available: false,
-    }
-  ];
-  constructor() { }
-
+  constructor(private lockerServerService: LockerServerService) { }
+  @Input() registered: Locker[];
+  @Input() locationsid: number[];
+   private editId: number;
    modal: HTMLElement;
-   btn: HTMLElement;
    span: Element;
   ngOnInit() {
-  this.modal = document.getElementById('myModal');
-  this.btn = document.getElementById('myBtn');
+  this.modal = document.getElementById('editModal');
   this.span = document.getElementsByClassName('close')[0];
   }
 
-  close(e) {
+  closeedit(e) {
+    this.modal.style.display = 'none';
+    this.editId = undefined;
+  }
+  openedit(form: NgForm, id) {
+    this.editId = id;
+    this.modal.style.display = 'block';
+    let i;
+    for (i = 0; i < this.registered.length; i++) {
+      if (id === this.registered[i].id) {
+        break;
+      }}
+    form.controls['name'].setValue(this.registered[i].name);
+    form.controls['number'].setValue(this.registered[i].number);
+    form.controls['locationID'].setValue(this.registered[i].location.id);
+ }
+  onEdit(form: NgForm) {
+    const name = form.value.name;
+    const number = form.value.number;
+    const locationID = form.value.locationID;
+    this.lockerServerService.patchlocker(name, number, locationID, this.editId);
+    form.resetForm();
+    this.editId = undefined;
     this.modal.style.display = 'none';
   }
-  open(e) {
-    this.modal.style.display = 'block';
+
+  onRemove(id: number) {
+    this.lockerServerService.deletelocker(id);
   }
 
 }

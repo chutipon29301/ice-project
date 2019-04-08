@@ -38,10 +38,6 @@ input::placeholder{
     width: 100%;
 }
 
-.inlineblock{
-    display: inline-block;
-}   
-
 .clocker{
     position: absolute;
     left: 286px;
@@ -51,3 +47,7 @@ input::placeholder{
     position: absolute;
     left: 951px;
 }
+
+@media screen and (max-width: 1405px) {
+    .cnoti {display: none;}
+  }

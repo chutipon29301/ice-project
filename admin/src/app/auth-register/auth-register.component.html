@@ -1,0 +1,32 @@
+<div class = "blue-back">
+<div class="content">
+<div class="mtitle">Register Admin</div>
+    <form (ngSubmit)="onRegis(fe)" #fe="ngForm">
+    <div id = "i1">
+      <mat-form-field appearance="legacy">
+        <mat-label>National ID</mat-label>
+        <input matInput required ngModel name="nationalID">
+      </mat-form-field>
+    </div>
+    <div id = "i2">
+        <mat-form-field appearance="legacy">
+          <mat-label>First Name</mat-label>
+          <input  matInput required ngModel name="firstName">
+        </mat-form-field>
+      </div>
+      <div id = "i3">
+        <mat-form-field appearance="legacy">
+          <mat-label>Last Name</mat-label>
+          <input matInput required ngModel name="lastName">
+        </mat-form-field>
+      </div>
+      <div id = "i4">
+          <mat-form-field appearance="legacy">
+            <mat-label>Phone</mat-label>
+            <input matInput required ngModel name="phone">
+          </mat-form-field>
+        </div>
+      <button id = "mregis" [disabled]="!fe.valid"> Submit </button>
+   </form>
+  </div>
+</div>

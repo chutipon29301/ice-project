@@ -38,7 +38,160 @@
 
 #incontainer{
     overflow-y: scroll;
-    margin-left: 20px;
+    margin-left: 10px;
     margin-right: 20px; 
     height: 420px;
+}
+
+#plockers{
+    position: absolute;
+    width: 53px;
+    height: 53px;
+    margin-top: 3px;
+    margin-right: 5px;
+    left: 20px;
+    top: 12px;
+    background: url(./../../../../resources/lockers.png);
+}
+
+#locker{
+    width: 100%;
+    height: 83px;
+    position: relative;
+}
+
+#bottomhr{
+    position: absolute;
+    bottom: 0px;
+}
+
+#seriallock{
+    position: absolute;
+    top: 12px;
+    left: 80px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: normal;
+    letter-spacing: 0.154353px;
+    
+    color: #000000;
+}
+
+#idlock{
+    left: 80px;
+    top: 53px;
+    position: absolute;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: normal;
+    letter-spacing: 0.123482px;
+    
+    color: #706A6A;
+}
+
+#add{
+    position: absolute;
+    top: 40px;
+    right: 20px;
+    height: 28px;
+    width: 62px;
+    background: #2fc711;
+    color: #FFFFFF;
+    border: 0;
+    border-radius: 20px;
+    font-style: normal;
+    font-weight: 550;
+    font-size: 12px;
+    line-height: normal;
+    text-align: center;
+    letter-spacing: 0.154353px;
+    text-decoration-line: underline;
+}
+
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid 
+    #888;
+    text-align: center;
+    position: relative;
+    height: 350px;
+    width: 700px;
+    box-shadow: 0px 6px 18px rgba(216, 216, 216, 0.109);
+    border-radius: 8px;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  #madd{
+    position: absolute;
+    bottom: 40px;
+    right: 90px;
+    height: 48px;
+    width: 92px;
+    background: rgb(65, 248, 37);
+    color: #FFFFFF;
+    border: 0;
+    border-radius: 20px;
+    font-style: normal;
+    font-weight: 550;
+    font-size: 16px;
+    line-height: normal;
+    text-align: center;
+    letter-spacing: 0.154353px;
+    text-decoration-line: underline;
+}
+
+    mat-form-field{
+        width: 80%;
+        font-size: 20px;
+    }
+
+
+
+
+
+
+@media screen and (max-height: 652px) {
+    #ncomponent {
+        height: 75vh;
+    }
+    #ncontainer {
+        height: 75%;
+    }
+    #incontainer{
+        height: 85%;
+    }
 }

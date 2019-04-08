@@ -1,0 +1,81 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders  } from '@angular/common/http';
+import { LocationService } from './location.service';
+import { catchError, map } from 'rxjs/operators';
+import { Settings } from './settings';
+
+@Injectable()
+export class LocationServerService {
+
+  constructor(private httpClient: HttpClient, private locationService: LocationService) { }
+  server = Settings.server;
+
+  getlocations() {
+    const token = localStorage.getItem('LineToken');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
+     this.httpClient.get('http://' + this.server + '/location', { headers: headers
+    })
+      .subscribe(
+        (res) => {
+          this.locationService.setLocations(res['locations']);
+        },
+        error  => {
+          console.log('Error', error);
+        }
+      );
+  }
+
+  postlocation(dis: string, lat: number , lng: number) {
+    const token = localStorage.getItem('LineToken');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
+    this.httpClient.post('http://' + this.server + '/location', {
+      'description':  dis,
+      'lat':  lat,
+      'lng':  lng
+      }, { headers: headers
+      })
+     .subscribe(
+       (res) => {
+        this.getlocations();
+       },
+       error  => {
+         console.log('Error', error);
+       }
+     );
+ }
+
+ deletelocation(id: number) {
+  const token = localStorage.getItem('LineToken');
+  const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
+  this.httpClient.delete('http://' + this.server + '/location/' + id, { headers: headers
+})
+  .subscribe(
+    (res) => {
+      this.getlocations();
+    },
+    error  => {
+      console.log('Error', error);
+    }
+  );
+ }
+
+ patchlocation(id: number, dis: string, lat: number , lng: number) {
+  const token = localStorage.getItem('LineToken');
+  const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
+  this.httpClient.patch('http://' + this.server + '/location/' + id, {
+    'description':  dis,
+    'lat':  lat,
+    'lng':  lng
+    }, { headers: headers
+    })
+   .subscribe(
+     (res) => {
+      this.getlocations();
+     },
+     error  => {
+       console.log('Error', error);
+     }
+   );
+}
+}
+
