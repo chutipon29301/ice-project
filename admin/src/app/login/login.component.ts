@@ -19,6 +19,6 @@ export class LoginComponent implements OnInit {
   }
 
   onSignin(form: NgForm) {
-    window.location.replace('http://' + Settings.server + '/auth/lineLoginPageAdmin');
+    window.location.replace(Settings.server + '/auth/lineLoginPageAdmin');
   }
 }

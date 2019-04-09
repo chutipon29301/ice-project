@@ -13,11 +13,11 @@ import { LocationServerService } from './../../shared/location.server.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  private registered: Locker[];
-  private unregistered: Locker[];
+  registered: Locker[];
+  unregistered: Locker[];
   private subscription: Subscription;
   private subscription2: Subscription;
-  private locationsid: number[];
+  locationsid: number[];
   constructor(private lockerService: LockerService, private lockerServerService: LockerServerService
     , private locationService: LocationService, private locationServerService: LocationServerService) { }
 

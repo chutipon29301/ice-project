@@ -13,7 +13,7 @@ export class LocationServerService {
   getlocations() {
     const token = localStorage.getItem('LineToken');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
-     this.httpClient.get('http://' + this.server + '/location', { headers: headers
+     this.httpClient.get(this.server + '/location', { headers: headers
     })
       .subscribe(
         (res) => {
@@ -28,7 +28,7 @@ export class LocationServerService {
   postlocation(dis: string, lat: number , lng: number) {
     const token = localStorage.getItem('LineToken');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
-    this.httpClient.post('http://' + this.server + '/location', {
+    this.httpClient.post(this.server + '/location', {
       'description':  dis,
       'lat':  lat,
       'lng':  lng
@@ -47,7 +47,7 @@ export class LocationServerService {
  deletelocation(id: number) {
   const token = localStorage.getItem('LineToken');
   const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
-  this.httpClient.delete('http://' + this.server + '/location/' + id, { headers: headers
+  this.httpClient.delete(this.server + '/location/' + id, { headers: headers
 })
   .subscribe(
     (res) => {
@@ -62,7 +62,7 @@ export class LocationServerService {
  patchlocation(id: number, dis: string, lat: number , lng: number) {
   const token = localStorage.getItem('LineToken');
   const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
-  this.httpClient.patch('http://' + this.server + '/location/' + id, {
+  this.httpClient.patch(this.server + '/location/' + id, {
     'description':  dis,
     'lat':  lat,
     'lng':  lng

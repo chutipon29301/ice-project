@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
           map((data: Response) => { if (data) {return true; } else { return false; } } )
          , catchError(e => {
           if (e) {
-            window.location.replace('http://' + Settings.server + '/auth/lineLoginPageAdmin');
+            window.location.replace(Settings.server + '/auth/lineLoginPageAdmin');
               return Observable.throw('Unauthorized');
           }
       })
