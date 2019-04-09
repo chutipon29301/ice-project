@@ -6,7 +6,6 @@ export class lockerGroupDto {
         description: 'Locker added to the group',
         required: true,
     })
-    @IsString()
     lockerID: number;
 
     @ApiModelProperty({
