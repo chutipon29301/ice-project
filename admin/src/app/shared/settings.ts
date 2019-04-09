@@ -1,6 +1,6 @@
 
 export class Settings {
-    public static server = 'localhost';
+    public static server = 'api.lockerswarm.xyz';
     constructor() {}
   }
 

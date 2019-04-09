@@ -19,7 +19,7 @@ export class LocationsCrudComponent implements OnInit {
   private spanadd: Element;
   private spanedit: Element;
   private subscription: Subscription;
-  private locations: Location[];
+  locations: Location[];
   private editId: number;
   ngOnInit() {
   this.addmodal = document.getElementById('addModal');
