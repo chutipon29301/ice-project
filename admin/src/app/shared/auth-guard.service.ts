@@ -4,6 +4,7 @@ import { AuthServerService } from './auth.server.service';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Settings } from './settings';
+import { throwError } from 'rxjs';
 
 
 @Injectable()
@@ -18,7 +19,7 @@ export class AuthGuard implements CanActivate {
          , catchError(e => {
           if (e) {
             window.location.replace(Settings.server + '/auth/lineLoginPageAdmin');
-              return Observable.throw('Unauthorized');
+              return throwError(e);
           }
       })
       );

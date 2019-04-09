@@ -28,7 +28,7 @@ export class AuthServerService {
  }
  checkGuardToken(token: string) {
   const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
-  return this.httpClient.get(+ this.server + '/location', { headers: headers
+  return this.httpClient.get(this.server + '/location', { headers: headers
 });
 }
 
