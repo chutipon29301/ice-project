@@ -7,6 +7,7 @@ services:
     environment:
       SERVER_URL:
       LIFF_SERVER_URL:
+      ADMIN_SERVER_URL:
       MYSQL_SERVER: db
       MYSQL_USER:
       MYSQL_PASSWORD:

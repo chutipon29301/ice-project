@@ -1,5 +1,5 @@
 import { ConflictException, forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException } from '@nestjs/common';
-import { LocationService } from 'src/location/location.service';
+import { LocationService } from '../location/location.service';
 import { Repository } from 'typeorm';
 import { ConfigService } from '../config/config.service';
 import { LockerRepositoryToken } from '../constant';

@@ -23,7 +23,7 @@ export class LockerInstanceService {
         private readonly creditUsageService: CreditUsageService,
         @Inject(CanAccessRelationRepositoryToken)
         private readonly canAccessRelationRepository: Repository<CanAccessRelation>,
-    ) {}
+    ) { }
 
     public async create(accessCode: string, nationalID: string): Promise<LockerInstance> {
         try {
@@ -167,7 +167,7 @@ export class LockerInstanceService {
         const relations: string[] = [...joinWith, ...nestedJoin];
         if (key.nationalID) {
             const canAccessRelations = await this.canAccessRelationRepository.find({
-                where: { nationalID: key.nationalID },
+                where: { nationalID: key.nationalID, },
                 relations,
             });
             return canAccessRelations.filter(
@@ -195,6 +195,30 @@ export class LockerInstanceService {
             const lockerInstance = await this.findInstance({ key: { inUsedLockerID: lockerID } });
             const canAccessRelation = new CanAccessRelation(user, lockerInstance);
             await this.canAccessRelationRepository.save(canAccessRelation);
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
+        }
+    }
+
+    public async revokePermissionFromNationalIDAndLockerID(ownerNationalID: string, nationalID: string, lockerID: number) {
+        try {
+            const lockerInstance = await this.findInstance({
+                key: { inUsedLockerID: lockerID },
+                joinWith: ['canAccesses'],
+            });
+            if (lockerInstance.userID !== ownerNationalID) {
+                throw new UnauthorizedException('Not owner of locker');
+            }
+            const index = lockerInstance.canAccesses.findIndex((canAccess) => canAccess.nationalID === nationalID);
+            if (index === -1) {
+                throw new NotFoundException(`User with nationalID "${nationalID}" does not have permission to access`);
+            }
+            lockerInstance.canAccesses.splice(index, 1);
+            this.lockerInstanceRepository.save(lockerInstance);
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;

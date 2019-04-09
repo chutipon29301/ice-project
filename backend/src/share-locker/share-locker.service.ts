@@ -76,4 +76,16 @@ export class ShareLockerService {
             }
         }
     }
+
+    public async revokeUserPermission(ownerNationalID: string, nationalID: string, lockerID: number) {
+        try {
+            this.lockerInstanceService.revokePermissionFromNationalIDAndLockerID(ownerNationalID, nationalID, lockerID);
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
+        }
+    }
 }
