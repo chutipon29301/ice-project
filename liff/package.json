@@ -20,7 +20,6 @@
     "redux-thunk": "^2.3.0",
     "babel-loader": "8.0.4"
   },
-  "proxy": "http://localhost",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
