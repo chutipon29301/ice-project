@@ -10,7 +10,7 @@ export class AuthServerService {
   constructor(private httpClient: HttpClient, private router: Router, private regisTokenService: RegisTokenService) { }
   server = Settings.server;
   checkRegisToken(token: string) {
-    this.httpClient.post('http://' + this.server + '/auth/myToken/line', {
+    this.httpClient.post(this.server + '/auth/myToken/line', {
       'lineToken':  token
       })
      .subscribe(
@@ -28,26 +28,26 @@ export class AuthServerService {
  }
  checkGuardToken(token: string) {
   const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
-  return this.httpClient.get('http://' + this.server + '/location', { headers: headers
+  return this.httpClient.get(+ this.server + '/location', { headers: headers
 });
 }
 
 checkToken(token: string) {
   const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
-  this.httpClient.get('http://' + this.server + '/location', { headers: headers
+  this.httpClient.get( this.server + '/location', { headers: headers
  })
    .subscribe(
      (res) => {
       this.router.navigate(['/admin/lockers']);
      },
      error  => {
-      window.location.replace('http://' + this.server + '/auth/lineLoginPageAdmin');
+      window.location.replace(this.server + '/auth/lineLoginPageAdmin');
      }
    );
 }
 
    lineToken(code: string) {
-    this.httpClient.post('http://' + this.server + '/auth/adminLineToken', {
+    this.httpClient.post(this.server + '/auth/adminLineToken', {
       'code':  code
       })
      .subscribe(
@@ -61,7 +61,7 @@ checkToken(token: string) {
      );
   }
   register(nationalID: string, firstName: string, lastName: string, phone: string, authenticationID: string) {
-    this.httpClient.post('http://' + this.server + '/user/registerAdmin', {
+    this.httpClient.post(this.server + '/user/registerAdmin', {
       'nationalID': nationalID,
       'firstName': firstName,
       'lastName': lastName,

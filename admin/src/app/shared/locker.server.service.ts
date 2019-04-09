@@ -14,7 +14,7 @@ export class LockerServerService {
   getlockers() {
     const token = localStorage.getItem('LineToken');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
-    this.httpClient.get('http://' + this.server + '/locker', { headers: headers
+    this.httpClient.get(this.server + '/locker', { headers: headers
   })
      .subscribe(
        (res) => {
@@ -29,7 +29,7 @@ export class LockerServerService {
  postlocker(name: string, number: string , loID: number, id: number) {
   const token = localStorage.getItem('LineToken');
   const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
-  this.httpClient.post('http://' + this.server + '/locker/register/' + id, {
+  this.httpClient.post(this.server + '/locker/register/' + id, {
     'name':  name,
     'number':  number,
     'locationID':  loID
@@ -48,7 +48,7 @@ export class LockerServerService {
 deletelocker(id: number) {
   const token = localStorage.getItem('LineToken');
   const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
-  this.httpClient.delete('http://' + this.server + '/locker/' + id, { headers: headers
+  this.httpClient.delete(this.server + '/locker/' + id, { headers: headers
 })
   .subscribe(
     (res) => {
@@ -66,7 +66,7 @@ deletelocker(id: number) {
   console.log(name);
   console.log(number);
   console.log(loID);
-  this.httpClient.patch('http://' + this.server + '/locker/' + id, {
+  this.httpClient.patch(this.server + '/locker/' + id, {
     'name':  name,
     'number':  number,
     'locationID':  loID
