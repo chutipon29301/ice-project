@@ -4,7 +4,8 @@ import { CreateGroupDto } from './dto/create-group.dto';
 import { EditGroupDto } from './dto/edit-group.dto';
 import { ApiUseTags } from '@nestjs/swagger';
 import { GroupService } from './group.service';
-import { AddUserGroupDto } from './dto/add-user-group.dto';
+import { lockerGroupDto } from './dto/locker-group.dto';
+import { userGroupDto } from './dto/user-group.dto';
 
 @ApiUseTags('Group')
 @Controller('group')
@@ -34,8 +35,13 @@ export class GroupController {
     }
 
     @Post('addUserToGroup')
-    async addUserToGroup(@Body() body: AddUserGroupDto) {
+    async addUserToGroup(@Body() body: userGroupDto) {
         const group = await this.groupService.addUserGroup(body.nationalID, body.groupID);
+        return group;
+    }
+    @Post('addLockerToGroup')
+    async addLockerToGroup(@Body() body: lockerGroupDto) {
+        const group = await this.groupService.addLockerGroup(body.lockerID, body.groupID);
         return group;
     }
 }

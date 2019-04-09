@@ -58,4 +58,22 @@ export class GroupService {
             }
         }
     }
+    public async addLockerGroup(lockerID: number, groupID: number) {
+      try {
+          const locker = await this.lockerService.findLocker({ key: { lockerID: lockerID } });
+          const group = await this.groupRepository.findOneOrFail({
+              where: {
+                  id: groupID,
+              },
+          });
+          group.lockers = [locker];
+          await this.groupRepository.save(group);
+      } catch (error) {
+          if (error instanceof HttpException) {
+              throw error;
+          } else {
+              throw new NotFoundException(error.message);
+          }
+      }
+  }
 }
