@@ -8,7 +8,6 @@ import {
 import Axios from "axios";
 class Auth extends React.Component {
   async componentDidMount() {
-    console.log("Auth is called");
     const { setAuthentication, setTokenAndExpiration } = this.props;
     initAxiosErrorHandling(deleteTokenAndExpiration);
     const idToken = localStorage.getItem("idToken");
