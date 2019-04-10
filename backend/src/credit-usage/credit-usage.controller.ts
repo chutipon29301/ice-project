@@ -5,7 +5,7 @@ import { CreditUsageService } from './credit-usage.service';
 import { JwtToken } from '../jwt-auth/dto/jwt-token.dto';
 import { User } from '../decorator/user.decorator';
 import { creditUsageTopUpDto } from './dto/creditUsageTopUp.dto';
-import { CreditSummary } from './dto/total-credit.dto';
+import { CreditSummary } from './dto/credit-summary.dto';
 
 @Controller('credit-usage')
 export class CreditUsageController {
