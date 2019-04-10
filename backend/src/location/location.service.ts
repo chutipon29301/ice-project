@@ -8,12 +8,37 @@ export class LocationService {
     constructor(
         @Inject(LocationRepositoryToken)
         private readonly locationRepository: Repository<Location>,
-    ) {}
+    ) { }
 
     public async create(description: string, lat: number, lng: number): Promise<Location> {
         const location = new Location(description, lat, lng);
         await this.locationRepository.save(location);
         return location;
+    }
+
+    public async findLocation({
+        key,
+        throwError = true,
+        joinWith = [],
+        nestedJoin = [],
+    }: {
+        key: {
+            locationID?: number;
+        };
+        throwError?: boolean;
+        joinWith?: Array<keyof Location>;
+        nestedJoin?: string[];
+    }): Promise<Location> {
+        const relations = [...joinWith, ...nestedJoin];
+        if (key.locationID) {
+            const where: Partial<Location> = { id: key.locationID };
+            if (throwError) {
+                return await this.locationRepository.findOneOrFail({ where, relations });
+            } else {
+                return await this.locationRepository.findOne({ where, relations });
+            }
+        }
+        throw new Error('One of the key must be specify');
     }
 
     public async list(): Promise<Location[]> {
