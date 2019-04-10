@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { LocationService } from './location.service';
 import { catchError, map } from 'rxjs/operators';
 import { Settings } from './settings';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class LocationServerService {
 
   constructor(private httpClient: HttpClient, private locationService: LocationService) { }
-  server = Settings.server;
+  server = environment;
 
   getlocations() {
     const token = localStorage.getItem('LineToken');

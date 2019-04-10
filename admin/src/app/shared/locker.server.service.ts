@@ -3,13 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LockerService } from './locker.service';
 import { catchError, map } from 'rxjs/operators';
 import { Settings } from './settings';
+import { environment } from '../../environments/environment';
 
 
 @Injectable()
 export class LockerServerService {
 
   constructor(private httpClient: HttpClient, private lockerService: LockerService) { }
-  server = Settings.server;
+  server = environment.serverURL;
 
   getlockers() {
     const token = localStorage.getItem('LineToken');

@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { RegisTokenService } from './regis-token.service';
 import { Settings } from './settings';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AuthServerService {
 
   constructor(private httpClient: HttpClient, private router: Router, private regisTokenService: RegisTokenService) { }
-  server = Settings.server;
+  server = environment.serverURL;
   checkRegisToken(token: string) {
     this.httpClient.post(this.server + '/auth/myToken/line', {
       'lineToken':  token

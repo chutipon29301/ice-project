@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Settings } from './settings';
 import { throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 
 @Injectable()
@@ -18,7 +19,7 @@ export class AuthGuard implements CanActivate {
           map((data: Response) => { if (data) {return true; } else { return false; } } )
          , catchError(e => {
           if (e) {
-            window.location.replace(Settings.server + '/auth/lineLoginPageAdmin');
+            window.location.replace(environment.serverURL + '/auth/lineLoginPageAdmin');
               return throwError(e);
           }
       })
