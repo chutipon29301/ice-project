@@ -30,7 +30,7 @@ export class CreditUsageService {
         return creditUse;
     }
 
-    public async calculateTimeCharge(startTime: Date, endTime: Date, nationalID: string): Promise<CreditUsage> {
+    public async deductCreditByTime(startTime: Date, endTime: Date, nationalID: string): Promise<CreditUsage> {
         const totalTimeUsed = endTime.getTime() - startTime.getTime();
         const chargingFee = -0.5;
         const amountCharge = Math.round(
