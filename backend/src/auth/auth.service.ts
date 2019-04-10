@@ -36,7 +36,7 @@ export class AuthService {
     }
 
     public getAdminCallbackWithAccessCode(accessCode: string): string {
-        return `${this.configService.adminServerURL}/callback?code=${accessCode}`;
+        return `${this.configService.adminServerURL}/auth/line-landing?code=${accessCode}`;
     }
 
     public async validateState(encryptedState: string): Promise<boolean> {
