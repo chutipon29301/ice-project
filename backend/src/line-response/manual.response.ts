@@ -2,13 +2,13 @@ export const manualResponse = (serverURL: string) => {
     return [
         {
             type: `image`,
-            originalContentUrl: `${serverURL}/bot/replyImage/user-manual.jpg?_ignored=`,
-            previewImageUrl: `${serverURL}/bot/replyImage/user-manual.jpg?_ignored=`,
+            originalContentUrl: `user-manual.jpg?_ignored=`,
+            previewImageUrl: `user-manual.jpg?_ignored=`,
         },
         {
             type: `image`,
-            originalContentUrl: `${serverURL}/bot/replyImage/user-manual-features.jpg?_ignored=`,
-            previewImageUrl: `${serverURL}/bot/replyImage/user-manual-features.jpg?_ignored=`,
+            originalContentUrl: `user-manual-features.jpg?_ignored=`,
+            previewImageUrl: `user-manual-features.jpg?_ignored=`,
         },
     ];
 };
