@@ -7,7 +7,7 @@ export const helpMeResponse = (serverURL: string) => {
                 type: `carousel`,
                 columns: [
                     {
-                        thumbnailImageUrl: `${serverURL}/bot/replyImage/howtouse-banner.jpg?_ignored=`,
+                        thumbnailImageUrl: `howtouse-banner.jpg?_ignored=`,
                         imageBackgroundColor: `#FFFFFF`,
                         title: `How to use 🔧📘`,
                         text: `Don't know how to use LockerSwam? Click here!`,
@@ -20,7 +20,7 @@ export const helpMeResponse = (serverURL: string) => {
                         ],
                     },
                     {
-                        thumbnailImageUrl: `${serverURL}/bot/replyImage/findlocker-banner.jpg?_ignored=`,
+                        thumbnailImageUrl: `findlocker-banner.jpg?_ignored=`,
                         imageBackgroundColor: `#FFFFFF`,
                         title: `Can't find the locker ❓`,
                         text: `Find available lockers`,
@@ -33,7 +33,7 @@ export const helpMeResponse = (serverURL: string) => {
                         ],
                     },
                     {
-                        thumbnailImageUrl: `${serverURL}/bot/replyImage/report.jpg?_ignored=`,
+                        thumbnailImageUrl: `report.jpg?_ignored=`,
                         imageBackgroundColor: `#000000`,
                         title: `Faulty locker ❓`,
                         text: `Unable to use locker or any emergencies`,
