@@ -14,11 +14,6 @@
 #include <GxIO/GxIO_SPI/GxIO_SPI.h>
 #include <GxIO/GxIO.h>
 
-// PIN Setting
-// BUSY -> 4, RST -> 16, DC -> 17, CS -> SS(5), CLK -> SCK(18), DIN -> MOSI(23), GND -> GND, 3.3V -> 3.3V
-GxIO_Class io(SPI, /*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16);   // arbitrary selection of 17, 16
-GxEPD_Class display(io, /*RST=*/ 16, /*BUSY=*/ 4);          // arbitrary selection of (16), 4
-
 #include "IMG_0001.h"
 #include "qrcode.h"  //https://github.com/ricmoo/qrcode/
 
@@ -30,6 +25,12 @@ GxEPD_Class display(io, /*RST=*/ 16, /*BUSY=*/ 4);          // arbitrary selecti
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
+
+// PIN Setting
+// BUSY -> 4, RST -> 16, DC -> 17, CS -> SS(5), CLK -> SCK(18), DIN -> MOSI(23), GND -> GND, 3.3V -> 3.3V
+GxIO_Class io(SPI, /*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16);   // arbitrary selection of 17, 16
+GxEPD_Class display(io, /*RST=*/ 16, /*BUSY=*/ 4);          // arbitrary selection of (16), 4
+
 //Set Username-Password WiFi
 const char* ssid = "CTiPhone";
 const char* password = "00000000";
@@ -40,7 +41,6 @@ const char* url = "www.google.com";
 
 #define EEPROM_SIZE 37
 int serialArray[EEPROM_SIZE];
-String serial = "";
 String serialString;
 int idInt;
 
@@ -61,7 +61,7 @@ void setup()
   Serial.begin(115200);
   display.init(115200);
 
-  pinMode(LED_BUILTIN, OUTPUT);
+//  pinMode(LED_BUILTIN, OUTPUT);
   pinMode(DOOR_LOCK, OUTPUT);
   pinMode(DOOR_LOCK_SWITCH, INPUT);
 
@@ -82,9 +82,9 @@ void setup()
   char temp;
   for (int i = 0; i < EEPROM_SIZE; i++) {
     if (i == EEPROM_SIZE - 1) {
-      idInt = serialArray[i];
+      idInt = EEPROM.read(i);
     } else {
-      temp = serialArray[i];
+      temp = EEPROM.read(i);
       serialString = serialString + temp;
     }
   }
@@ -94,7 +94,7 @@ void setup()
   Serial.print("Current ID: "); Serial.println(idInt);
   delay(1000);
 
-  registerNewLocker();
+  requestNewLockerKey(serialString, idInt);
 }
 
 //--------------------------------------------------------------------------------Loop-----------------------------------------------------------------------------//
@@ -289,9 +289,11 @@ void clearEEPROM() {
 
 
 
-void registerNewLocker() {
+void requestNewLockerKey(String serialString, int idInt) {
   if (serialString == NULL) {
-    Serial.println("request for serial");
+    Serial.println("New locker!")
+    Serial.println("request for serial...");
+    delay(2000);
     StaticJsonDocument<200> jsonBuffer;
     HTTPClient http;
     http.begin("https://api.lockerswarm.xyz/locker"); //destination
