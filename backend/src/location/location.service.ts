@@ -41,6 +41,19 @@ export class LocationService {
         throw new Error('One of the key must be specify');
     }
 
+    public async findLocations({
+        key,
+        joinWith = [],
+        nestedJoin = [],
+    }: {
+        key: {};
+        joinWith?: Array<keyof Location>;
+        nestedJoin?: string[];
+    }): Promise<Location[]> {
+        const relations = [...joinWith, ...nestedJoin];
+        return await this.locationRepository.find({ relations });
+    }
+
     public async list(): Promise<Location[]> {
         return await this.locationRepository.find();
     }
