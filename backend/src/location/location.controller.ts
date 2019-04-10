@@ -14,7 +14,7 @@ export class LocationController {
     @Roles(Role.SUPERUSER, Role.ADMIN, Role.USER)
     @Get()
     async list(): Promise<{ locations: Location[] }> {
-        const locations = await this.locationService.list();
+        const locations = await this.locationService.findLocations();
         return { locations };
     }
 
