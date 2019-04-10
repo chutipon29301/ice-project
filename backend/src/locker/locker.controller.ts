@@ -16,7 +16,7 @@ import { Locker } from '../entities/locker.entity';
 @ApiUseTags('Locker')
 @Controller('locker')
 export class LockerController {
-    constructor(private readonly lockerService: LockerService) {}
+    constructor(private readonly lockerService: LockerService) { }
 
     @ApiOperation({
         title: 'List all locker',
@@ -46,6 +46,13 @@ export class LockerController {
             joinWith: ['lockerInstances'],
             nestedJoin: ['lockerInstances.ownerUser'],
         });
+    }
+
+    @Get('isRegister')
+    async checkRegister(@Query('serialNumber') serialNumber: string): Promise<{ isActivated: boolean }> {
+        return {
+            isActivated: await this.lockerService.isLockerActiveBySerialNumber(serialNumber),
+        };
     }
 
     @ApiOperation({

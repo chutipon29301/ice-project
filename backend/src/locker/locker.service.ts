@@ -20,7 +20,7 @@ export class LockerService {
         private readonly lockerUsageService: LockerUsageService,
         @Inject(forwardRef(() => LockerInstanceService))
         private readonly lockerInstanceService: LockerInstanceService,
-    ) {}
+    ) { }
 
     public async findLocker({
         key,
@@ -181,6 +181,19 @@ export class LockerService {
             return locker.availability === LockerAvailability.AVAILABLE;
         } catch (error) {
             throw new NotFoundException(error.message);
+        }
+    }
+
+    public async isLockerActiveBySerialNumber(serialNumber: string): Promise<boolean> {
+        try {
+            const locker = await this.findLocker({ key: { serialNumber } });
+            return locker.availability === LockerAvailability.AVAILABLE;
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
         }
     }
 }
