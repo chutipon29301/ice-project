@@ -55,7 +55,7 @@ export class BotService {
                         headers: {
                             'Content-Type': 'application/json',
                             // tslint:disable-next-line:object-literal-key-quotes
-                            Authorization: `Bearer ${this.configService.channelAccessToken}`,
+                            Authorization: `Bearer ${this.configService.lineBotChannelToken}`,
                         },
                     },
                 )

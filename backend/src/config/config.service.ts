@@ -92,6 +92,15 @@ export class ConfigService {
         }
     }
 
+    get lineBotChannelToken(): string {
+        const token = process.env.LINE_BOT_CHANNEL_TOKEN;
+        if (token) {
+            return token
+        } else {
+            throw new Error(`Unable to read "LINE_BOT_CHANNEL_TOKEN" environment`);
+        }
+    }
+
     get lineMessagingApiEndpoint(): string {
         const endpoint = process.env.LINE_MESSAGING_API_ENDPOINT;
         if (endpoint) {
