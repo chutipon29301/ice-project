@@ -6,17 +6,19 @@ import { JwtToken } from '../jwt-auth/dto/jwt-token.dto';
 import { User } from '../decorator/user.decorator';
 import { creditUsageTopUpDto } from './dto/creditUsageTopUp.dto';
 import { CreditSummary } from './dto/credit-summary.dto';
+import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiUseTags('Credit Usage')
 @Controller('credit-usage')
 export class CreditUsageController {
     constructor(private readonly creditUsageService: CreditUsageService) {}
-
+    @ApiBearerAuth()
     @Get('myCredit')
     @Roles(Role.USER, Role.SUPERUSER)
     async getMyCredit(@User() user: JwtToken): Promise<CreditSummary> {
         return await this.creditUsageService.currentCredit(user.nationalID);
     }
-
+    @ApiBearerAuth()
     @Post('addCredit')
     @Roles(Role.USER, Role.ADMIN, Role.SUPERUSER)
     async addCredit(@User() user: JwtToken, @Body() body: creditUsageTopUpDto) {

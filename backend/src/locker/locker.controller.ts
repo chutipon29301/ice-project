@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { Role } from '../entities/user.entity';
 import { Roles } from '../guard/role.decorator';
 import { AddLockerResponseDto } from './dto/add-locker-response.dto';
@@ -21,6 +21,7 @@ export class LockerController {
     @ApiOperation({
         title: 'List all locker',
     })
+    @ApiBearerAuth()
     @Roles(Role.SUPERUSER, Role.ADMIN, Role.USER)
     @Get()
     async list(): Promise<ListLockerResponseDto> {
@@ -36,6 +37,7 @@ export class LockerController {
         return await this.lockerService.getLockerCurrentStatus(serialNumber);
     }
 
+    @ApiBearerAuth()
     @Roles(Role.ADMIN, Role.SUPERUSER)
     @Get('history/:id')
     async getHistory(@Param('id', new ParseIntPipe()) lockerID: number): Promise<Locker> {
@@ -64,6 +66,7 @@ export class LockerController {
         return { id: locker.id, serial: locker.serialNumber };
     }
 
+    @ApiBearerAuth()
     @ApiOperation({
         title: 'To register locker by using locker id (Make available)',
     })
@@ -73,12 +76,14 @@ export class LockerController {
         await this.lockerService.registerLocker(id, body);
     }
 
+    @ApiBearerAuth()
     @Roles(Role.SUPERUSER, Role.ADMIN)
     @Patch(':id')
     async edit(@Param('id', new ParseIntPipe()) id: number, @Body() body: EditLockerDto) {
         await this.lockerService.edit(id, body);
     }
 
+    @ApiBearerAuth()
     @Roles(Role.SUPERUSER, Role.ADMIN)
     @Delete(':id')
     async delete(@Param('id', new ParseIntPipe()) id: number) {

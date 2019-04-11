@@ -3,7 +3,7 @@ import { LockerInstance } from '../entities/locker-instance.entity';
 import { ListLockerInstanceDto } from './dto/list-locker-instance.dto';
 import { LockerInstanceDto } from './dto/locker-instance.dto';
 import { LockerInstanceService } from './locker-instance.service';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { ApiOperation } from '@nestjs/swagger';
 import { Role } from '../entities/user.entity';
 import { Roles } from '../guard/role.decorator';
@@ -14,8 +14,8 @@ import { UnlockLockerInstanceDto } from './dto/unlock-locker-instance.dto';
 @ApiUseTags('Locker Instance')
 @Controller('locker-instance')
 export class LockerInstanceController {
-    constructor(private readonly lockerInstanceService: LockerInstanceService) {}
-
+    constructor(private readonly lockerInstanceService: LockerInstanceService) { }
+    @ApiBearerAuth()
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('myLocker')
     async getMyLocker(@User() user: JwtToken): Promise<{ lockerInstances: LockerInstance[] }> {
@@ -29,6 +29,7 @@ export class LockerInstanceController {
         return { lockerInstances };
     }
 
+    @ApiBearerAuth()
     @Roles(Role.ADMIN, Role.SUPERUSER)
     @Get('inUsedLocker')
     async getInUsedLocker(): Promise<{ lockerInstances: LockerInstance[] }> {
@@ -62,12 +63,14 @@ export class LockerInstanceController {
         await this.lockerInstanceService.returnInstance(user.nationalID, body.accessCode);
     }
 
+    @ApiBearerAuth()
     @Post('unlock')
     @Roles(Role.USER, Role.SUPERUSER)
     async unlockLocker(@User() user: JwtToken, @Body() body: UnlockLockerInstanceDto) {
         return await this.lockerInstanceService.unlock(user.nationalID, body.accessCode);
     }
 
+    @ApiBearerAuth()
     @Delete()
     @Roles(Role.ADMIN, Role.SUPERUSER)
     async deleteInstance(@Body() body: ListLockerInstanceDto) {

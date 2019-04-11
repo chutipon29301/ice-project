@@ -9,11 +9,12 @@ import { User as UserDecorator } from '../decorator/user.decorator';
 import { JwtToken } from '../jwt-auth/dto/jwt-token.dto';
 
 @ApiUseTags('User')
-@ApiBearerAuth()
 @Controller('user')
 export class UserController {
+
     constructor(private readonly userService: UserService) {}
 
+    @ApiBearerAuth()
     @Roles(Role.SUPERUSER, Role.ADMIN)
     @Get()
     async list(): Promise<{ users: User[] }> {
@@ -21,6 +22,7 @@ export class UserController {
         return { users };
     }
 
+    @ApiBearerAuth()
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('creditHistory')
     async creditHistory(@UserDecorator() user: JwtToken): Promise<User> {
