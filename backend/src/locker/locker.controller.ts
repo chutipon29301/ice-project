@@ -7,7 +7,7 @@ import { EditLockerDto } from './dto/edit-locker.dto';
 import { ApiUseTags } from '@nestjs/swagger';
 import { ListLockerResponseDto } from './dto/list-locker-response.dto';
 import { LockerCurrentStatusResponseDto } from './dto/locker-current-status-response.dto';
-import { LockerLockDto } from './dto/locker-lock.dto';
+import { LockerSerialDto } from './dto/locker-serial.dto';
 import { LockerSecretDto } from './dto/locker-secret.dto';
 import { RegisterLockerDto } from './dto/register-locker.dto';
 import { LockerService } from './locker.service';
@@ -33,8 +33,8 @@ export class LockerController {
         title: 'Get locker current status',
     })
     @Get('status')
-    async getCurrentStatus(@Query('serialNumber') serialNumber: string): Promise<LockerCurrentStatusResponseDto> {
-        return await this.lockerService.getLockerCurrentStatus(serialNumber);
+    async getCurrentStatus(@Query() query: LockerSerialDto): Promise<LockerCurrentStatusResponseDto> {
+        return await this.lockerService.getLockerCurrentStatus(query.serialNumber);
     }
 
     @ApiBearerAuth()
@@ -51,9 +51,9 @@ export class LockerController {
     }
 
     @Get('isRegister')
-    async checkRegister(@Query('serialNumber') serialNumber: string): Promise<{ isActivated: boolean }> {
+    async checkRegister(@Query() query: LockerSerialDto): Promise<{ isActive: boolean }> {
         return {
-            isActivated: await this.lockerService.isLockerActiveBySerialNumber(serialNumber),
+            isActive: await this.lockerService.isLockerActiveBySerialNumber(query.serialNumber),
         };
     }
 
@@ -94,7 +94,7 @@ export class LockerController {
         title: 'To lock locker',
     })
     @Post('lock')
-    async lock(@Body() body: LockerLockDto): Promise<LockerCurrentStatusResponseDto> {
+    async lock(@Body() body: LockerSerialDto): Promise<LockerCurrentStatusResponseDto> {
         return await this.lockerService.lock(body.serialNumber);
     }
 }
