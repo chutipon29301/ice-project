@@ -1,3 +1,4 @@
+//-----------------------------Library Import---------------------------//
 #include <GxFont_GFX.h>
 #include <GxEPD.h>
 #include <GxGDEH029A1/GxGDEH029A1.h>      // 2.9" b/w
@@ -25,6 +26,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
+//-----------------------------Setting--------------------------//
 
 // PIN Setting
 // BUSY -> 4, RST -> 16, DC -> 17, CS -> SS(5), CLK -> SCK(18), DIN -> MOSI(23), GND -> GND, 3.3V -> 3.3V
@@ -32,8 +34,10 @@ GxIO_Class io(SPI, /*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16);   // arbitrary selecti
 GxEPD_Class display(io, /*RST=*/ 16, /*BUSY=*/ 4);          // arbitrary selection of (16), 4
 
 //Set Username-Password WiFi
-const char* ssid = "CTiPhone";
-const char* password = "00000000";
+//const char* ssid = "CTiPhone";
+//const char* password = "00000000";
+const char* ssid = "true_home2G_Up7";
+const char* password = "vDcqdQQq";
 
 QRCode qrcode;
 int counter = 0;
@@ -41,27 +45,26 @@ const char* url = "www.google.com";
 
 #define EEPROM_SIZE 37
 int serialArray[EEPROM_SIZE];
-String serialString;
-int idInt;
+String serialString = "";
+int idInt = 0;
 
-//int isRegistered = 0;
-
-const char* lockerNumber;
-
-int isLock;
+const char* lockerNumber = "XX";
 
 #define DOOR_LOCK 25
-int isLock_Switch;
 #define DOOR_LOCK_SWITCH 26
 
-//--------------------------------------------------------------------------------Setup-----------------------------------------------------------------------------//
+boolean isLockFromServer = false;
+boolean isLockBySwitch = false;
+boolean isRegister = false;
+int wakeUpReason;
+
+//--------------------------------------------------------------------------Void Setup-----------------------------------------------------------------------------//
 
 void setup()
 {
   Serial.begin(115200);
   display.init(115200);
 
-//  pinMode(LED_BUILTIN, OUTPUT);
   pinMode(DOOR_LOCK, OUTPUT);
   pinMode(DOOR_LOCK_SWITCH, INPUT);
 
@@ -71,21 +74,21 @@ void setup()
   xTaskCreate(&doorLockSwitch, "doorLockSwitch", 2048, NULL, 10, NULL);
   xTaskCreate(&doorLock, "doorLock", 2048, NULL, 10, NULL);
 
+  Serial.print("WakeUpReason: ");
+  Serial.println(readWakeUpReason());
+  print_wakeup_reason();
+
+  wakeUpReason = readWakeUpReason();
+
   //  clearEEPROM();
 
   wifiConnection();
 
   for (int i = 0; i < EEPROM_SIZE; i++) {
-    serialArray[i] = EEPROM.read(i);
-  }
-
-  char temp;
-  for (int i = 0; i < EEPROM_SIZE; i++) {
     if (i == EEPROM_SIZE - 1) {
       idInt = EEPROM.read(i);
     } else {
-      temp = EEPROM.read(i);
-      serialString = serialString + temp;
+      serialString = serialString + EEPROM.read(i);
     }
   }
 
@@ -95,43 +98,62 @@ void setup()
   delay(1000);
 
   requestNewLockerKey(serialString, idInt);
+
+  counter = 0;
 }
 
-//--------------------------------------------------------------------------------Loop-----------------------------------------------------------------------------//
+//-----------------------------------------------------------------Void Loop-----------------------------------------------------------------------------//
 
 void loop() {
+  //  boolean isRegister = getIsRegister(); //รอเขียน function "getIsRegister()" !!!
+  isRegister = false; //Mockup only
 
-  display.fillScreen(GxEPD_WHITE);
-  display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
+  if (!isRegister) {
+    const char* id = idInt + "";
+    display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
+    showText("Please input id below", &FreeSans12pt7b, 10, 170);
+    showText(id, &FreeSansBold24pt7b , 10, 220);
+    display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
+    // waiting for Registration by Admin
+    while (!isRegister) {
+//      isRegister = getIsRegister(); //รอเขียน function "getIsRegister()" !!!
+      delay(1000);
+    }
+    //    String status = getCurrentStatus();
+    //    showLockerNumber(status.number);
+    //    deepSleep();
+  }
 
-  //  showIdToRegister();
-
-  Serial.println(counter);
-  if (counter == 0) {                           // Update to be QRcode Display when start (counter=0)
-    display.update();
-    Serial.println("Initial");
-  } else if (counter > 0 && counter <= 3) {    //Show QRcode for 3 second
-    Serial.println("QR");
-  } else if (counter > 3) {                    //Return to Logo display and Deep Sleep for 3 second
-    Serial.println("Logo");
-
-    // Initial partial update
-    display.updateWindow(0, 0, 128, 296, false);
-    display.fillRect(0, 120, 128, 176, GxEPD_WHITE);
-
-    // Set Content in partial update
+  if (wakeUpReason == 1) {
     display.fillScreen(GxEPD_WHITE);
     display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
-    display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
-    showLockerNumber("Number", &FreeSans12pt7b);
-    showLargeText("23", &FreeSansBold24pt7b);
-    display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
-    //     display.update();
-    display.updateWindow(0, 120, 128, 176, true);
-    deepSleepMode();                      //Deep Sleep for 20 second
+    Display_QRcode(6, 175, url);
+    while (counter <= 60) {
+      if (counter == 0) {
+        display.update();
+      } else if (counter > 0 && counter <= 59) {
+        Serial.println("Showing QRcode for scanning...");
+      } else if (counter > 59) {
+        // Initial partial update
+        display.updateWindow(0, 0, 128, 296, false);
+        display.fillRect(0, 120, 128, 176, GxEPD_WHITE);
+
+        // Set Content in partial update
+        display.fillScreen(GxEPD_WHITE);
+        display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
+        display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
+        showText("Number", &FreeSans12pt7b, 25, 170);
+        showText("23", &FreeSansBold24pt7b, 39, 220);
+        display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
+        //     display.update();
+        display.updateWindow(0, 120, 128, 176, true);
+        deepSleep();
+      }
+      counter++;
+      delay(1000);
+    }
   }
-  counter++;
-  delay(1000);
+
 
 }
 
@@ -139,24 +161,17 @@ void loop() {
 
 //----------------------------print text in e-ink display--------------------------//
 
-void showText(const char text[], const GFXfont * f) {
-  display.setTextColor(GxEPD_BLACK);
-  display.setFont(f);
-  display.setCursor(36, 150);
-  display.println(text);
-}
+//void showText(const char text[], const GFXfont * f, int x, int y) {
+//  display.setTextColor(GxEPD_BLACK);
+//  display.setFont(f);
+//  display.setCursor(36, 150);
+//  display.println(text);
+//}
 
-void showLargeText(const char text[], const GFXfont * f) {
+void showText(const char text[], const GFXfont * f, int x, int y) {
   display.setTextColor(GxEPD_BLACK);
   display.setFont(f);
-  display.setCursor(39, 220);
-  display.println(text);
-}
-
-void showLockerNumber(const char text[], const GFXfont * f) {
-  display.setTextColor(GxEPD_BLACK);
-  display.setFont(f);
-  display.setCursor(25, 170);
+  display.setCursor(x, y);
   display.println(text);
 }
 
@@ -183,8 +198,8 @@ void Display_QRcode(int offset_x, int offset_y, const char* Message) {
 
 //----------------------------Deep Sleep--------------------------//
 
-void deepSleepMode() {
-  esp_sleep_enable_timer_wakeup(20e6);    // DeepSleep for 20 sec.
+void deepSleep() {
+  //  esp_sleep_enable_timer_wakeup(20e6);    // DeepSleep for 20 sec.
   Serial.println("Going to sleep now");
   esp_deep_sleep_start();
 }
@@ -204,24 +219,24 @@ void print_wakeup_reason() {
   }
 }
 
+int readWakeUpReason() {
+  esp_sleep_wakeup_cause_t wakeup_reason;
+  wakeup_reason = esp_sleep_get_wakeup_cause();
+
+  switch (wakeup_reason)
+  {
+    case ESP_SLEEP_WAKEUP_EXT0: return 0;
+    case ESP_SLEEP_WAKEUP_EXT1: return 1;
+    case ESP_SLEEP_WAKEUP_TIMER: return 2;
+    case ESP_SLEEP_WAKEUP_TOUCHPAD: return 3;
+    case ESP_SLEEP_WAKEUP_ULP: return 4;
+    default: return -1;
+  }
+}
+
 //----------------------------locker unlock status--------------------//
 //----------------------------"GET/status" request--------------------//
 //----------------------------Check all time--------------------------//
-
-//void doorLockSwitch(void *p) {
-//  while (1) {
-//    isLock_Switch = digitalRead(DOOR_LOCK_SWITCH);
-//    if (isLock_Switch == 1) {
-//      Serial.println("Switch: Door is Close");
-//      delay(100);
-//    } else {
-//      Serial.println("Switch: Door still Open");
-//      delay(100);
-//    }
-//    delay(500);
-//  }
-//}
-
 void doorLock(void *p) {
   while (1) {
     if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
@@ -237,10 +252,10 @@ void doorLock(void *p) {
         }
         else {
           JsonObject root = jsonDocument.as<JsonObject>();
-          isLock = root["status"];
-          Serial.print("status:"); Serial.println(isLock);
+          isLockFromServer = root["status"];
+          Serial.print("status:"); Serial.println(isLockFromServer);
 
-          if (isLock == 1) {
+          if (isLockFromServer == 1) {
             digitalWrite(LED_BUILTIN, LOW);
             digitalWrite(DOOR_LOCK, HIGH);
             Serial.println("LED ON");
@@ -266,8 +281,8 @@ void doorLock(void *p) {
 //----------------------------When the door is closed-----------------//
 void doorLockSwitch(void *p) {
   while (1) {
-    isLock_Switch = digitalRead(DOOR_LOCK_SWITCH);
-    if (isLock_Switch == 1) {
+    isLockBySwitch = digitalRead(DOOR_LOCK_SWITCH);
+    if (isLockBySwitch == 1) {
       Serial.println("Switch: Door is Close");
       delay(100);
     } else {
@@ -287,11 +302,9 @@ void clearEEPROM() {
   Serial.println("EEPROM is cleared.");
 }
 
-
-
 void requestNewLockerKey(String serialString, int idInt) {
   if (serialString == NULL) {
-    Serial.println("New locker!")
+    Serial.println("New locker!");
     Serial.println("request for serial...");
     delay(2000);
     StaticJsonDocument<200> jsonBuffer;
@@ -330,35 +343,6 @@ void requestNewLockerKey(String serialString, int idInt) {
   }
 }
 
-boolean isRegistered() {
-
-}
-
-//void showIdToRegister() {
-//  if (id == NULL && isRegistered == true) {
-//
-//    lockerNumber = "30A"; //***MOCK ONLY!!! //ตรงนี้ต้องยิงGET /Status
-//
-//    showText(lockerNumber, &FreeSansBold18pt7b); //Paste Locker Number here.
-//    Display_QRcode(6, 175, url);   //Paste URL here.
-//  } else {
-//    showText("---", &FreeSansBold18pt7b);
-//
-//    while (lockerNumber == NULL) {
-//      Serial.println("Waiting for Locker's Number...");
-//      delay(1000);
-//      lockerNumber = "30A"; //***MOCK ONLY!!! //ตรงนี้ต้องยิงGET /Status
-//    }
-//    Serial.println("Locker's Number Assigned!");
-//    delay(1000);
-//
-//    display.fillScreen(GxEPD_WHITE);
-//    display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
-//    showText(lockerNumber, &FreeSansBold18pt7b); //Paste Locker Number here.
-//    Display_QRcode(6, 175, url);   //Paste URL here.
-//  }
-//}
-
 void wifiConnection() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
@@ -368,11 +352,13 @@ void wifiConnection() {
   delay(1000);
 }
 
+boolean getIsRegister() {
+  // get Request
+}
 
-
-
-
-
+String getCurrentStatus(){
+  // get Request
+}
 
 
 // ---------Partial Update Template------------
