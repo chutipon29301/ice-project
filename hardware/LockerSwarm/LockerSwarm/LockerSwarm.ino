@@ -35,10 +35,13 @@ GxIO_Class io(SPI, /*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16);   // arbitrary selecti
 GxEPD_Class display(io, /*RST=*/ 16, /*BUSY=*/ 4);          // arbitrary selection of (16), 4
 
 //Set Username-Password WiFi
-const char* ssid = "CTiPhone";
-const char* password = "00000000";
+//const char* ssid = "CTiPhone";
+//const char* password = "00000000";
 //const char* ssid = "true_home2G_Up7";
 //const char* password = "vDcqdQQq";
+const char* ssid = "Chutipon's Wi-Fi Network";
+const char* password = "Non29301";
+
 
 QRCode qrcode;
 int counter = 0;
@@ -54,7 +57,7 @@ const char* lockerNumber = "XX";
 #define DOOR_LOCK 25
 #define DOOR_LOCK_SWITCH 26
 
-boolean isIOpenFromServer = false;
+boolean isOpenFromServer = false;
 boolean isLockBySwitch = false;
 boolean isRegister = false;
 int wakeUpReason;
@@ -112,9 +115,8 @@ void setup()
 
 void loop() {
   Serial.println("in void loop");
-  //  isRegister = getIsRegister(); // function "getIsRegister()" !!!
-  isRegister = false; //Mockup only
-
+  isRegister = getIsRegister(); // function "getIsRegister()" !!!
+  //  isRegister = false; //Mockup only
   if (!isRegister) {
     char id[2];
     String str;
@@ -132,53 +134,93 @@ void loop() {
     display.update();
     // waiting for Registration by Admin
     while (!isRegister) {
-      //      isRegister = getIsRegister(); // function "getIsRegister()" !!!
+      isRegister = getIsRegister(); // function "getIsRegister()" !!!
       Serial.println("waiting for Registration by Admin...");
       delay(1000);
     }
     Serial.println("Locker registered!");
     delay(1000);
 
-    String lockerNumber = getLockerNumber();
     display.fillScreen(GxEPD_WHITE);
     display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
     display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
     showText("Number", &FreeSans12pt7b, 25, 170);
-    showText(lockerNumber, &FreeSansBold24pt7b, 39, 220);
+    showText(string2char(getLockerNumber()), &FreeSansBold24pt7b, 39, 220);
     display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
     display.update();
     deepSleep();
-  }
+  } else {
+    if (wakeUpReason == 0) {
+      Serial.println("in button wakeup loop");
+      display.fillScreen(GxEPD_WHITE);
+      display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
+      Display_QRcode(6, 175, url);
+      while (counter <= 60) {
+        if (counter == 0) {
+          display.update();
+        } else if (counter > 0 && counter <= 59) {
+          Serial.println("Showing QRcode for scanning...");
+        } else if (counter > 59) {
+          // Initial partial update
+          display.updateWindow(0, 0, 128, 296, false);
+          display.fillRect(0, 120, 128, 176, GxEPD_WHITE);
 
-  if (wakeUpReason == 1) {
-    display.fillScreen(GxEPD_WHITE);
-    display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
-    Display_QRcode(6, 175, url);
-    while (counter <= 60) {
-      if (counter == 0) {
-        display.update();
-      } else if (counter > 0 && counter <= 59) {
-        Serial.println("Showing QRcode for scanning...");
-      } else if (counter > 59) {
-        // Initial partial update
-        display.updateWindow(0, 0, 128, 296, false);
-        display.fillRect(0, 120, 128, 176, GxEPD_WHITE);
-
-        // Set Content in partial update
-        display.fillScreen(GxEPD_WHITE);
-        display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
-        display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
-        showText("Number", &FreeSans12pt7b, 25, 170);
-        showText("23", &FreeSansBold24pt7b, 39, 220);
-        display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
-        //     display.update();
-        display.updateWindow(0, 120, 128, 176, true);
-        deepSleep();
+          // Set Content in partial update
+          display.fillScreen(GxEPD_WHITE);
+          display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
+          display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
+          showText("Number", &FreeSans12pt7b, 25, 170);
+          showText(string2char(getLockerNumber()), &FreeSansBold24pt7b, 39, 220);
+          display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
+          //     display.update();
+          display.updateWindow(0, 120, 128, 176, true);
+          deepSleep();
+        }
+        counter++;
+        delay(1000);
       }
-      counter++;
-      delay(1000);
+    } else {
+      Serial.println("in normal wakeup loop");
+      display.fillScreen(GxEPD_WHITE);
+      display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
+      display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
+      showText("Number", &FreeSans12pt7b, 25, 170);
+      showText(string2char(getLockerNumber()), &FreeSansBold24pt7b, 37, 220);
+      display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
+      display.update();
+      deepSleep();
     }
   }
+
+  //  if (wakeUpReason == 1) {
+  //    display.fillScreen(GxEPD_WHITE);
+  //    display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
+  //    Display_QRcode(6, 175, url);
+  //    while (counter <= 60) {
+  //      if (counter == 0) {
+  //        display.update();
+  //      } else if (counter > 0 && counter <= 59) {
+  //        Serial.println("Showing QRcode for scanning...");
+  //      } else if (counter > 59) {
+  //        // Initial partial update
+  //        display.updateWindow(0, 0, 128, 296, false);
+  //        display.fillRect(0, 120, 128, 176, GxEPD_WHITE);
+  //
+  //        // Set Content in partial update
+  //        display.fillScreen(GxEPD_WHITE);
+  //        display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
+  //        display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
+  //        showText("Number", &FreeSans12pt7b, 25, 170);
+  //        showText(string2char(getLockerNumber()), &FreeSansBold24pt7b, 39, 220);
+  //        display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
+  //        //     display.update();
+  //        display.updateWindow(0, 120, 128, 176, true);
+  //        deepSleep();
+  //      }
+  //      counter++;
+  //      delay(1000);
+  //    }
+  //  }
 
 
 }
@@ -271,14 +313,14 @@ void doorLock(void *p) {
           JsonObject root = jsonDocument.as<JsonObject>();
           isOpenFromServer = root["isOpen"];
           Serial.print("Locker Status: "); Serial.println(isOpenFromServer);
-          if (isLockFromServer == 1) {
-            digitalWrite(LED_BUILTIN, LOW);
+          if (isOpenFromServer == 1) {
+            //digitalWrite(LED_BUILTIN, LOW);
             digitalWrite(DOOR_LOCK, HIGH);
-            Serial.println("LED ON");
+            Serial.println("LOCKED!");
           } else {
-            digitalWrite(LED_BUILTIN, HIGH);
+            //digitalWrite(LED_BUILTIN, HIGH);
             digitalWrite(DOOR_LOCK, LOW);
-            Serial.println("LED OFF");
+            Serial.println("UNLOCKED!");
           }
         }
         jsonDocument.clear();
@@ -407,7 +449,7 @@ boolean getIsRegister() {
 }
 
 //---------------------------Get ACTUAL locker Number-------------------------------//
-boolean getLockerNumber() {
+String getLockerNumber() {
   if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
     HTTPClient http;
     http.begin(baseURL + "/locker/status?serialNumber=" + serialString); //Specify the URL
@@ -425,6 +467,42 @@ boolean getLockerNumber() {
         lockerNumber = root["lockerNumber"];
         Serial.print("Locker Number: "); Serial.println(lockerNumber);
         return lockerNumber;
+      }
+      jsonDocument.clear();
+    }
+    else {
+      Serial.println("Error on HTTP request");
+    }
+    http.end(); //Free the resources
+  }
+  delay(500);
+}
+
+char* string2char(String command) {
+  if (command.length() != 0) {
+    char *p = const_cast<char*>(command.c_str());
+    return p;
+  }
+}
+
+String generateLink() {
+  if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
+    HTTPClient http;
+    http.begin(baseURL + "/qr/generateLink?serialNumber=" + serialString); //Specify the URL
+    int httpCode = http.GET(); //Make the request
+    if (httpCode > 0) { //Check for the returning code
+      const size_t bufferSize = JSON_OBJECT_SIZE(1) + 50;
+      DynamicJsonDocument jsonDocument(bufferSize);
+      DeserializationError error = deserializeJson(jsonDocument, http.getString());
+      if (error) {
+        Serial.println("There was an error while deserializing");
+      }
+      else {
+        boolean RegisterStatus;
+        JsonObject root = jsonDocument.as<JsonObject>();
+        generatedLink = root["link"];
+        Serial.print("QRcode Link: "); Serial.println(generatedLink);
+        return generatedLink;
       }
       jsonDocument.clear();
     }
