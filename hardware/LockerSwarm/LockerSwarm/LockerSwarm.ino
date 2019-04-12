@@ -4,6 +4,7 @@
 #include <GxGDEH029A1/GxGDEH029A1.h>      // 2.9" b/w
 
 // Normal Font
+#include <Fonts/FreeSans9pt7b.h>
 #include <Fonts/FreeSans12pt7b.h>
 #include <Fonts/FreeSans18pt7b.h>
 #include <Fonts/FreeSans24pt7b.h>
@@ -58,6 +59,8 @@ boolean isLockBySwitch = false;
 boolean isRegister = false;
 int wakeUpReason;
 
+String baseURL = "https://75377aed.ngrok.io";
+
 //--------------------------------------------------------------------------Void Setup-----------------------------------------------------------------------------//
 
 void setup()
@@ -74,29 +77,16 @@ void setup()
   //  xTaskCreate(&doorLockSwitch, "doorLockSwitch", 2048, NULL, 10, NULL);
   //  xTaskCreate(&doorLock, "doorLock", 2048, NULL, 10, NULL);
 
+  esp_sleep_enable_ext0_wakeup(GPIO_NUM_15, 1);
   Serial.print("WakeUpReason: ");
   Serial.println(readWakeUpReason());
   print_wakeup_reason();
 
   wakeUpReason = readWakeUpReason();
 
-//  clearEEPROM();
+  //  clearEEPROM();
 
   wifiConnection();
-
-//  for (int i = 0; i < EEPROM_SIZE; i++) {
-//    serialArray[i] = EEPROM.read(i);
-//  }
-//
-//  char temp;
-//  for (int i = 0; i < EEPROM_SIZE; i++) {
-//    if (i == EEPROM_SIZE - 1) {
-//      idInt = EEPROM.read(i);
-//    } else {
-//      temp = EEPROM.read(i);
-//      serialString = serialString + temp;
-//    }
-//  }
 
   for (int i = 0; i < EEPROM_SIZE; i++) {
     serialArray[i] = EEPROM.read(i);
@@ -122,25 +112,44 @@ void setup()
 
 void loop() {
   Serial.println("in void loop");
-  //  boolean isRegister = getIsRegister(); //รอเขียน function "getIsRegister()" !!!
-  isRegister = false; //Mockup only
+//  isRegister = getIsRegister(); // function "getIsRegister()" !!!
+    isRegister = false; //Mockup only
 
   if (!isRegister) {
-    const char* id = idInt + "";
+    char id[2];
+    String str;
+    str = String(idInt);
+    str.toCharArray(id, 2);
+    showText("Locker is not Registered.", &FreeSans9pt7b, 10, 100);
     display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
-    showText("Please input id below", &FreeSans12pt7b, 10, 170);
+    showText("input ID below", &FreeSans9pt7b, 10, 170);
     showText(id, &FreeSansBold24pt7b , 10, 220);
     display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
+    display.update();
     // waiting for Registration by Admin
     while (!isRegister) {
-      //      isRegister = getIsRegister(); //รอเขียน function "getIsRegister()" !!!
+//      isRegister = getIsRegister(); // function "getIsRegister()" !!!
       Serial.println("waiting for Registration by Admin...");
       delay(1000);
     }
+    Serial.println("Locker registered!");
+    delay(1000);
+    display.fillScreen(GxEPD_WHITE);
+    display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
+    display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
+    showText("Number", &FreeSans12pt7b, 25, 170);
+    showText("99", &FreeSansBold24pt7b, 39, 220);
+    display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
+    display.update();
+
+    deepSleep();
+
     //    String status = getCurrentStatus();
     //    showLockerNumber(status.number);
     //    deepSleep();
   }
+
+  deepSleep();
 
   if (wakeUpReason == 1) {
     display.fillScreen(GxEPD_WHITE);
@@ -327,7 +336,7 @@ void requestNewLockerKey(String serialString, int idInt) {
     delay(2000);
     StaticJsonDocument<200> jsonBuffer;
     HTTPClient http;
-    http.begin("https://api.lockerswarm.xyz/locker"); //destination
+    http.begin(baseURL + "/locker"); //destination
     http.addHeader("Content-Type" , "application/x-www-form-urlencoded"); // content-type, header
     int httpResponseCode = http.POST("secret=112233445566Aa");
     if (httpResponseCode > 0) {
@@ -349,7 +358,7 @@ void requestNewLockerKey(String serialString, int idInt) {
           EEPROM.commit();
         }
       }
-      deepSleep(); // พอเก็บSerialเสร็จให้ deepSleep เลย
+      //      deepSleep(); // พอเก็บSerialเสร็จให้ deepSleep เลย
 
     } else {
       Serial.print("Error on sending POST:  ");
@@ -372,7 +381,32 @@ void wifiConnection() {
 }
 
 boolean getIsRegister() {
-  // get Request
+  if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
+    HTTPClient http;
+    http.begin(baseURL + "/locker/isRegister?serialNumber=" + serialString); //Specify the URL
+    int httpCode = http.GET(); //Make the request
+    if (httpCode > 0) { //Check for the returning code
+      const size_t bufferSize = JSON_OBJECT_SIZE(1) + 50;
+      DynamicJsonDocument jsonDocument(bufferSize);
+      DeserializationError error = deserializeJson(jsonDocument, http.getString());
+      if (error) {
+        Serial.println("There was an error while deserializing");
+      }
+      else {
+        boolean RegisterStatus;
+        JsonObject root = jsonDocument.as<JsonObject>();
+        RegisterStatus = root["isActive"];
+        Serial.print("Register Status"); Serial.println(RegisterStatus);
+        return RegisterStatus;
+      }
+      jsonDocument.clear();
+    }
+    else {
+      Serial.println("Error on HTTP request");
+    }
+    http.end(); //Free the resources
+  }
+  delay(500);
 }
 
 String getCurrentStatus() {
