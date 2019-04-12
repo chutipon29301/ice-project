@@ -34,10 +34,10 @@ GxIO_Class io(SPI, /*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16);   // arbitrary selecti
 GxEPD_Class display(io, /*RST=*/ 16, /*BUSY=*/ 4);          // arbitrary selection of (16), 4
 
 //Set Username-Password WiFi
-//const char* ssid = "CTiPhone";
-//const char* password = "00000000";
-const char* ssid = "true_home2G_Up7";
-const char* password = "vDcqdQQq";
+const char* ssid = "CTiPhone";
+const char* password = "00000000";
+//const char* ssid = "true_home2G_Up7";
+//const char* password = "vDcqdQQq";
 
 QRCode qrcode;
 int counter = 0;
@@ -71,8 +71,8 @@ void setup()
   WiFi.begin(ssid, password);
   EEPROM.begin(EEPROM_SIZE);
 
-  xTaskCreate(&doorLockSwitch, "doorLockSwitch", 2048, NULL, 10, NULL);
-  xTaskCreate(&doorLock, "doorLock", 2048, NULL, 10, NULL);
+  //  xTaskCreate(&doorLockSwitch, "doorLockSwitch", 2048, NULL, 10, NULL);
+  //  xTaskCreate(&doorLock, "doorLock", 2048, NULL, 10, NULL);
 
   Serial.print("WakeUpReason: ");
   Serial.println(readWakeUpReason());
@@ -80,15 +80,31 @@ void setup()
 
   wakeUpReason = readWakeUpReason();
 
-  //  clearEEPROM();
+//  clearEEPROM();
 
   wifiConnection();
 
+//  for (int i = 0; i < EEPROM_SIZE; i++) {
+//    serialArray[i] = EEPROM.read(i);
+//  }
+//
+//  char temp;
+//  for (int i = 0; i < EEPROM_SIZE; i++) {
+//    if (i == EEPROM_SIZE - 1) {
+//      idInt = EEPROM.read(i);
+//    } else {
+//      temp = EEPROM.read(i);
+//      serialString = serialString + temp;
+//    }
+//  }
+
   for (int i = 0; i < EEPROM_SIZE; i++) {
+    serialArray[i] = EEPROM.read(i);
     if (i == EEPROM_SIZE - 1) {
-      idInt = EEPROM.read(i);
+      idInt = serialArray[i];
     } else {
-      serialString = serialString + EEPROM.read(i);
+      char temp = serialArray[i];
+      serialString = serialString + temp;
     }
   }
 
@@ -105,6 +121,7 @@ void setup()
 //-----------------------------------------------------------------Void Loop-----------------------------------------------------------------------------//
 
 void loop() {
+  Serial.println("in void loop");
   //  boolean isRegister = getIsRegister(); //รอเขียน function "getIsRegister()" !!!
   isRegister = false; //Mockup only
 
@@ -116,7 +133,8 @@ void loop() {
     display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
     // waiting for Registration by Admin
     while (!isRegister) {
-//      isRegister = getIsRegister(); //รอเขียน function "getIsRegister()" !!!
+      //      isRegister = getIsRegister(); //รอเขียน function "getIsRegister()" !!!
+      Serial.println("waiting for Registration by Admin...");
       delay(1000);
     }
     //    String status = getCurrentStatus();
@@ -331,6 +349,7 @@ void requestNewLockerKey(String serialString, int idInt) {
           EEPROM.commit();
         }
       }
+      deepSleep(); // พอเก็บSerialเสร็จให้ deepSleep เลย
 
     } else {
       Serial.print("Error on sending POST:  ");
@@ -356,7 +375,7 @@ boolean getIsRegister() {
   // get Request
 }
 
-String getCurrentStatus(){
+String getCurrentStatus() {
   // get Request
 }
 
