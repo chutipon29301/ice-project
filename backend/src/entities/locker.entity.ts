@@ -45,7 +45,7 @@ export class Locker {
     })
     locationID: number;
 
-    @ManyToOne(type => Location, location => location.lockers)
+    @ManyToOne(type => Location, location => location.lockers, { onDelete: 'SET NULL' })
     @JoinColumn({
         name: 'locationID',
     })

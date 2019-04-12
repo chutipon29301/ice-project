@@ -1,13 +1,18 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { LocationRepositoryToken } from '../constant';
 import { Location } from '../entities/location.entity';
+import { LockerAvailability } from '../entities/locker.entity';
+import { LockerService } from '../locker/locker.service';
 
 @Injectable()
 export class LocationService {
+
     constructor(
         @Inject(LocationRepositoryToken)
         private readonly locationRepository: Repository<Location>,
+        @Inject(forwardRef(() => LockerService))
+        private readonly lockerService: LockerService,
     ) { }
 
     public async create(description: string, lat: number, lng: number): Promise<Location> {
@@ -23,7 +28,9 @@ export class LocationService {
         nestedJoin = [],
     }: {
         key: {
-            locationID?: number;
+            locationID?: number,
+            lat?: number,
+            lng?: number;
         };
         throwError?: boolean;
         joinWith?: Array<keyof Location>;
@@ -37,6 +44,9 @@ export class LocationService {
             } else {
                 return await this.locationRepository.findOne({ where, relations });
             }
+        }
+        if(key.lat&&key.lng){
+            
         }
         throw new Error('One of the key must be specify');
     }
@@ -65,11 +75,18 @@ export class LocationService {
     }
 
     public async delete(id: number) {
-        await this.locationRepository.delete(id);
+        try {
+            const location = await this.findLocation({ key: { locationID: id }, joinWith: ['lockers'] });
+            await this.lockerService.updateLockerAvailability(location.lockers.map(locker => locker.id), LockerAvailability.MAINTENANCE);
+            await this.locationRepository.delete(id);
+        } catch (error) {
+            throw error;
+        }
     }
 
     public async findLocationByIDOrFail(id: number): Promise<Location> {
         const location = await this.locationRepository.findOneOrFail(id);
         return location;
     }
+
 }

@@ -1,6 +1,6 @@
 import { ConflictException, forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException } from '@nestjs/common';
 import { LocationService } from '../location/location.service';
-import { Repository } from 'typeorm';
+import { Repository, FindConditions, ObjectLiteral, In } from 'typeorm';
 import { ConfigService } from '../config/config.service';
 import { LockerRepositoryToken } from '../constant';
 import { ActionType } from '../entities/locker-usage.entity';
@@ -86,12 +86,18 @@ export class LockerService {
         joinWith = [],
         nestedJoin = [],
     }: {
-        key?: {};
+        key?: {
+            inLockerIDs?: number[];
+        };
         joinWith?: Array<keyof Locker>;
         nestedJoin?: string[];
     }): Promise<Locker[]> {
         const relations = [...joinWith, ...nestedJoin];
-        return await this.lockerRepository.find({ relations });
+        let where: FindConditions<Locker> | ObjectLiteral | string = {};
+        if (key.inLockerIDs) {
+            where = { id: In(key.inLockerIDs) };
+        }
+        return await this.lockerRepository.find({ where, relations });
     }
 
     public async create(secret: string): Promise<Locker> {
@@ -195,5 +201,9 @@ export class LockerService {
                 throw new NotFoundException(error.message);
             }
         }
+    }
+
+    public async updateLockerAvailability(lockerIDs: number[], availability: LockerAvailability) {
+        await this.lockerRepository.update(lockerIDs, { availability });
     }
 }

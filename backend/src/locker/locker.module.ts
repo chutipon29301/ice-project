@@ -7,9 +7,9 @@ import { lockerProviders } from './locker.providers';
 import { LockerService } from './locker.service';
 
 @Module({
-    imports: [LocationModule, LockerUsageModule, forwardRef(() => LockerInstanceModule)],
+    imports: [forwardRef(() => LocationModule), LockerUsageModule, forwardRef(() => LockerInstanceModule)],
     providers: [...lockerProviders, LockerService],
     controllers: [LockerController],
     exports: [LockerService, LocationModule, LockerUsageModule],
 })
-export class LockerModule {}
+export class LockerModule { }
