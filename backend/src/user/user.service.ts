@@ -10,7 +10,7 @@ export class UserService {
         @Inject(UserRepositoryToken)
         private readonly userRepository: Repository<User>,
         private readonly lineAuthService: LineAuthService,
-    ) {}
+    ) { }
 
     public async listUser(): Promise<User[]> {
         const users = await this.userRepository.find();
@@ -56,21 +56,17 @@ export class UserService {
         nestedJoin?: string[];
     }): Promise<User> {
         const relations: string[] = [...joinWith, ...nestedJoin];
+        let where: Partial<User> = {};
         if (key.lineID) {
-            const where: Partial<User> = { authenticationID: key.lineID, authenticationType: AuthenticationType.LINE };
-            if (throwError) {
-                return await this.userRepository.findOneOrFail({ where, relations });
-            } else {
-                return await this.userRepository.findOne({ where, relations });
-            }
+          where = { authenticationID: key.lineID, authenticationType: AuthenticationType.LINE };
         }
         if (key.nationalID) {
-            const where: Partial<User> = { nationalID: key.nationalID };
-            if (throwError) {
-                return await this.userRepository.findOneOrFail({ where, relations });
-            } else {
-                return await this.userRepository.findOne({ where, relations });
-            }
+            where = { nationalID: key.nationalID };
+        }
+        if (throwError) {
+            return await this.userRepository.findOneOrFail({ where, relations });
+        } else {
+            return await this.userRepository.findOne({ where, relations });
         }
         throw new Error('One of the key must be specify');
     }
