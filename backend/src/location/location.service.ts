@@ -60,13 +60,6 @@ export class LocationService {
         return await this.locationRepository.find({ relations });
     }
 
-    public async findLockerInLocationByLocationID(locationID: number): Promise<Location> {
-        const location = await this.locationRepository.findOne(locationID, {
-            relations: ['lockers'],
-        });
-        return location;
-    }
-
     public async update(id: number, value: Partial<Location>) {
         await this.locationRepository.update(id, value);
     }
