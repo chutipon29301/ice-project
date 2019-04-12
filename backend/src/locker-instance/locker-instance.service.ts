@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException, ConflictException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, ObjectLiteral, FindOneOptions } from 'typeorm';
 import { LockerInstanceRepositoryToken, CanAccessRelationRepositoryToken } from '../constant';
 import { CanAccessRelation } from '../entities/can-access.entity';
 import { LockerInstance } from '../entities/locker-instance.entity';
@@ -27,8 +27,8 @@ export class LockerInstanceService {
 
     public async create(accessCode: string, nationalID: string): Promise<LockerInstance> {
         try {
-            const locker = await this.qrService.findLockerByAccessCodeOrFail(accessCode);
-            const activeLocker = await this.lockerService.findLocker({ key: { activeLockerID: locker.id } });
+            const qrCode = await this.qrService.findQRCode({ key: { accessCode } });
+            const activeLocker = await this.lockerService.findLocker({ key: { activeLockerID: qrCode.lockerID } });
             const user = await this.userService.findUser({ key: { nationalID } });
             const currentLockerInstance = await this.findInstance({
                 key: { inUsedLockerID: activeLocker.id },
@@ -64,30 +64,37 @@ export class LockerInstanceService {
                 startTime: Date;
             };
             inUsedLockerID?: number;
+            accessCode?: string;
+            ownerOf?: {
+                lockerID: number;
+                ownerID: string;
+            }
         };
         throwError?: boolean;
         joinWith?: Array<keyof LockerInstance>;
         nestedJoin?: string[];
     }): Promise<LockerInstance> {
         const relations: string[] = [...joinWith, ...nestedJoin];
+        let where: Partial<LockerInstance> = {};
         try {
             if (key.instance) {
-                const where: Partial<LockerInstance> = { lockerID: key.instance.lockerID, startTime: key.instance.startTime };
-                if (throwError) {
-                    return await this.lockerInstanceRepository.findOneOrFail({ where, relations });
-                } else {
-                    return await this.lockerInstanceRepository.findOne({ where, relations });
-                }
+                where = { lockerID: key.instance.lockerID, startTime: key.instance.startTime };
             }
             if (key.inUsedLockerID) {
-                const where: Partial<LockerInstance> = { lockerID: key.inUsedLockerID, inUsed: true };
-                if (throwError) {
-                    return await this.lockerInstanceRepository.findOneOrFail({ where, relations });
-                } else {
-                    return await this.lockerInstanceRepository.findOne({ where, relations });
-                }
+                where = { lockerID: key.inUsedLockerID, inUsed: true };
             }
-            throw new Error('One of the key must be specify');
+            if (key.accessCode) {
+                const qrCode = await this.qrService.findQRCode({ key: { accessCode: key.accessCode } });
+                where = { lockerID: qrCode.lockerID, inUsed: true };
+            }
+            if (key.ownerOf) {
+                where = { lockerID: key.ownerOf.lockerID, inUsed: true, userID: key.ownerOf.ownerID };
+            }
+            if (throwError) {
+                return await this.lockerInstanceRepository.findOneOrFail({ where, relations });
+            } else {
+                return await this.lockerInstanceRepository.findOne({ where, relations });
+            }
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
@@ -111,13 +118,14 @@ export class LockerInstanceService {
         nestedJoin?: string[];
     }): Promise<LockerInstance[]> {
         const relations: string[] = [...joinWith, ...nestedJoin];
+        let where: Partial<LockerInstance> = {};
         if (key.inUsed) {
-            return await this.lockerInstanceRepository.find({ where: { inUsed: key.inUsed } });
+            where = { inUsed: key.inUsed };
         }
         if (key.inUsedByNationalID) {
-            return await this.lockerInstanceRepository.find({ where: { userID: key.inUsedByNationalID, inUsed: true }, relations });
+            where = { userID: key.inUsedByNationalID, inUsed: true };
         }
-        return await this.lockerInstanceRepository.find({ relations });
+        return await this.lockerInstanceRepository.find({ where, relations });
     }
 
     public async findCanAccessRelation({
@@ -138,19 +146,19 @@ export class LockerInstanceService {
         nestedJoin?: string[];
     }): Promise<CanAccessRelation> {
         const relations: string[] = [...joinWith, ...nestedJoin];
+        let where: Partial<CanAccessRelation> | { startTime: string } = {}
         if (key.relation) {
-            const where: Partial<CanAccessRelation> | { startTime: string } = {
+            where = {
                 startTime: key.relation.startTime,
                 lockerID: key.relation.lockerID,
                 nationalID: key.relation.nationalID,
             };
-            if (throwError) {
-                return await this.canAccessRelationRepository.findOneOrFail({ where, relations });
-            } else {
-                return await this.canAccessRelationRepository.findOne({ where, relations });
-            }
         }
-        throw new Error('One of the key must be specify');
+        if (throwError) {
+            return await this.canAccessRelationRepository.findOneOrFail({ where, relations });
+        } else {
+            return await this.canAccessRelationRepository.findOne({ where, relations });
+        }
     }
 
     public async findCanAccessRelations({
@@ -230,12 +238,12 @@ export class LockerInstanceService {
 
     public async unlock(nationalID: string, accessCode: string): Promise<LockerUsage> {
         try {
-            const locker = await this.qrService.findLockerByAccessCodeOrFail(accessCode);
-            const activeLocker = await this.lockerService.isLockerActiveByLockerID(locker.id);
+            const qrCode = await this.qrService.findQRCode({ key: { accessCode } });
+            const activeLocker = await this.lockerService.isLockerActiveByLockerID(qrCode.lockerID);
             if (!activeLocker) {
                 throw new NotFoundException('Not found "ACTIVE" Locker');
             }
-            const lockerInstance = await this.findInstance({ key: { inUsedLockerID: locker.id } });
+            const lockerInstance = await this.findInstance({ key: { inUsedLockerID: qrCode.lockerID } });
             const canAccessRelation = await this.findCanAccessRelation({
                 key: {
                     relation: {
@@ -263,8 +271,8 @@ export class LockerInstanceService {
 
     public async returnInstance(nationalID: string, accessCode: string) {
         try {
-            const locker = await this.qrService.findLockerByAccessCodeOrFail(accessCode);
-            const lockerInstance = await this.findInstance({ key: { inUsedLockerID: locker.id } });
+            const qrCode = await this.qrService.findQRCode({ key: { accessCode } });
+            const lockerInstance = await this.findInstance({ key: { inUsedLockerID: qrCode.lockerID } });
             if (lockerInstance.userID !== nationalID) {
                 throw new UnauthorizedException('Not owner of in used locker instance');
             }
@@ -280,4 +288,14 @@ export class LockerInstanceService {
             }
         }
     }
+    public async lockerIsInUsed(accessCode: string): Promise<boolean> {
+        const qrCode = await this.qrService.findQRCode({ key: { accessCode } });
+        const activeLocker = await this.lockerService.findLocker({ key: { activeLockerID: qrCode.lockerID } });
+        const currentLockerInstance = await this.findInstance({
+            key: { inUsedLockerID: activeLocker.id },
+            throwError: false,
+        });
+        return currentLockerInstance.inUsed;
+    }
 }
+

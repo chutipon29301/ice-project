@@ -1,5 +1,4 @@
-import { ToInt } from 'class-sanitizer';
-import { IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class LockerInstanceDto {

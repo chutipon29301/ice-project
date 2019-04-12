@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException, HttpException } from '@nestjs/common';
-import { Repository, MoreThan, LessThan } from 'typeorm';
+import { Repository, MoreThan, LessThan, FindOneOptions, ObjectLiteral } from 'typeorm';
 import { ConfigService } from '../config/config.service';
 import { QRCodeRepositoryToken } from '../constant';
 import { Locker } from '../entities/locker.entity';
@@ -13,7 +13,7 @@ export class QrService {
         private readonly qrCodeRepository: Repository<QRCode>,
         private readonly configService: ConfigService,
         private readonly lockerService: LockerService,
-    ) {}
+    ) { }
 
     public async generateRedirectURL(serialNumber: string): Promise<string> {
         try {
@@ -30,15 +30,36 @@ export class QrService {
         }
     }
 
-    public async findLockerByAccessCodeOrFail(id: string): Promise<Locker> {
-        const qrCode = await this.qrCodeRepository.findOneOrFail({
-            where: { id, expireDate: MoreThan(new Date()) },
-            relations: ['locker'],
-        });
-        if (qrCode) {
-            return qrCode.locker;
-        } else {
-            throw new NotFoundException('Cannot find qr code');
+    public async findQRCode({
+        key,
+        throwError = true,
+        joinWith = [],
+        nestedJoin = [],
+    }: {
+        key: {
+            accessCode?: string;
+        };
+        throwError?: boolean;
+        joinWith?: Array<keyof QRCode>;
+        nestedJoin?: string[];
+    }): Promise<QRCode> {
+        const relations: string[] = [...joinWith, ...nestedJoin];
+        let where: ObjectLiteral | FindOneOptions<QRCode> = {};
+        try {
+            if (key.accessCode) {
+                where = { id: key.accessCode, expireDate: MoreThan(new Date()) };
+            }
+            if (throwError) {
+                return await this.qrCodeRepository.findOneOrFail({ where, relations });
+            } else {
+                return await this.qrCodeRepository.findOne({ where, relations });
+            }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new NotFoundException(error.message);
+            }
         }
     }
 }
