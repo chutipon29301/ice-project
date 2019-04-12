@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { CreditUsage } from '../entities/credit-usage.entity';
 import { UserService } from '../user/user.service';
 import moment = require('moment');
-import { CreditSummary } from './dto/total-credit.dto';
+import { CreditSummary } from './dto/credit-summary.dto';
 
 @Injectable()
 export class CreditUsageService {
