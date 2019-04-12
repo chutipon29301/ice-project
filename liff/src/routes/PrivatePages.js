@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route,Redirect } from "react-router-dom";
 import MyLocker from "../pages/mylocker";
 import OpenLocker from "../pages/open";
 import OpenLockerRedirect from "../pages/open/Redirect";
@@ -13,7 +13,12 @@ const PrivatePages = () => (
     <Route exact path="/find-lockers" component={Lockers} />
     <Route exact path="/my-locker/:id" component={LockerDetails} />
     <Route exact path="/my-locker" component={MyLocker} />
+    <Route exact path = "/" component = {RedirectToMyLocker}/>
   </Switch>
 );
+
+const RedirectToMyLocker = () => (
+  <Redirect to = "/my-locker"/>
+)
 
 export default PrivatePages;

@@ -47,8 +47,7 @@ const initAxiosLineErrorHandling = history => {
       return response;
     },
     error => {
-      console.log("I AM NOT REGISTERED!");
-      if (error.response.status === 401) {
+      if (error.response.status === 400) {
         history.push("/auth/registration");
       }
       return error;
