@@ -54,7 +54,7 @@ const char* lockerNumber = "XX";
 #define DOOR_LOCK 25
 #define DOOR_LOCK_SWITCH 26
 
-boolean isLockFromServer = false;
+boolean isIOpenFromServer = false;
 boolean isLockBySwitch = false;
 boolean isRegister = false;
 int wakeUpReason;
@@ -112,44 +112,43 @@ void setup()
 
 void loop() {
   Serial.println("in void loop");
-//  isRegister = getIsRegister(); // function "getIsRegister()" !!!
-    isRegister = false; //Mockup only
+  //  isRegister = getIsRegister(); // function "getIsRegister()" !!!
+  isRegister = false; //Mockup only
 
   if (!isRegister) {
     char id[2];
     String str;
     str = String(idInt);
     str.toCharArray(id, 2);
-    showText("Locker is not Registered.", &FreeSans9pt7b, 10, 100);
+    display.fillScreen(GxEPD_WHITE);
+    showText("Young Chai", &FreeSans9pt7b, 10, 35);
+    showText("Mai Dai.", &FreeSans9pt7b, 10, 55);
+    showText("Waiting for", &FreeSans9pt7b, 10, 100);
+    showText("Register...", &FreeSans9pt7b, 10, 120);
     display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
-    showText("input ID below", &FreeSans9pt7b, 10, 170);
+    showText("Input ID:", &FreeSans9pt7b, 10, 170);
     showText(id, &FreeSansBold24pt7b , 10, 220);
     display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
     display.update();
     // waiting for Registration by Admin
     while (!isRegister) {
-//      isRegister = getIsRegister(); // function "getIsRegister()" !!!
+      //      isRegister = getIsRegister(); // function "getIsRegister()" !!!
       Serial.println("waiting for Registration by Admin...");
       delay(1000);
     }
     Serial.println("Locker registered!");
     delay(1000);
+
+    String lockerNumber = getLockerNumber();
     display.fillScreen(GxEPD_WHITE);
     display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
     display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
     showText("Number", &FreeSans12pt7b, 25, 170);
-    showText("99", &FreeSansBold24pt7b, 39, 220);
+    showText(lockerNumber, &FreeSansBold24pt7b, 39, 220);
     display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
     display.update();
-
     deepSleep();
-
-    //    String status = getCurrentStatus();
-    //    showLockerNumber(status.number);
-    //    deepSleep();
   }
-
-  deepSleep();
 
   if (wakeUpReason == 1) {
     display.fillScreen(GxEPD_WHITE);
@@ -187,14 +186,6 @@ void loop() {
 //--------------------------------------------------------------------------------Methods-----------------------------------------------------------------------------//
 
 //----------------------------print text in e-ink display--------------------------//
-
-//void showText(const char text[], const GFXfont * f, int x, int y) {
-//  display.setTextColor(GxEPD_BLACK);
-//  display.setFont(f);
-//  display.setCursor(36, 150);
-//  display.println(text);
-//}
-
 void showText(const char text[], const GFXfont * f, int x, int y) {
   display.setTextColor(GxEPD_BLACK);
   display.setFont(f);
@@ -224,7 +215,6 @@ void Display_QRcode(int offset_x, int offset_y, const char* Message) {
 }
 
 //----------------------------Deep Sleep--------------------------//
-
 void deepSleep() {
   //  esp_sleep_enable_timer_wakeup(20e6);    // DeepSleep for 20 sec.
   Serial.println("Going to sleep now");
@@ -261,14 +251,13 @@ int readWakeUpReason() {
   }
 }
 
-//----------------------------locker unlock status--------------------//
-//----------------------------"GET/status" request--------------------//
+//----------------------------locker isLock status--------------------//
 //----------------------------Check all time--------------------------//
 void doorLock(void *p) {
   while (1) {
     if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
       HTTPClient http;
-      http.begin("http://192.168.1.34:3000/status"); //Specify the URL
+      http.begin(baseURL + "/locker/status?serialNumber=" + serialString); //Specify the URL
       int httpCode = http.GET(); //Make the request
       if (httpCode > 0) { //Check for the returning code
         const size_t bufferSize = JSON_OBJECT_SIZE(1) + 50;
@@ -278,10 +267,10 @@ void doorLock(void *p) {
           Serial.println("There was an error while deserializing");
         }
         else {
+          boolean RegisterStatus;
           JsonObject root = jsonDocument.as<JsonObject>();
-          isLockFromServer = root["status"];
-          Serial.print("status:"); Serial.println(isLockFromServer);
-
+          isOpenFromServer = root["isOpen"];
+          Serial.print("Locker Status: "); Serial.println(isOpenFromServer);
           if (isLockFromServer == 1) {
             digitalWrite(LED_BUILTIN, LOW);
             digitalWrite(DOOR_LOCK, HIGH);
@@ -303,24 +292,23 @@ void doorLock(void *p) {
   }
 }
 
-//----------------------------locker unlock status--------------------//
-//----------------------------"POST/locker/lock" request--------------//
+//----------------------------locker switch send status to server--------------------//
 //----------------------------When the door is closed-----------------//
 void doorLockSwitch(void *p) {
   while (1) {
     isLockBySwitch = digitalRead(DOOR_LOCK_SWITCH);
     if (isLockBySwitch == 1) {
       Serial.println("Switch: Door is Close");
-      delay(100);
+      delay(1000);
     } else {
       Serial.println("Switch: Door still Open");
-      delay(100);
+      delay(1000);
     }
     delay(500);
   }
 }
 
-//----------------------------EEPROM----------------------------//
+//----------------------------EEPROM----------------------------------//
 //----------------------------Clear EEPROM----------------------------//
 void clearEEPROM() {
   for (int i = 0 ; i < EEPROM_SIZE ; i++) {
@@ -329,6 +317,7 @@ void clearEEPROM() {
   Serial.println("EEPROM is cleared.");
 }
 
+//-------------------Request for Serial and ID of new Locker------------------------//
 void requestNewLockerKey(String serialString, int idInt) {
   if (serialString == NULL) {
     Serial.println("New locker!");
@@ -358,8 +347,6 @@ void requestNewLockerKey(String serialString, int idInt) {
           EEPROM.commit();
         }
       }
-      //      deepSleep(); // พอเก็บSerialเสร็จให้ deepSleep เลย
-
     } else {
       Serial.print("Error on sending POST:  ");
       Serial.print(httpResponseCode);
@@ -371,15 +358,25 @@ void requestNewLockerKey(String serialString, int idInt) {
   }
 }
 
+//----------------------------Wi-Fi connection---------------------------------//
 void wifiConnection() {
+  display.fillScreen(GxEPD_WHITE);
+  showText("Connecting to", &FreeSans9pt7b, 10, 35);
+  showText("Wi-Fi...", &FreeSans9pt7b, 10, 55);
+  display.update();
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
-    Serial.println("Connecting to WiFi..");
+    Serial.println("Connecting to Wi-Fi...");
   }
-  Serial.println("Connected to the WiFi network");
+  Serial.println("Connected to the Wi-Fi network");
+  display.fillScreen(GxEPD_WHITE);
+  showText("Connected to", &FreeSans9pt7b, 10, 35);
+  showText("Wi-Fi!", &FreeSans9pt7b, 10, 55);
+  display.update();
   delay(1000);
 }
 
+//----------------------------isLock-------------------------------//
 boolean getIsRegister() {
   if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
     HTTPClient http;
@@ -396,7 +393,7 @@ boolean getIsRegister() {
         boolean RegisterStatus;
         JsonObject root = jsonDocument.as<JsonObject>();
         RegisterStatus = root["isActive"];
-        Serial.print("Register Status"); Serial.println(RegisterStatus);
+        Serial.print("Register Status: "); Serial.println(RegisterStatus);
         return RegisterStatus;
       }
       jsonDocument.clear();
@@ -409,8 +406,34 @@ boolean getIsRegister() {
   delay(500);
 }
 
-String getCurrentStatus() {
-  // get Request
+//---------------------------Get ACTUAL locker Number-------------------------------//
+boolean getLockerNumber() {
+  if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
+    HTTPClient http;
+    http.begin(baseURL + "/locker/status?serialNumber=" + serialString); //Specify the URL
+    int httpCode = http.GET(); //Make the request
+    if (httpCode > 0) { //Check for the returning code
+      const size_t bufferSize = JSON_OBJECT_SIZE(1) + 50;
+      DynamicJsonDocument jsonDocument(bufferSize);
+      DeserializationError error = deserializeJson(jsonDocument, http.getString());
+      if (error) {
+        Serial.println("There was an error while deserializing");
+      }
+      else {
+        boolean RegisterStatus;
+        JsonObject root = jsonDocument.as<JsonObject>();
+        lockerNumber = root["lockerNumber"];
+        Serial.print("Locker Number: "); Serial.println(lockerNumber);
+        return lockerNumber;
+      }
+      jsonDocument.clear();
+    }
+    else {
+      Serial.println("Error on HTTP request");
+    }
+    http.end(); //Free the resources
+  }
+  delay(500);
 }
 
 
