@@ -11,8 +11,7 @@ import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 @ApiUseTags('Share Locker')
 @Controller('share-locker')
 export class ShareLockerController {
-
-    constructor(private readonly shareLockerService: ShareLockerService) { }
+    constructor(private readonly shareLockerService: ShareLockerService) {}
 
     @ApiBearerAuth()
     @Roles(Role.USER, Role.SUPERUSER)

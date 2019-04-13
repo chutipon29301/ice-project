@@ -7,7 +7,7 @@ import { JwtToken } from './dto/jwt-token.dto';
 
 @Injectable()
 export class JwtAuthService {
-    constructor(private readonly jwtService: JwtService, private readonly userService: UserService) { }
+    constructor(private readonly jwtService: JwtService, private readonly userService: UserService) {}
 
     async generateTokenForLineID(lineID: string, picture?: string): Promise<JwtTokenInfo> {
         try {

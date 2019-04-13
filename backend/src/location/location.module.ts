@@ -10,4 +10,4 @@ import { LockerModule } from '../locker/locker.module';
     controllers: [LocationController],
     exports: [LocationService],
 })
-export class LocationModule { }
+export class LocationModule {}

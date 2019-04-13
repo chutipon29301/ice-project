@@ -12,4 +12,4 @@ import { LockerService } from './locker.service';
     controllers: [LockerController],
     exports: [LockerService, LocationModule, LockerUsageModule],
 })
-export class LockerModule { }
+export class LockerModule {}

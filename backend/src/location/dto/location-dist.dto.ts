@@ -1,4 +1,4 @@
-export class LocationDistanceDto{
+export class LocationDistanceDto {
     location: Location;
     dist: number;
 }

@@ -14,7 +14,7 @@ export class ShareLockerService {
         private readonly userService: UserService,
         private readonly configService: ConfigService,
         private readonly lockerInstanceService: LockerInstanceService,
-    ) { }
+    ) {}
 
     public async findUserInvitation({
         key,
@@ -23,7 +23,7 @@ export class ShareLockerService {
         nestedJoin = [],
     }: {
         key: {
-            id?: string
+            id?: string;
         };
         throwError?: boolean;
         joinWith?: Array<keyof UserInvitation>;

@@ -11,7 +11,6 @@ import { JwtToken } from '../jwt-auth/dto/jwt-token.dto';
 @ApiUseTags('User')
 @Controller('user')
 export class UserController {
-
     constructor(private readonly userService: UserService) {}
 
     @ApiBearerAuth()

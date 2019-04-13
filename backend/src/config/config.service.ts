@@ -95,7 +95,7 @@ export class ConfigService {
     get lineBotChannelToken(): string {
         const token = process.env.LINE_BOT_CHANNEL_TOKEN;
         if (token) {
-            return token
+            return token;
         } else {
             throw new Error(`Unable to read "LINE_BOT_CHANNEL_TOKEN" environment`);
         }

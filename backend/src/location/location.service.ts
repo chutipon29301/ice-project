@@ -8,13 +8,12 @@ import { LocationDistanceDto } from './dto/location-dist.dto';
 
 @Injectable()
 export class LocationService {
-
     constructor(
         @Inject(LocationRepositoryToken)
         private readonly locationRepository: Repository<Location>,
         @Inject(forwardRef(() => LockerService))
         private readonly lockerService: LockerService,
-    ) { }
+    ) {}
 
     public async create(description: string, lat: number, lng: number): Promise<Location> {
         const location = new Location(description, lat, lng);
@@ -30,7 +29,6 @@ export class LocationService {
     }: {
         key: {
             locationID?: number;
-
         };
         throwError?: boolean;
         joinWith?: Array<keyof Location>;
@@ -57,10 +55,10 @@ export class LocationService {
             sortFrom?: {
                 lat: number;
                 lng: number;
-            }
-        },
-        joinWith?: Array<keyof Location>,
-        nestedJoin?: string[],
+            };
+        };
+        joinWith?: Array<keyof Location>;
+        nestedJoin?: string[];
     }): Promise<Location[]> {
         const relations = [...joinWith, ...nestedJoin];
         const where: Partial<Location> = {};
@@ -98,5 +96,4 @@ export class LocationService {
     private calculateDist(destLat: number, destLng: number, lat: number, lng: number): number {
         return Math.sqrt(Math.pow(destLat - lat, 2) + Math.pow(destLng - lng, 2));
     }
-
 }

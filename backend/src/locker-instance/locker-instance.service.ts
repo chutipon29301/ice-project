@@ -23,7 +23,7 @@ export class LockerInstanceService {
         private readonly creditUsageService: CreditUsageService,
         @Inject(CanAccessRelationRepositoryToken)
         private readonly canAccessRelationRepository: Repository<CanAccessRelation>,
-    ) { }
+    ) {}
 
     public async create(accessCode: string, nationalID: string): Promise<LockerInstance> {
         try {
@@ -69,7 +69,7 @@ export class LockerInstanceService {
             ownerOf?: {
                 lockerID: number;
                 ownerID: string;
-            }
+            };
         };
         throwError?: boolean;
         joinWith?: Array<keyof LockerInstance>;
@@ -147,7 +147,7 @@ export class LockerInstanceService {
         nestedJoin?: string[];
     }): Promise<CanAccessRelation> {
         const relations: string[] = [...joinWith, ...nestedJoin];
-        let where: Partial<CanAccessRelation> | { startTime: string } = {}
+        let where: Partial<CanAccessRelation> | { startTime: string } = {};
         if (key.relation) {
             where = {
                 startTime: key.relation.startTime,
@@ -176,7 +176,7 @@ export class LockerInstanceService {
         const relations: string[] = [...joinWith, ...nestedJoin];
         if (key.nationalID) {
             const canAccessRelations = await this.canAccessRelationRepository.find({
-                where: { nationalID: key.nationalID, },
+                where: { nationalID: key.nationalID },
                 relations,
             });
             return canAccessRelations.filter(
@@ -222,7 +222,7 @@ export class LockerInstanceService {
             if (lockerInstance.userID !== ownerNationalID) {
                 throw new UnauthorizedException('Not owner of locker');
             }
-            const index = lockerInstance.canAccesses.findIndex((canAccess) => canAccess.nationalID === nationalID);
+            const index = lockerInstance.canAccesses.findIndex(canAccess => canAccess.nationalID === nationalID);
             if (index === -1) {
                 throw new NotFoundException(`User with nationalID "${nationalID}" does not have permission to access`);
             }
@@ -299,4 +299,3 @@ export class LockerInstanceService {
         return currentLockerInstance.inUsed;
     }
 }
-

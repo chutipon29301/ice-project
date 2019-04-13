@@ -18,7 +18,7 @@ import { AccessibleLockerDto } from './dto/accessible-locker.dto';
 @ApiUseTags('Locker Instance')
 @Controller('locker-instance')
 export class LockerInstanceController {
-    constructor(private readonly lockerInstanceService: LockerInstanceService) { }
+    constructor(private readonly lockerInstanceService: LockerInstanceService) {}
     @ApiBearerAuth()
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('myLocker')
@@ -52,21 +52,18 @@ export class LockerInstanceController {
     @ApiBearerAuth()
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('accessibleUsers')
-    async getAccessibleUsers(
-        @User() user: JwtToken,
-        @Query() query: AccessibleLockerDto,
-    ): Promise<UserArrayDto> {
+    async getAccessibleUsers(@User() user: JwtToken, @Query() query: AccessibleLockerDto): Promise<UserArrayDto> {
         const lockerInstance = await this.lockerInstanceService.findInstance({
             key: {
                 ownerOf: {
                     lockerID: query.lockerID,
                     ownerID: user.nationalID,
-                }
+                },
             },
             joinWith: ['canAccesses'],
-            nestedJoin: ['canAccesses.accessibleUser']
+            nestedJoin: ['canAccesses.accessibleUser'],
         });
-        return { users: lockerInstance.canAccesses.map((canAccessRelation) => canAccessRelation.accessibleUser) };
+        return { users: lockerInstance.canAccesses.map(canAccessRelation => canAccessRelation.accessibleUser) };
     }
 
     @ApiBearerAuth()

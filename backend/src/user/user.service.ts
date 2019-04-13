@@ -10,7 +10,7 @@ export class UserService {
         @Inject(UserRepositoryToken)
         private readonly userRepository: Repository<User>,
         private readonly lineAuthService: LineAuthService,
-    ) { }
+    ) {}
 
     public async listUser(): Promise<User[]> {
         const users = await this.userRepository.find();
@@ -58,7 +58,7 @@ export class UserService {
         const relations: string[] = [...joinWith, ...nestedJoin];
         let where: Partial<User> = {};
         if (key.lineID) {
-          where = { authenticationID: key.lineID, authenticationType: AuthenticationType.LINE };
+            where = { authenticationID: key.lineID, authenticationType: AuthenticationType.LINE };
         }
         if (key.nationalID) {
             where = { nationalID: key.nationalID };

@@ -1,4 +1,13 @@
-import { ConflictException, forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException, BadRequestException } from '@nestjs/common';
+import {
+    ConflictException,
+    forwardRef,
+    Inject,
+    Injectable,
+    NotFoundException,
+    UnauthorizedException,
+    HttpException,
+    BadRequestException,
+} from '@nestjs/common';
 import { LocationService } from '../location/location.service';
 import { Repository, FindConditions, ObjectLiteral, In } from 'typeorm';
 import { ConfigService } from '../config/config.service';
@@ -20,7 +29,7 @@ export class LockerService {
         private readonly lockerUsageService: LockerUsageService,
         @Inject(forwardRef(() => LockerInstanceService))
         private readonly lockerInstanceService: LockerInstanceService,
-    ) { }
+    ) {}
 
     public async findLocker({
         key,
@@ -222,6 +231,5 @@ export class LockerService {
                 throw new BadRequestException(error.message);
             }
         }
-
     }
 }

@@ -17,7 +17,7 @@ import { ReportLockerStatusDto } from './dto/report-locker-status.dto';
 @ApiUseTags('Locker')
 @Controller('locker')
 export class LockerController {
-    constructor(private readonly lockerService: LockerService) { }
+    constructor(private readonly lockerService: LockerService) {}
 
     @ApiOperation({
         title: 'List all locker',

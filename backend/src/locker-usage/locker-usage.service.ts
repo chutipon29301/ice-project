@@ -10,7 +10,7 @@ export class LockerUsageService {
     constructor(
         @Inject(LockerUsageRepositoryToken)
         private readonly lockerUsageRepository: Repository<LockerUsage>,
-    ) { }
+    ) {}
 
     public async findLockerUsage({
         key,
@@ -19,15 +19,15 @@ export class LockerUsageService {
         nestedJoin = [],
     }: {
         key?: {
-            lockerID: number
-        },
-        throwError?: boolean,
-        joinWith?: Array<keyof LockerUsage>,
-        nestedJoin?: string[]
+            lockerID: number;
+        };
+        throwError?: boolean;
+        joinWith?: Array<keyof LockerUsage>;
+        nestedJoin?: string[];
     }): Promise<LockerUsage> {
         const relations = [...joinWith, ...nestedJoin];
         let where: Partial<LockerUsage> = {};
-        let order: { [P in keyof LockerUsage]?: 'ASC' | 'DESC' | 1 | -1; } = {};
+        let order: { [P in keyof LockerUsage]?: 'ASC' | 'DESC' | 1 | -1 } = {};
         if (key.lockerID) {
             where = { lockerID: key.lockerID };
             order = { timeStamp: 'DESC' };

@@ -11,8 +11,7 @@ import { LocationCoordinationDto } from './dto/location-coordinate.dto';
 @ApiUseTags('Location')
 @Controller('location')
 export class LocationController {
-
-    constructor(private readonly locationService: LocationService) { }
+    constructor(private readonly locationService: LocationService) {}
     @ApiBearerAuth()
     @Roles(Role.SUPERUSER, Role.ADMIN, Role.USER)
     @Get()
@@ -48,5 +47,4 @@ export class LocationController {
     async delete(@Param('id', new ParseIntPipe()) id: number) {
         await this.locationService.delete(id);
     }
-
 }

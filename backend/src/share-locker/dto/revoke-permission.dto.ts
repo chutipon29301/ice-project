@@ -2,7 +2,7 @@ import { ToInt } from 'class-sanitizer';
 import { IsNumber, IsString } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
-export class RevokePermissionDto{
+export class RevokePermissionDto {
     @ApiModelProperty({
         description: 'locker ID that user wants to revoke some of shared permission of',
         required: true,

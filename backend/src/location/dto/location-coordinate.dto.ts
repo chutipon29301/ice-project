@@ -3,7 +3,6 @@ import { ApiModelProperty } from '@nestjs/swagger';
 import { ToFloat } from 'class-sanitizer';
 
 export class LocationCoordinationDto {
-
     @ApiModelProperty({
         description: 'latitude of location',
         required: true,
@@ -21,5 +20,4 @@ export class LocationCoordinationDto {
     @IsNumber()
     @ToFloat()
     lng: number;
-
 }
