@@ -38,10 +38,10 @@ GxEPD_Class display(io, /*RST=*/ 16, /*BUSY=*/ 4);          // arbitrary selecti
 //Set Username-Password WiFi
 //const char* ssid = "CTiPhone";
 //const char* password = "00000000";
-const char* ssid = "true_home2G_Up7";
-const char* password = "vDcqdQQq";
-//const char* ssid = "Chutipon's Wi-Fi Network";
-//const char* password = "Non29301";
+//const char* ssid = "true_home2G_Up7";
+//const char* password = "vDcqdQQq";
+const char* ssid = "Chutipon's Wi-Fi Network";
+const char* password = "Non29301";
 
 
 QRCode qrcode;
@@ -55,7 +55,7 @@ int idInt = 0;
 
 const char* lockerNumber = "XX";
 
-#define DOOR_LOCK 7
+#define DOOR_LOCK 21
 #define DOOR_LOCK_SWITCH 26
 
 boolean isOpenFromServer = false;
@@ -64,7 +64,7 @@ boolean isRegister = false;
 const char* generatedLink = "www.google.com";
 int wakeUpReason;
 
-String baseURL = "https://75377aed.ngrok.io";
+String baseURL = "https://d7ca69a2.ngrok.io";
 
 //--------------------------------------------------------------------------Void Setup-----------------------------------------------------------------------------//
 
@@ -78,10 +78,6 @@ void setup()
 
   WiFi.begin(ssid, password);
   EEPROM.begin(EEPROM_SIZE);
-
-  //    xTaskCreate(&doorLockSwitch, "doorLockSwitch", 2048, NULL, 10, NULL);
-  //    xTaskCreate(&doorLock, "doorLock", 2048, NULL, 10, NULL);
-  //  xTaskCreate(&testAsync, "testAsync", 2048, NULL, 10, NULL);
 
   esp_sleep_enable_ext0_wakeup(GPIO_NUM_15, 1);
   Serial.print("WakeUpReason: ");
@@ -160,16 +156,17 @@ void loop() {
       display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
       showText("Scan me!", &FreeSansBold9pt7b, 25, 160);
       Display_QRcode(8, 165, url);
-      while (counter <= 10) {
+      while (counter <= 60) {
+        doorLock();
+        doorLockSwitch();
         if (counter == 0) {
           display.update();
         } else if (counter > 0 && counter <= 9) {
           Serial.println("Showing QRcode for scanning...");
-        } else if (counter > 9) {
+        } else if (counter == 10) {
           // Initial partial update
           display.updateWindow(0, 0, 128, 296, false);
           display.fillRect(0, 120, 128, 176, GxEPD_WHITE);
-
           // Set Content in partial update
           display.fillScreen(GxEPD_WHITE);
           display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
@@ -179,10 +176,13 @@ void loop() {
           display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
           //     display.update();
           display.updateWindow(0, 120, 128, 176, true);
+        } else if (counter > 10 && counter < 59) {
+          Serial.println("Nothing to do");
+        } else if (counter == 59) {
           deepSleep();
         }
         counter++;
-        delay(1000);
+        delay(500);
       }
     } else {
       Serial.println("in normal wakeup loop");
@@ -268,92 +268,88 @@ int readWakeUpReason() {
 
 //----------------------------locker isLock status--------------------//
 //----------------------------Check all time--------------------------//
-void testAsync(void *p) {
-  while (1) {
-    Serial.println("Async");
-    delay(1000);
-  }
-}
-
-void doorLock(void *p) {
-  while (1) {
-    if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
-      HTTPClient http;
-      http.begin(baseURL + "/locker/status?serialNumber=" + serialString); //Specify the URL
-      int httpCode = http.GET(); //Make the request
-      if (httpCode > 0) { //Check for the returning code
-        const size_t bufferSize = JSON_OBJECT_SIZE(1) + 50;
-        DynamicJsonDocument jsonDocument(bufferSize);
-        DeserializationError error = deserializeJson(jsonDocument, http.getString());
-        if (error) {
-          Serial.println("There was an error while deserializing");
-        }
-        else {
-          //          boolean RegisterStatus;
-          JsonObject root = jsonDocument.as<JsonObject>();
-          isOpenFromServer = root["isOpen"];
-          Serial.print("Locker Status: "); Serial.println(isOpenFromServer);
-          if (isOpenFromServer == 1) {
-            //digitalWrite(LED_BUILTIN, LOW);
-            digitalWrite(DOOR_LOCK, HIGH);
-            Serial.println("LOCKED!");
-          } else {
-            //digitalWrite(LED_BUILTIN, HIGH);
-            digitalWrite(DOOR_LOCK, LOW);
-            Serial.println("UNLOCKED!");
-          }
-        }
-        jsonDocument.clear();
+void doorLock() {
+  if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
+    HTTPClient http;
+    http.begin(baseURL + "/locker/status?serialNumber=" + serialString); //Specify the URL
+    int httpCode = http.GET(); //Make the request
+    if (httpCode > 0) { //Check for the returning code
+      const size_t bufferSize = JSON_OBJECT_SIZE(1) + 50;
+      DynamicJsonDocument jsonDocument(bufferSize);
+      DeserializationError error = deserializeJson(jsonDocument, http.getString());
+      if (error) {
+        Serial.println("There was an error while deserializing");
       }
       else {
-        Serial.println("Error on HTTP request");
+        // boolean RegisterStatus;
+        JsonObject root = jsonDocument.as<JsonObject>();
+        isOpenFromServer = root["isOpen"];
+        Serial.print("Locker Status: "); Serial.println(isOpenFromServer);
+        if (isOpenFromServer == 1) {
+          //digitalWrite(LED_BUILTIN, LOW);
+          digitalWrite(DOOR_LOCK, LOW);
+          Serial.println("UNLOCKED!");
+        } else {
+          //digitalWrite(LED_BUILTIN, HIGH);
+          digitalWrite(DOOR_LOCK, HIGH);
+          Serial.println("LOCKED!");
+        }
       }
-      http.end(); //Free the resources
+      jsonDocument.clear();
     }
-    delay(500);
+    else {
+      Serial.println("Error on HTTP request");
+    }
+    http.end(); //Free the resources
   }
+  delay(500);
 }
+
 
 //----------------------------locker switch send status to server--------------------//
 //----------------------------When the door is closed-----------------//
-void doorLockSwitch(void *p) {
-  while (1) {
+void doorLockSwitch() {
+  isLockBySwitch = digitalRead(DOOR_LOCK_SWITCH);
+  if (isLockBySwitch) {
     if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
-      isLockBySwitch = digitalRead(DOOR_LOCK_SWITCH);
       HTTPClient http;
-      http.begin(baseURL + "/locker/reportStatus"); //Specify the URL
+      http.begin(baseURL + "/locker/lock"); //Specify the URL
       http.addHeader("Content-Type" , "application/x-www-form-urlencoded"); // content-type, header
-      http.POST("serialNumber=" + serialString + "&" + "isLocked=" + isLockBySwitch);
-      //      if (httpCode > 0) { //Check for the returning code
-      //        const size_t bufferSize = JSON_OBJECT_SIZE(1) + 50;
-      //        DynamicJsonDocument jsonDocument(bufferSize);
-      //        DeserializationError error = deserializeJson(jsonDocument, http.getString());
-      //        if (error) {
-      //          Serial.println("There was an error while deserializing");
-      //        }
-      //        else {
-      //          Serial.println("Report locker-status successfully!");
-      //        }
-      //        jsonDocument.clear();
-      //      }
-      //      else {
-      //        Serial.println("Error on HTTP request");
-      //      }
+      http.POST("serialNumber=" + serialString);
       http.end(); //Free the resources
     }
     delay(500);
-
-    //    isLockBySwitch = digitalRead(DOOR_LOCK_SWITCH);
-    //    if (isLockBySwitch == 1) {
-    //      Serial.println("Switch: Door is Close");
-    //      delay(1000);
-    //    } else {
-    //      Serial.println("Switch: Door still Open");
-    //      delay(1000);
-    //    }
-    //    delay(500);
   }
 }
+
+//----------------------------Report Status--------------------//
+//----------------------------When the door is open abnormal-----------------//
+//void reportStatus {
+//  if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
+//    isLockBySwitch = digitalRead(DOOR_LOCK_SWITCH);
+//    HTTPClient http;
+//    http.begin(baseURL + "/locker/reportStatus"); //Specify the URL
+//    http.addHeader("Content-Type" , "application/x-www-form-urlencoded"); // content-type, header
+//    http.POST("serialNumber=" + serialString + "&" + "isLocked=" + isLockBySwitch);
+//    if (httpCode > 0) { //Check for the returning code
+//      const size_t bufferSize = JSON_OBJECT_SIZE(1) + 50;
+//      DynamicJsonDocument jsonDocument(bufferSize);
+//      DeserializationError error = deserializeJson(jsonDocument, http.getString());
+//      if (error) {
+//        Serial.println("There was an error while deserializing");
+//      }
+//      else {
+//        Serial.println("Report locker-status successfully!");
+//      }
+//      jsonDocument.clear();
+//    }
+//    else {
+//      Serial.println("Error on HTTP request");
+//    }
+//    http.end(); //Free the resources
+//  }
+//  delay(500);
+//}
 
 //----------------------------EEPROM----------------------------------//
 //----------------------------Clear EEPROM----------------------------//
