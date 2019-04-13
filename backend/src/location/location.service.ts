@@ -4,6 +4,7 @@ import { LocationRepositoryToken } from '../constant';
 import { Location } from '../entities/location.entity';
 import { LockerAvailability } from '../entities/locker.entity';
 import { LockerService } from '../locker/locker.service';
+import { LocationDistanceDto } from './dto/location-dist.dto';
 
 @Injectable()
 export class LocationService {
@@ -28,9 +29,8 @@ export class LocationService {
         nestedJoin = [],
     }: {
         key: {
-            locationID?: number,
-            lat?: number,
-            lng?: number;
+            locationID?: number;
+
         };
         throwError?: boolean;
         joinWith?: Array<keyof Location>;
@@ -45,29 +45,35 @@ export class LocationService {
                 return await this.locationRepository.findOne({ where, relations });
             }
         }
-        if(key.lat&&key.lng){
-            
-        }
         throw new Error('One of the key must be specify');
     }
 
-    public async findLocations(args?: {
-        key?: {};
-        joinWith?: Array<keyof Location>;
-        nestedJoin?: string[];
+    public async findLocations({
+        key,
+        joinWith = [],
+        nestedJoin = [],
+    }: {
+        key?: {
+            sortFrom?: {
+                lat: number;
+                lng: number;
+            }
+        },
+        joinWith?: Array<keyof Location>,
+        nestedJoin?: string[],
     }): Promise<Location[]> {
-        const {
-            joinWith,
-            nestedJoin
-        } = {
-            ...{
-                joinWith: [],
-                nestedJoin: [],
-            },
-            ...args
-        };
         const relations = [...joinWith, ...nestedJoin];
-        return await this.locationRepository.find({ relations });
+        const where: Partial<Location> = {};
+        if (key.sortFrom) {
+            const { lat, lng } = key.sortFrom;
+            const locations = await this.locationRepository.find();
+            return await locations.sort((firstLocation, secondLocation) => {
+                const firstDist = this.calculateDist(firstLocation.lat, firstLocation.lng, lat, lng);
+                const secondDist = this.calculateDist(secondLocation.lat, secondLocation.lng, lat, lng);
+                return firstDist - secondDist;
+            });
+        }
+        return await this.locationRepository.find({ where, relations });
     }
 
     public async update(id: number, value: Partial<Location>) {
@@ -87,6 +93,10 @@ export class LocationService {
     public async findLocationByIDOrFail(id: number): Promise<Location> {
         const location = await this.locationRepository.findOneOrFail(id);
         return location;
+    }
+
+    private calculateDist(destLat: number, destLng: number, lat: number, lng: number): number {
+        return Math.sqrt(Math.pow(destLat - lat, 2) + Math.pow(destLng - lng, 2));
     }
 
 }
