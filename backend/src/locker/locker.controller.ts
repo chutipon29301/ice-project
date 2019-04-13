@@ -12,6 +12,7 @@ import { LockerSecretDto } from './dto/locker-secret.dto';
 import { RegisterLockerDto } from './dto/register-locker.dto';
 import { LockerService } from './locker.service';
 import { Locker } from '../entities/locker.entity';
+import { ReportLockerStatusDto } from './dto/report-locker-status.dto';
 
 @ApiUseTags('Locker')
 @Controller('locker')
@@ -64,6 +65,12 @@ export class LockerController {
     async addLocker(@Body() body: LockerSecretDto): Promise<AddLockerResponseDto> {
         const locker = await this.lockerService.create(body.secret);
         return { id: locker.id, serial: locker.serialNumber };
+    }
+
+    @ApiBearerAuth()
+    @Post('reportStatus')
+    async reportStatus(@Body() body: ReportLockerStatusDto) {
+        await this.lockerService.checkLockerLockStatus(body.serialNumber, body.isLocked);
     }
 
     @ApiBearerAuth()

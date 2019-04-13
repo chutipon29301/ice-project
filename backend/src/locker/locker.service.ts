@@ -1,4 +1,4 @@
-import { ConflictException, forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException } from '@nestjs/common';
+import { ConflictException, forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException, BadRequestException } from '@nestjs/common';
 import { LocationService } from '../location/location.service';
 import { Repository, FindConditions, ObjectLiteral, In } from 'typeorm';
 import { ConfigService } from '../config/config.service';
@@ -116,7 +116,7 @@ export class LockerService {
     public async registerLocker(id: number, value: RegisterLockerDto) {
         try {
             const locker = await this.findLocker({ key: { lockerID: id } });
-            const location = await this.locationService.findLocationByIDOrFail(value.locationID);
+            const location = await this.locationService.findLocation({ key: { locationID: value.locationID } });
             if (locker.availability !== LockerAvailability.UNREGISTERED) {
                 throw new ConflictException('Locker has already been registered');
             }
@@ -205,5 +205,23 @@ export class LockerService {
 
     public async updateLockerAvailability(lockerIDs: number[], availability: LockerAvailability) {
         await this.lockerRepository.update(lockerIDs, { availability });
+    }
+
+    public async checkLockerLockStatus(serialNumber: string, isLocked: boolean) {
+        try {
+            const locker = await this.findLocker({ key: { serialNumber } });
+            const lockerUsage = await this.lockerUsageService.findLockerUsage({ key: { lockerID: locker.id } });
+            if (lockerUsage.actionType !== (isLocked ? ActionType.CLOSE : ActionType.OPEN)) {
+                locker.availability = LockerAvailability.WARNING;
+                await this.lockerRepository.save(locker);
+            }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new BadRequestException(error.message);
+            }
+        }
+
     }
 }
