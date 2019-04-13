@@ -9,6 +9,7 @@ export enum LockerAvailability {
     AVAILABLE = 'AVAILABLE',
     MAINTENANCE = 'MAINTENANCE',
     DELETE = 'DELETE',
+    WARNING = 'WARNING',
 }
 
 @Entity()
