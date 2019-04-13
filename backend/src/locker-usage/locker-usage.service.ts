@@ -10,7 +10,34 @@ export class LockerUsageService {
     constructor(
         @Inject(LockerUsageRepositoryToken)
         private readonly lockerUsageRepository: Repository<LockerUsage>,
-    ) {}
+    ) { }
+
+    public async findLockerUsage({
+        key,
+        throwError = true,
+        joinWith = [],
+        nestedJoin = [],
+    }: {
+        key?: {
+            lockerID: number
+        },
+        throwError?: boolean,
+        joinWith?: Array<keyof LockerUsage>,
+        nestedJoin?: string[]
+    }): Promise<LockerUsage> {
+        const relations = [...joinWith, ...nestedJoin];
+        let where: Partial<LockerUsage> = {};
+        let order: { [P in keyof LockerUsage]?: 'ASC' | 'DESC' | 1 | -1; } = {};
+        if (key.lockerID) {
+            where = { lockerID: key.lockerID };
+            order = { timeStamp: 'DESC' };
+        }
+        if (throwError) {
+            return await this.lockerUsageRepository.findOneOrFail({ where, relations, order });
+        } else {
+            return await this.lockerUsageRepository.findOne({ where, relations, order });
+        }
+    }
 
     public async lock(lockerInstance: LockerInstance): Promise<LockerUsage> {
         const lockerUsage = new LockerUsage(ActionType.CLOSE, lockerInstance);
