@@ -42,6 +42,7 @@ export class LockerInstanceService {
             lockerInstance = await this.findInstance({ key: { inUsedLockerID: activeLocker.id } });
             const canAccessRelation = new CanAccessRelation(user, lockerInstance);
             await this.canAccessRelationRepository.save(canAccessRelation);
+            await this.lockerUsageService.unlock(lockerInstance, user);
             return lockerInstance;
         } catch (error) {
             if (error instanceof HttpException) {
