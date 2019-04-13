@@ -1,8 +1,7 @@
 import { Inject, Injectable, NotFoundException, HttpException } from '@nestjs/common';
-import { Repository, MoreThan, LessThan, FindOneOptions, ObjectLiteral } from 'typeorm';
+import { Repository, MoreThan, FindOneOptions, ObjectLiteral } from 'typeorm';
 import { ConfigService } from '../config/config.service';
 import { QRCodeRepositoryToken } from '../constant';
-import { Locker } from '../entities/locker.entity';
 import { QRCode } from '../entities/qr-code.entity';
 import { LockerService } from '../locker/locker.service';
 
