@@ -17,21 +17,6 @@ services:
     # - ./volumes/database:/var/lib/mysql
     # logging:
     #   driver: none
-  elasticsearch:
-    # volumes:
-    # - ./volumes/elasticsearch:/usr/share/elasticsearch/data
-    logging:
-      driver: none
-  kibana:
-    ports:
-      - 5601:5601
-    logging:
-      driver: none
-  metricbeat:
-    # volumes:
-    # - ./metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
-    logging:
-      driver: none
   nginx:
     image: nginx
     restart: always
