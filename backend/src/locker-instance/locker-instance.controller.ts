@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Query, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query, Param, ParseIntPipe } from '@nestjs/common';
 import { LockerInstance } from '../entities/locker-instance.entity';
 import { ListLockerInstanceDto } from './dto/list-locker-instance.dto';
 import { LockerInstanceDto } from './dto/locker-instance.dto';
@@ -18,7 +18,7 @@ import { AccessibleLockerDto } from './dto/accessible-locker.dto';
 @ApiUseTags('Locker Instance')
 @Controller('locker-instance')
 export class LockerInstanceController {
-    constructor(private readonly lockerInstanceService: LockerInstanceService) {}
+    constructor(private readonly lockerInstanceService: LockerInstanceService) { }
     @ApiBearerAuth()
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('myLocker')
@@ -27,8 +27,8 @@ export class LockerInstanceController {
             key: {
                 inUsedByNationalID: user.nationalID,
             },
-            joinWith: ['locker', 'ownerUser'],
-            nestedJoin: ['locker.location'],
+            joinWith: ['locker', 'canAccesses'],
+            nestedJoin: ['locker.location', 'canAccesses.accessibleUser'],
         });
         return { lockerInstances };
     }
@@ -39,6 +39,19 @@ export class LockerInstanceController {
     async getInUsedLocker(): Promise<LockerInstanceArrayDto> {
         const lockerInstances = await this.lockerInstanceService.findInstances({ key: { inUsed: true }, joinWith: ['ownerUser'] });
         return { lockerInstances };
+    }
+
+    @ApiBearerAuth()
+    @Roles(Role.USER, Role.SUPERUSER)
+    @Get('history/:id')
+    async getLockerInstanceUsageHistory(@Param('id', new ParseIntPipe()) id: number): Promise<LockerInstance> {
+        return await this.lockerInstanceService.findInstance({
+            key: {
+                inUsedLockerID: id
+            },
+            joinWith: ['lockerUsages'],
+            nestedJoin: ['lockerUsages.user']
+        });
     }
 
     @ApiBearerAuth()
