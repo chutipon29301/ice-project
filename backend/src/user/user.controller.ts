@@ -11,7 +11,7 @@ import { JwtToken } from '../jwt-auth/dto/jwt-token.dto';
 @ApiUseTags('User')
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) { }
 
     @ApiBearerAuth()
     @Roles(Role.SUPERUSER, Role.ADMIN)
@@ -19,6 +19,15 @@ export class UserController {
     async list(): Promise<{ users: User[] }> {
         const users = await this.userService.listUser();
         return { users };
+    }
+
+    @ApiBearerAuth()
+    @Roles(Role.USER, Role.ADMIN, Role.SUPERUSER)
+    @Get('profile')
+    async profile(@UserDecorator() user: JwtToken): Promise<User> {
+        return await this.userService.findUser({
+            key: { nationalID: user.nationalID },
+        });
     }
 
     @ApiBearerAuth()

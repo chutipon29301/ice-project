@@ -68,7 +68,6 @@ export class UserService {
         } else {
             return await this.userRepository.findOne({ where, relations });
         }
-        throw new Error('One of the key must be specify');
     }
 
     public async canUserActivateRole(nationalID: string, ...roles: Role[]): Promise<boolean> {
