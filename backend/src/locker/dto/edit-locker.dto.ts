@@ -1,6 +1,7 @@
 import { IsString, IsNumber, IsEnum, IsOptional } from 'class-validator';
 import { ToInt } from 'class-sanitizer';
 import { ApiModelProperty } from '@nestjs/swagger';
+import { LockerAvailability } from '../../entities/locker.entity';
 
 export class EditLockerDto {
     @ApiModelProperty({
@@ -28,7 +29,11 @@ export class EditLockerDto {
     @IsString()
     public number: string;
 
-    // @IsOptional()
-    // @IsEnum(LockerStatus)
-    // public status: LockerStatus;
+    @ApiModelProperty({
+        description: 'Edit Locker availability',
+        required: false,
+    })
+    @IsOptional()
+    @IsEnum(LockerAvailability)
+    public status: LockerAvailability;
 }
