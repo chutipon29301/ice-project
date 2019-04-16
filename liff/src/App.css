@@ -12,8 +12,22 @@ body {
   height: 55px !important;
 }
 
+div.locker-container {
+  width: 88vw;
+  margin-left: 6vw;
+  margin-right: 6vw;
+  color: black;
+  font-size: 16;
+  font-weight: bolder;
+  position: relative;
+}
+
 .ant-card-body {
   padding: 12px !important;
+}
+
+.ant-timeline-item-tail {
+  border: 1px solid #2979ff !important;
 }
 
 .mb-0 {
