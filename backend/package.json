@@ -31,6 +31,8 @@
     "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",
     "crypto-js": "^3.1.9-1",
+    "dialogflow": "^0.8.2",
+    "dialogflow-fulfillment": "^0.6.1",
     "elasticsearch": "^15.4.1",
     "helmet": "^3.15.1",
     "moment": "^2.24.0",
