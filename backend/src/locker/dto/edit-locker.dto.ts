@@ -35,5 +35,5 @@ export class EditLockerDto {
     })
     @IsOptional()
     @IsEnum(LockerAvailability)
-    public status: LockerAvailability;
+    public lockerAvailability: LockerAvailability;
 }
