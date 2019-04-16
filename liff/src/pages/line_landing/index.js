@@ -20,6 +20,9 @@ class LineLanding extends React.Component {
       });
       if (res.data) {
         setAuthentication(true);
+        localStorage.setItem("token", res.data.token);
+        Axios.defaults.headers.common["Authorization"] =
+          "Bearer " + res.data.token;
         history.push("/" + initialURL);
       }
     } catch (error) {
