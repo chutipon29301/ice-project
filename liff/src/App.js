@@ -47,7 +47,14 @@ class LiffHelper {
     if (liff) {
       liff.openWindow({ url: url, external: external });
     } else {
-      console.log("eiei");
+      console.log("NOT IN LIFF");
+    }
+  }
+  closeLiff() {
+    if (liff) {
+      liff.closeWindow();
+    } else {
+      console.log("NOT IN LIFF");
     }
   }
 }
