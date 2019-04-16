@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException, ConflictException } from '@nestjs/common';
-import { Repository, ObjectLiteral, FindOneOptions } from 'typeorm';
+import { Repository } from 'typeorm';
 import { LockerInstanceRepositoryToken, CanAccessRelationRepositoryToken } from '../constant';
 import { CanAccessRelation } from '../entities/can-access.entity';
 import { LockerInstance } from '../entities/locker-instance.entity';
@@ -296,6 +296,6 @@ export class LockerInstanceService {
             key: { inUsedLockerID: activeLocker.id },
             throwError: false,
         });
-        return currentLockerInstance.inUsed;
+        return currentLockerInstance ? currentLockerInstance.inUsed : false;
     }
 }
