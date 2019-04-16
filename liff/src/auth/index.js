@@ -18,15 +18,18 @@ class Auth extends React.Component {
           lineToken: idToken
         });
         if (res) {
+          localStorage.setItem("token", res.data.token);
           setAuthentication(true);
           setTokenAndExpiration(idToken, expireIn);
+          Axios.defaults.headers.common["Authorization"] =
+            "Bearer " + res.data.token;
         }
       } catch (error) {
         console.log(error);
         throw error;
       }
     } else {
-      window.location.href = "http://localhost/auth/lineLoginPage";
+      window.location.href = "https://10e2f066.ngrok.io/auth/lineLoginPage";
     }
   }
   render() {
@@ -58,7 +61,7 @@ const initAxiosErrorHandling = callback => {
       if (error.response.status === 401) {
         console.log("eiei");
         callback();
-        window.location.href = "http://localhost/auth/lineLoginPage";
+        window.location.href = "https://10e2f066.ngrok.io/auth/lineLoginPage";
       }
       return error;
     }
