@@ -3,10 +3,12 @@ import { Locker } from './locker.entity';
 
 @Entity()
 export class Location {
-    constructor(description: string, lat: number, lng: number) {
+
+    constructor(description: string, lat: number, lng: number, imageURL: string) {
         this.description = description;
         this.lat = lat;
         this.lng = lng;
+        this.imageURL = imageURL;
     }
 
     @PrimaryGeneratedColumn()
@@ -24,6 +26,11 @@ export class Location {
         type: 'double',
     })
     lng: number;
+
+    @Column({
+        nullable: true,
+    })
+    imageURL: string;
 
     @OneToMany(type => Locker, locker => locker.location)
     lockers: Locker[];

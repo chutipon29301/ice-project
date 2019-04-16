@@ -25,4 +25,11 @@ export class LocationEntityDto {
     @IsNumber()
     @ToInt()
     lng: number;
+
+    @ApiModelProperty({
+        description: 'location image url',
+        required: false,
+    })
+    @IsString()
+    imageURL: string;
 }

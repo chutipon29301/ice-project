@@ -15,8 +15,8 @@ export class LocationService {
         private readonly lockerService: LockerService,
     ) {}
 
-    public async create(description: string, lat: number, lng: number): Promise<Location> {
-        const location = new Location(description, lat, lng);
+    public async create(description: string, lat: number, lng: number, imageURL?: string): Promise<Location> {
+        const location = new Location(description, lat, lng, imageURL);
         await this.locationRepository.save(location);
         return location;
     }

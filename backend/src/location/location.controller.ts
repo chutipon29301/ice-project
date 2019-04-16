@@ -31,7 +31,7 @@ export class LocationController {
     @Roles(Role.SUPERUSER, Role.ADMIN)
     @Post()
     async create(@Body() body: LocationEntityDto) {
-        await this.locationService.create(body.description, body.lat, body.lng);
+        await this.locationService.create(body.description, body.lat, body.lng, body.imageURL);
     }
 
     @ApiBearerAuth()
