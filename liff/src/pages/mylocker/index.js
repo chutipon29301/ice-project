@@ -1,20 +1,37 @@
-import React from "react";
-import { WhiteSpace, Modal, NavBar } from "antd-mobile";
-import { Card, Row, Col, Icon } from "antd";
-import facultyOfEngineering from "../../assets/facultyOfEngineeringSign.jpeg";
-import Goku from "../../assets/goku.jpg";
+import React, { useEffect } from "react";
+import { WhiteSpace, NavBar } from "antd-mobile";
+import { Row, Col } from "antd";
+import LockerCard from "./components/LockerCard";
+import { connect } from "react-redux";
+import { fetchMyLockers, fetchSharedLockers, fetchUserProfile } from "./ducks";
 
-const Alert = Modal.alert;
-const MyLocker = ({ history }) => {
+// const Alert = Modal.alert;
+const MyLocker = ({
+  history,
+  fetchMyLockers,
+  myLockersInstances,
+  fetchSharedLockers,
+  sharedLockersInstances,
+  fetchUserProfile,
+  userProfile
+}) => {
+  useEffect(() => {
+    fetchUserProfile();
+    fetchMyLockers();
+    fetchSharedLockers();
+    document.body.style.backgroundColor = "#EEF4FB";
+    return () => {
+      document.body.style.backgroundColor = "";
+    };
+  }, []);
   return (
     <div className="bg-primary">
-      <NavBar mode="dark"> My Locker </NavBar>
+      <NavBar mode="dark"> Accessible Lockers </NavBar>
       <div style={{ backgroundColor: "#2979FF" }}>
         <Row type="flex" align="middle">
           <Col span={8} style={{ padding: 12 }}>
-            {" "}
             <img
-              src={Goku}
+              src={userProfile.profileImage}
               alt="profile"
               style={{
                 borderRadius: 100,
@@ -26,151 +43,96 @@ const MyLocker = ({ history }) => {
           </Col>
           <Col span={16} style={{ padding: 12, color: "white", fontSize: 14 }}>
             <p style={{ marginBottom: 2 }}>
-              Username:
-              <span style={{ fontWeight: "bold" }}> ttaaii13492 </span>
-            </p>
-            <p style={{ marginBottom: 2 }}>
-              Email:
+              Full name:
               <span style={{ fontWeight: "bold" }}>
                 {" "}
-                Tai.t_13492@hotmail.com
+                {userProfile.firstName} {userProfile.lastName}{" "}
               </span>
             </p>
             <p style={{ marginBottom: 2 }}>
-              My Lockers: <span style={{ fontWeight: "bold" }}> 2 </span>{" "}
+              Accessible lockers:{" "}
+              <span style={{ fontWeight: "bold" }}>
+                {" "}
+                {myLockersInstances.length + sharedLockersInstances.length}{" "}
+              </span>{" "}
             </p>
           </Col>
         </Row>
       </div>
       <WhiteSpace size="lg" />
-      <Card
-        style={{ width: "88vw", marginLeft: "6vw", marginRight: "6vw" }}
-        cover={
-          <div style={{ position: "relative" }}>
-            <div
-              className="card-tab-right"
-              onClick={() => history.push("/my-locker/1")}
-            >
-              <Icon type="right" style={{ color: "white" }} />
-            </div>
-            <img
-              alt="example"
-              src={facultyOfEngineering}
-              style={{ width: "100%" }}
-            />
-          </div>
-        }
-        actions={[
-          <button
-            className="button default bg-danger"
-            onClick={() =>
-              Alert(
-                "Return Locker",
-                "Are you going to return Locker 1, Building 2, Faculty of Engineering?",
-                [
-                  { text: "Cancel", onPress: () => console.log("cancel") },
-                  { text: "Ok", onPress: () => console.log("Ok") }
-                ]
-              )
-            }
-          >
+      <div className="locker-container">
+        <p> My Lockers </p>
+        {myLockersInstances.length === 0 && (
+          <p style={{ fontWeight: "normal" }}>
             {" "}
-            <Icon type="rollback" style={{ marginRight: 4 }} /> Return{" "}
-          </button>,
-          <button
-            className="button default bg-success"
-            onClick={() =>
-              Alert(
-                "Share Locker",
-                "Are you going to share Locker 1, Building 2, Faculty of Engineering?",
-                [
-                  { text: "Cancel", onPress: () => console.log("cancel") },
-                  { text: "Ok", onPress: () => console.log("Ok") }
-                ]
-              )
-            }
-          >
-            {" "}
-            <Icon type="usergroup-add" style={{ marginRight: 4 }} />
-            Share
-          </button>
-        ]}
-      >
-        <div>
-          <p className="card-titletext">
-            Locker 1, Building 2, Faculty of Engineering
+            There is no locker in your posession yet.
           </p>
-          <p className="card-descriptiontext">Deposited Since Feb 22, 10.01</p>
-          <Icon type="user" style={{ color: "black", height: 4 }} />{" "}
-          <span style={{ fontWeight: "bold", fontSize: 12 }}> : 1</span>
-        </div>
-      </Card>
-      <WhiteSpace size="lg" />
-      <Card
-        style={{ width: "88vw", marginLeft: "6vw", marginRight: "6vw" }}
-        cover={
-          <div style={{ position: "relative" }}>
-            <div
-              className="card-tab-right"
-              onClick={() => history.push("/my-locker/1")}
-            >
-              <Icon type="right" style={{ color: "white" }} />
-            </div>
-            <img
-              alt="example"
-              src={facultyOfEngineering}
-              style={{ width: "100%" }}
+        )}
+      </div>
+      {myLockersInstances.map(
+        ({ canAccesses, lockerID, startTime, locker }) => (
+          <React.Fragment key={lockerID}>
+            <LockerCard
+              navigateToLockerDetails={() =>
+                history.push(`/my-locker/${lockerID}`)
+              }
+              lockerID={lockerID}
+              location_description={locker.location.description}
+              amountOfAccessibleUsers={canAccesses.length}
+              imageURL={locker.location.imageURL}
+              startTime={startTime}
+              number={locker.number}
+              isMine={true}
             />
-          </div>
-        }
-        actions={[
-          <button
-            className="button default bg-danger"
-            onClick={() =>
-              Alert(
-                "Return Locker",
-                "Are you going to return Locker 1, Building 2, Faculty of Engineering?",
-                [
-                  { text: "Cancel", onPress: () => console.log("cancel") },
-                  { text: "Ok", onPress: () => console.log("Ok") }
-                ]
-              )
-            }
-          >
+            <WhiteSpace size="lg" />
+          </React.Fragment>
+        )
+      )}
+
+      <div className="locker-container">
+        <p> Shared with me </p>
+        {sharedLockersInstances.length === 0 && (
+          <p style={{ fontWeight: "normal" }}>
             {" "}
-            <Icon type="rollback" style={{ marginRight: 4 }} /> Return{" "}
-          </button>,
-          <button
-            className="button default bg-success"
-            onClick={() =>
-              Alert(
-                "Share Locker",
-                "Are you going to share Locker 1, Building 2, Faculty of Engineering?",
-                [
-                  { text: "Cancel", onPress: () => console.log("cancel") },
-                  { text: "Ok", onPress: () => console.log("Ok") }
-                ]
-              )
-            }
-          >
-            {" "}
-            <Icon type="usergroup-add" style={{ marginRight: 4 }} />
-            Share
-          </button>
-        ]}
-      >
-        <div>
-          <p className="card-titletext">
-            Locker 1, Building 2, Faculty of Engineering
+            There is no locker shared with you yet.
           </p>
-          <p className="card-descriptiontext">Deposited Since Feb 22, 10.01</p>
-          <Icon type="user" style={{ color: "black", height: 4 }} />{" "}
-          <span style={{ fontWeight: "bold", fontSize: 12 }}> : 1</span>
-        </div>
-      </Card>
+        )}
+      </div>
+
+      {sharedLockersInstances.map(
+        ({ ownerUser, lockerID, startTime, locker }) => (
+          <React.Fragment key={lockerID}>
+            <LockerCard
+              navigateToLockerDetails={() =>
+                history.push(`/my-locker/${lockerID}`)
+              }
+              lockerID={lockerID}
+              location_description={locker.location.description}
+              amountOfAccessibleUsers={
+                ownerUser.firstName + " " + ownerUser.lastName
+              }
+              profileImage={ownerUser.profileImage}
+              number={locker.number}
+              imageURL={locker.location.imageURL}
+              startTime={startTime}
+              isMine={false}
+            />
+            <WhiteSpace size="lg" />
+          </React.Fragment>
+        )
+      )}
       <WhiteSpace size="lg" />
     </div>
   );
 };
 
-export default MyLocker;
+const mapStateToProps = state => ({
+  myLockersInstances: state.lockerInstances.myLockersInstances,
+  sharedLockersInstances: state.lockerInstances.sharedLockersInstances,
+  userProfile: state.lockerInstances.userProfile
+});
+
+export default connect(
+  mapStateToProps,
+  { fetchMyLockers, fetchSharedLockers, fetchUserProfile }
+)(MyLocker);
