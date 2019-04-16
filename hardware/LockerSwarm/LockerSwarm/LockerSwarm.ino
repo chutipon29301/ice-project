@@ -36,12 +36,12 @@ GxIO_Class io(SPI, /*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16);   // arbitrary selecti
 GxEPD_Class display(io, /*RST=*/ 16, /*BUSY=*/ 4);          // arbitrary selection of (16), 4
 
 //Set Username-Password WiFi
-//const char* ssid = "CTiPhone";
-//const char* password = "00000000";
+const char* ssid = "CTiPhone";
+const char* password = "00000000";
 //const char* ssid = "true_home2G_Up7";
 //const char* password = "vDcqdQQq";
-const char* ssid = "Chutipon's Wi-Fi Network";
-const char* password = "Non29301";
+//const char* ssid = "Chutipon's Wi-Fi Network";
+//const char* password = "Non29301";
 
 
 QRCode qrcode;
@@ -59,12 +59,14 @@ const char* lockerNumber = "XX";
 #define DOOR_LOCK_SWITCH 26
 
 boolean isOpenFromServer = false;
-boolean isLockBySwitch = false;
+boolean isLockBySwitch = true;
+boolean isUnlockBySwitch = false;
+boolean isPostToServer = false;
 boolean isRegister = false;
 const char* generatedLink = "www.google.com";
 int wakeUpReason;
 
-String baseURL = "https://d7ca69a2.ngrok.io";
+String baseURL = "https://10e2f066.ngrok.io";
 
 //--------------------------------------------------------------------------Void Setup-----------------------------------------------------------------------------//
 
@@ -156,14 +158,25 @@ void loop() {
       display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
       showText("Scan me!", &FreeSansBold9pt7b, 25, 160);
       Display_QRcode(8, 165, url);
-      while (counter <= 60) {
+
+      //boolean isLockBySwitch = true; false true
+      //boolean isUnlockBySwitch = false; true
+      //boolean isPostToServer = false;
+
+      while (true) {
         doorLock();
-        doorLockSwitch();
-        if (counter == 0) {
-          display.update();
-        } else if (counter > 0 && counter <= 9) {
-          Serial.println("Showing QRcode for scanning...");
-        } else if (counter == 10) {
+
+        isLockBySwitch = !digitalRead(DOOR_LOCK_SWITCH);
+        if (!isLockBySwitch) {
+          isUnlockBySwitch = true;
+        }
+
+        Serial.println("isLock status :");
+        Serial.print(isLockBySwitch);
+        Serial.println(isUnlockBySwitch);
+
+        if (isLockBySwitch && isUnlockBySwitch) {
+          doorLockSwitch();
           // Initial partial update
           display.updateWindow(0, 0, 128, 296, false);
           display.fillRect(0, 120, 128, 176, GxEPD_WHITE);
@@ -176,13 +189,47 @@ void loop() {
           display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
           //     display.update();
           display.updateWindow(0, 120, 128, 176, true);
-        } else if (counter > 10 && counter < 59) {
+          deepSleep();
+        }
+
+
+        if (counter == 0) {
+          display.update();
+        } else if (counter > 0 && counter <= 4) {
+          Serial.println("Showing QRcode for scanning...");
+          isLockBySwitch = !digitalRead(DOOR_LOCK_SWITCH);
+          if (!isLockBySwitch) {
+            isUnlockBySwitch = true;
+          }
+        } else if (counter == 4) {
+          // Initial partial update
+          display.updateWindow(0, 0, 128, 296, false);
+          display.fillRect(0, 120, 128, 176, GxEPD_WHITE);
+          // Set Content in partial update
+          display.fillScreen(GxEPD_WHITE);
+          display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
+          display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
+          showText("Number", &FreeSans12pt7b, 25, 170);
+          showText(string2char(getLockerNumber()), &FreeSansBold24pt7b, 37, 220);
+          display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
+          //     display.update();
+          display.updateWindow(0, 120, 128, 176, true);
+          isLockBySwitch = !digitalRead(DOOR_LOCK_SWITCH);
+          if (!isLockBySwitch) {
+            isUnlockBySwitch = true;
+          }
+        } else if (counter > 4) {
           Serial.println("Nothing to do");
-        } else if (counter == 59) {
+          isLockBySwitch = !digitalRead(DOOR_LOCK_SWITCH);
+          if (!isLockBySwitch) {
+            isUnlockBySwitch = true;
+          }
+        } else if (counter > 10) {
+          doorLockSwitch();
           deepSleep();
         }
         counter++;
-        delay(500);
+        delay(100);
       }
     } else {
       Serial.println("in normal wakeup loop");
@@ -302,7 +349,7 @@ void doorLock() {
     }
     http.end(); //Free the resources
   }
-  delay(500);
+  delay(100);
 }
 
 
@@ -318,38 +365,9 @@ void doorLockSwitch() {
       http.POST("serialNumber=" + serialString);
       http.end(); //Free the resources
     }
-    delay(500);
+    delay(100);
   }
 }
-
-//----------------------------Report Status--------------------//
-//----------------------------When the door is open abnormal-----------------//
-//void reportStatus {
-//  if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
-//    isLockBySwitch = digitalRead(DOOR_LOCK_SWITCH);
-//    HTTPClient http;
-//    http.begin(baseURL + "/locker/reportStatus"); //Specify the URL
-//    http.addHeader("Content-Type" , "application/x-www-form-urlencoded"); // content-type, header
-//    http.POST("serialNumber=" + serialString + "&" + "isLocked=" + isLockBySwitch);
-//    if (httpCode > 0) { //Check for the returning code
-//      const size_t bufferSize = JSON_OBJECT_SIZE(1) + 50;
-//      DynamicJsonDocument jsonDocument(bufferSize);
-//      DeserializationError error = deserializeJson(jsonDocument, http.getString());
-//      if (error) {
-//        Serial.println("There was an error while deserializing");
-//      }
-//      else {
-//        Serial.println("Report locker-status successfully!");
-//      }
-//      jsonDocument.clear();
-//    }
-//    else {
-//      Serial.println("Error on HTTP request");
-//    }
-//    http.end(); //Free the resources
-//  }
-//  delay(500);
-//}
 
 //----------------------------EEPROM----------------------------------//
 //----------------------------Clear EEPROM----------------------------//
@@ -476,7 +494,7 @@ String getLockerNumber() {
     }
     http.end(); //Free the resources
   }
-  delay(500);
+  delay(100);
 }
 
 char* string2char(String command) {
@@ -513,7 +531,7 @@ String generateLink() {
     }
     http.end(); //Free the resources
   }
-  delay(500);
+  delay(100);
 }
 
 
