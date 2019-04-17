@@ -19,7 +19,7 @@ export class QrService {
             const locker = await this.lockerService.findLocker({ key: { activeLockerSerialNumber: serialNumber } });
             const qr = new QRCode(locker);
             await this.qrCodeRepository.save(qr);
-            return `${this.configService.liffServerURL}/unlock?accessCode=${qr.id}`;
+            return `${this.configService.liffServerURL}/open-locker?accessCode=${qr.id}`;
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
