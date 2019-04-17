@@ -21,6 +21,11 @@ services:
       ELASTICSEARCH_URL: http://elasticsearch:9200/
     depends_on:
       - db
+  grafana:
+    container_name: ice-project-grafana
+    image: grafana/grafana
+    volumes: 
+      - ./volumes/grafana:/var/lib/grafana
   db:
     image: mysql:5.7
     container_name: ice-project-db
