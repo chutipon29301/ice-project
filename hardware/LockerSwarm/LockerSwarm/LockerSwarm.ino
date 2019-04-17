@@ -40,9 +40,12 @@ GxEPD_Class display(io, /*RST=*/ 16, /*BUSY=*/ 4);          // arbitrary selecti
 //const char* password = "00000000";
 //const char* ssid = "true_home2G_Up7";
 //const char* password = "vDcqdQQq";
-const char* ssid = "Chutipon's Wi-Fi Network";
-const char* password = "Non29301";
-
+//const char* ssid = "Chutipon's Wi-Fi Network";
+//const char* password = "Non29301";
+//const char* ssid = "APPLESUCKS";
+//const char* password = "mynameistai";
+const char* ssid = "prial";
+const char* password = "mynameisp";
 
 QRCode qrcode;
 int counter = 0;
@@ -159,7 +162,7 @@ void loop() {
       showText("Scan me!", &FreeSansBold9pt7b, 25, 160);
       Display_QRcode(8, 165, url);
 
-      while (counter < 6) {
+      while (counter < 7) {
         doorLock();
 
 //        isLockBySwitch = !digitalRead(DOOR_LOCK_SWITCH);
@@ -192,13 +195,13 @@ void loop() {
 
         if (counter == 0) {
           display.update();
-        } else if (counter > 0 && counter < 5) {
+        } else if (counter > 0 && counter < 6) {
           Serial.println("Showing QRcode for scanning...");
 //          isLockBySwitch = !digitalRead(DOOR_LOCK_SWITCH);
 //          if (!isLockBySwitch) {
 //            isUnlockBySwitch = true;
 //          }
-        } else if (counter == 5) {
+        } else if (counter == 6) {
           // Initial partial update
           doorLockSwitch();
           delay(100);
