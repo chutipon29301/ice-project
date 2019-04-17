@@ -4,7 +4,6 @@ import { LocationRepositoryToken } from '../constant';
 import { Location } from '../entities/location.entity';
 import { LockerAvailability } from '../entities/locker.entity';
 import { LockerService } from '../locker/locker.service';
-import { LocationDistanceDto } from './dto/location-dist.dto';
 
 @Injectable()
 export class LocationService {
@@ -13,7 +12,7 @@ export class LocationService {
         private readonly locationRepository: Repository<Location>,
         @Inject(forwardRef(() => LockerService))
         private readonly lockerService: LockerService,
-    ) {}
+    ) { }
 
     public async create(description: string, lat: number, lng: number, imageURL?: string): Promise<Location> {
         const location = new Location(description, lat, lng, imageURL);
@@ -81,7 +80,9 @@ export class LocationService {
     public async delete(id: number) {
         try {
             const location = await this.findLocation({ key: { locationID: id }, joinWith: ['lockers'] });
-            await this.lockerService.updateLockerAvailability(location.lockers.map(locker => locker.id), LockerAvailability.MAINTENANCE);
+            if (location.lockers.length > 0) {
+                await this.lockerService.updateLockerAvailability(location.lockers.map(locker => locker.id), LockerAvailability.MAINTENANCE);
+            }
             await this.locationRepository.delete(id);
         } catch (error) {
             throw error;
