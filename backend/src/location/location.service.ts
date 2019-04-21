@@ -12,7 +12,7 @@ export class LocationService {
         private readonly locationRepository: Repository<Location>,
         @Inject(forwardRef(() => LockerService))
         private readonly lockerService: LockerService,
-    ) { }
+    ) {}
 
     public async create(description: string, lat: number, lng: number, imageURL?: string): Promise<Location> {
         const location = new Location(description, lat, lng, imageURL);

@@ -3,7 +3,6 @@ import { Locker } from './locker.entity';
 
 @Entity()
 export class Location {
-
     constructor(description: string, lat: number, lng: number, imageURL: string) {
         this.description = description;
         this.lat = lat;

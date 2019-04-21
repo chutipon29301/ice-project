@@ -18,7 +18,7 @@ import { AccessibleLockerDto } from './dto/accessible-locker.dto';
 @ApiUseTags('Locker Instance')
 @Controller('locker-instance')
 export class LockerInstanceController {
-    constructor(private readonly lockerInstanceService: LockerInstanceService) { }
+    constructor(private readonly lockerInstanceService: LockerInstanceService) {}
     @ApiBearerAuth()
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('myLocker')
@@ -47,10 +47,10 @@ export class LockerInstanceController {
     async getLockerInstanceUsageHistory(@Param('id', new ParseIntPipe()) id: number): Promise<LockerInstance> {
         return await this.lockerInstanceService.findInstance({
             key: {
-                inUsedLockerID: id
+                inUsedLockerID: id,
             },
             joinWith: ['lockerUsages'],
-            nestedJoin: ['lockerUsages.user']
+            nestedJoin: ['lockerUsages.user'],
         });
     }
 
