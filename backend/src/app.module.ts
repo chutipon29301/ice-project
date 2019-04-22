@@ -20,6 +20,7 @@ import { UserModule } from './user/user.module';
 import { ShareLockerModule } from './share-locker/share-locker.module';
 import { GlobalModule } from './global/global.module';
 import { CreditUsageModule } from './credit-usage/credit-usage.module';
+import { ReportModule } from './report/report.module';
 import * as helmet from 'helmet';
 
 @Module({
@@ -39,6 +40,7 @@ import * as helmet from 'helmet';
         QrModule,
         ShareLockerModule,
         CreditUsageModule,
+        ReportModule,
     ],
     controllers: [AppController],
     providers: [
