@@ -10,11 +10,12 @@ import { userGroupDto } from './dto/user-group.dto';
 @ApiUseTags('Group')
 @Controller('group')
 export class GroupController {
-    constructor(private readonly groupService: GroupService) {}
+    constructor(private readonly groupService: GroupService) { }
 
     @Get()
     async list(): Promise<{ groups: Group[] }> {
-        return { groups: await this.groupService.list() };
+        // TODO: add query parameter
+        return { groups: await this.groupService.findGroups({}) };
     }
 
     @Post()
@@ -36,12 +37,20 @@ export class GroupController {
 
     @Post('addUserToGroup')
     async addUserToGroup(@Body() body: userGroupDto) {
-        const group = await this.groupService.addUserGroup(body.nationalID, body.groupID);
-        return group;
+        await this.groupService.addUserToGroup(body.nationalID, body.groupID);
     }
     @Post('addLockerToGroup')
     async addLockerToGroup(@Body() body: lockerGroupDto) {
-        const group = await this.groupService.addLockerGroup(body.lockerID, body.groupID);
-        return group;
+        await this.groupService.addLockerToGroup(body.lockerID, body.groupID);
+    }
+
+    @Delete('removeUserFromGroup')
+    async removeUserFromGroup(@Body() body: userGroupDto) {
+        await this.groupService.removeUserFromGroup(body.nationalID, body.groupID);
+    }
+
+    @Delete('removeLockerFromGroup')
+    async removeLockerFromGroup(@Body() body: lockerGroupDto) {
+        await this.groupService.removeLockerFromGroup(body.lockerID, body.groupID);
     }
 }
