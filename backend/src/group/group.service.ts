@@ -7,13 +7,12 @@ import { LockerService } from '../locker/locker.service';
 
 @Injectable()
 export class GroupService {
-
     constructor(
         @Inject(GroupRepositoryToken)
         private readonly groupRepository: Repository<Group>,
         private readonly userService: UserService,
         private readonly lockerService: LockerService,
-    ) { }
+    ) {}
 
     public async create(name: string): Promise<Group> {
         const group = new Group(name);
@@ -51,7 +50,7 @@ export class GroupService {
         nestedJoin = [],
     }: {
         key?: {
-            name?: string
+            name?: string;
         };
         joinWith?: Array<keyof Group>;
         nestedJoin?: string[];
@@ -94,7 +93,7 @@ export class GroupService {
     public async removeUserFromGroup(nationalID: string, groupID: number) {
         try {
             const group = await this.findGroup({ key: { groupID }, joinWith: ['users'] });
-            const userIndex = group.users.findIndex((user) => user.nationalID === nationalID);
+            const userIndex = group.users.findIndex(user => user.nationalID === nationalID);
             group.users.splice(userIndex, 1);
             await this.groupRepository.save(group);
         } catch (error) {
@@ -124,7 +123,7 @@ export class GroupService {
     public async removeLockerFromGroup(lockerID: number, groupID: number) {
         try {
             const group = await this.findGroup({ key: { groupID }, joinWith: ['lockers'] });
-            const lockerIndex = group.lockers.findIndex((locker) => locker.id === lockerID);
+            const lockerIndex = group.lockers.findIndex(locker => locker.id === lockerID);
             group.lockers.splice(lockerIndex, 1);
             await this.groupRepository.save(group);
         } catch (error) {
