@@ -1,7 +1,6 @@
-import { IsString, IsOptional } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
-export class lockerGroupDto {
+export class LockerGroupDto {
     @ApiModelProperty({
         description: 'Locker added to the group',
         required: true,

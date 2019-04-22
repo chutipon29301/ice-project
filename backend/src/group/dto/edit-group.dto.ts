@@ -1,4 +1,3 @@
-import { ToInt } from 'class-sanitizer';
 import { IsString, IsOptional } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
