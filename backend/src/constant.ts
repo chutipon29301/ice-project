@@ -9,3 +9,4 @@ export const QRCodeRepositoryToken = 'QRCodeRepositoryToken';
 export const UserInvitationRepositoryToken = 'UserInvitationRepositoryToken';
 export const CanAccessRelationRepositoryToken = 'CanAccessRelationRepositoryToken';
 export const CreditUsageRepositoryToken = 'CreditUsageRepositoryToken';
+export const ReportRepositoryToken = 'ReportRepositoryToken';
