@@ -18,7 +18,6 @@ services:
       IOT_DEVICE_SECRET:
       LINE_BOT_CHANNEL_TOKEN:
       LINE_MESSAGING_API_ENDPOINT:
-      ELASTICSEARCH_URL: http://elasticsearch:9200/
     depends_on:
       - db
   grafana:

@@ -3,7 +3,7 @@ import { ReportService } from './report.service';
 
 describe('ReportService', () => {
   let service: ReportService;
-  
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [ReportService],
