@@ -6,11 +6,12 @@ import { GroupService } from './group.service';
 import { LockerGroupDto } from './dto/locker-group.dto';
 import { UserGroupDto } from './dto/user-group.dto';
 import { GroupDto } from './dto/groups.dto';
+import { Group } from '../entities/group.entity';
 
 @ApiUseTags('Group')
 @Controller('group')
 export class GroupController {
-    constructor(private readonly groupService: GroupService) {}
+    constructor(private readonly groupService: GroupService) { }
 
     @Get()
     async list(): Promise<GroupDto> {
@@ -18,6 +19,11 @@ export class GroupController {
         return {
             groups: await this.groupService.findGroups({}),
         };
+    }
+
+    @Get('/:id')
+    async detail(@Param('id', new ParseIntPipe()) id: number): Promise<Group> {
+        return await this.groupService.findGroup({ key: { groupID: id }, joinWith: ['users'] });
     }
 
     @Post()
