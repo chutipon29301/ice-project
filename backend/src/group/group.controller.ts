@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Delete, Query } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { EditGroupDto } from './dto/edit-group.dto';
 import { ApiUseTags } from '@nestjs/swagger';
@@ -6,6 +6,7 @@ import { GroupService } from './group.service';
 import { LockerGroupDto } from './dto/locker-group.dto';
 import { UserGroupDto } from './dto/user-group.dto';
 import { GroupDto } from './dto/groups.dto';
+import { QueryDto } from './dto/query.dto';
 import { Group } from '../entities/group.entity';
 
 @ApiUseTags('Group')
@@ -14,11 +15,14 @@ export class GroupController {
     constructor(private readonly groupService: GroupService) { }
 
     @Get()
-    async list(): Promise<GroupDto> {
-        // TODO: add query parameter
-        return {
-            groups: await this.groupService.findGroups({}),
-        };
+    async list(@Query() query: QueryDto): Promise<GroupDto> {
+        let groups: Group[] = [];
+        if (query.groupName) {
+            groups = await this.groupService.findGroups({ key: { name } });
+        } else {
+            groups = await this.groupService.findGroups({});
+        }
+        return { groups };
     }
 
     @Get('/:id')
