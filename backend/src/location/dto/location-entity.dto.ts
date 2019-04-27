@@ -1,5 +1,5 @@
 import { IsString, IsNumber } from 'class-validator';
-import { ToInt, ToFloat } from 'class-sanitizer';
+import { ToFloat } from 'class-sanitizer';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class LocationEntityDto {
