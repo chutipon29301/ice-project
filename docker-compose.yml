@@ -23,6 +23,8 @@ services:
   grafana:
     container_name: ice-project-grafana
     image: grafana/grafana
+    environment: 
+      GF_INSTALL_PLUGINS: grafana-worldmap-panel
     volumes: 
       - ./volumes/grafana:/var/lib/grafana
   db:
