@@ -57,7 +57,7 @@ export class GroupService {
     }): Promise<Group[]> {
         const relations: string[] = [...joinWith, ...nestedJoin];
         let where: FindConditions<Group> = {};
-        if (key.name) {
+        if (key && key.name) {
             where = { name: Like(`%${key.name}%`) };
         }
         return await this.groupRepository.find({ where, relations });

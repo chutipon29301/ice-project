@@ -18,7 +18,7 @@ export class GroupController {
     async list(@Query() query: QueryDto): Promise<GroupDto> {
         let groups: Group[] = [];
         if (query.groupName) {
-            groups = await this.groupService.findGroups({ key: { name } });
+            groups = await this.groupService.findGroups({ key: { name: query.groupName } });
         } else {
             groups = await this.groupService.findGroups({});
         }
@@ -36,33 +36,33 @@ export class GroupController {
         return group;
     }
 
-    @Patch(':id')
-    async edit(@Param('id', new ParseIntPipe()) id: number, @Body() body: EditGroupDto) {
-        await this.groupService.edit(id, body.name);
-    }
-
-    @Delete(':id')
-    async delete(@Param('id') id: number) {
-        const group = await this.groupService.delete(id);
-        return group;
-    }
-
-    @Post('addUserToGroup')
+    @Post('/addUserToGroup')
     async addUserToGroup(@Body() body: UserGroupDto) {
         await this.groupService.addUserToGroup(body.nationalID, body.groupID);
     }
-    @Post('addLockerToGroup')
+    @Post('/addLockerToGroup')
     async addLockerToGroup(@Body() body: LockerGroupDto) {
         await this.groupService.addLockerToGroup(body.lockerID, body.groupID);
     }
 
-    @Delete('removeUserFromGroup')
+    @Patch('/:id')
+    async edit(@Param('id', new ParseIntPipe()) id: number, @Body() body: EditGroupDto) {
+        await this.groupService.edit(id, body.name);
+    }
+
+    @Delete('/removeUserFromGroup')
     async removeUserFromGroup(@Body() body: UserGroupDto) {
         await this.groupService.removeUserFromGroup(body.nationalID, body.groupID);
     }
 
-    @Delete('removeLockerFromGroup')
+    @Delete('/removeLockerFromGroup')
     async removeLockerFromGroup(@Body() body: LockerGroupDto) {
         await this.groupService.removeLockerFromGroup(body.lockerID, body.groupID);
+    }
+
+    @Delete('/:id')
+    async delete(@Param('id') id: number) {
+        const group = await this.groupService.delete(id);
+        return group;
     }
 }
