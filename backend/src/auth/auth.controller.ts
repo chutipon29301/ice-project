@@ -7,18 +7,19 @@ import { AuthService } from './auth.service';
 import { LineUserTokenDto } from './dto/line-user-token.dto';
 import { RequestTokenDto } from './dto/request-token.dto';
 import { ApiUseTags } from '@nestjs/swagger';
+import { LoginCallbackPageDro } from './dto/login-callback-page.dto';
 
 @ApiUseTags('Auth')
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(private readonly authService: AuthService) { }
 
     @ApiOperation({
-        title: 'Request short token from line for user,admin,superuser to register',
+        title: 'Request short token from line for user, admin, superuser to register',
     })
     @Get('lineLoginPage')
-    async lineAuth(@Res() res: Response) {
-        res.redirect(this.authService.getLineAuthenticationPageURL());
+    async lineAuth(@Query() query: LoginCallbackPageDro, @Res() res: Response) {
+        res.redirect(this.authService.getLineAuthenticationPageURL(query.redirect));
     }
 
     @Get('lineLoginPageAdmin')
@@ -39,7 +40,7 @@ export class AuthController {
             throw new UnauthorizedException(errorMessage);
         }
         if (await this.authService.validateState(state)) {
-            res.redirect(this.authService.getLiffCallbackWithAccessCode(code));
+            res.redirect(this.authService.getLiffCallbackWithAccessCode(code, state));
         } else {
             throw new UnauthorizedException('User not authorize');
         }

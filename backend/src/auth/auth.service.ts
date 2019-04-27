@@ -21,18 +21,19 @@ export class AuthService {
         private readonly cryptoService: CryptoService,
         private readonly configService: ConfigService,
         private readonly httpService: HttpService,
-    ) {}
+    ) { }
 
-    public getLineAuthenticationPageURL(): string {
-        return this.lineAuthService.lineAuthPageURL(this.lineCallbackURL);
+    public getLineAuthenticationPageURL(redirect: string): string {
+        return this.lineAuthService.lineAuthPageURL(this.lineCallbackURL, redirect);
     }
 
     public getAdminLineAuthenticationPageURL(): string {
         return this.lineAuthService.lineAuthPageURL(this.lineAdminCallbackURL);
     }
 
-    public getLiffCallbackWithAccessCode(accessCode: string): string {
-        return `${this.configService.liffServerURL}/auth/line-landing?code=${accessCode}`;
+    public getLiffCallbackWithAccessCode(accessCode: string, encryptedState: string): string {
+        const state = State.from(this.cryptoService.AES.decrypt(decodeURIComponent(encryptedState), this.configService.lineChannelSecret));
+        return `${this.configService.liffServerURL}/auth/line-landing?code=${accessCode}&redirect=${state.stateString}`;
     }
 
     public getAdminCallbackWithAccessCode(accessCode: string): string {
