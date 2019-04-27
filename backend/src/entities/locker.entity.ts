@@ -3,6 +3,7 @@ import { Group } from './group.entity';
 import { Location } from './location.entity';
 import { LockerInstance } from './locker-instance.entity';
 import { QRCode } from './qr-code.entity';
+import { Report } from './report.entity';
 
 export enum LockerAvailability {
     UNREGISTERED = 'UNREGISTERED',
@@ -60,4 +61,8 @@ export class Locker {
 
     @OneToMany(type => QRCode, qrCode => qrCode.locker, { nullable: true })
     qrCodes: QRCode[];
+
+    @OneToMany(type => Report, report => report.locker)
+    reports: Report[];
+
 }
