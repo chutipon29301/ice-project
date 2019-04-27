@@ -47,8 +47,8 @@ export class ReportService {
         return await this.reportRepository.find({ where, relations });
     }
 
-    public async add(message: string): Promise<Report> {
-        const report = new Report(message);
+    public async add(message: string, lockerID): Promise<Report> {
+        const report = new Report(message, lockerID);
         return await this.reportRepository.save(report);
     }
 
