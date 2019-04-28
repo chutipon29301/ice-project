@@ -18,7 +18,7 @@ import { AccessibleLockerDto } from './dto/accessible-locker.dto';
 @ApiUseTags('Locker Instance')
 @Controller('locker-instance')
 export class LockerInstanceController {
-    constructor(private readonly lockerInstanceService: LockerInstanceService) {}
+    constructor(private readonly lockerInstanceService: LockerInstanceService) { }
     @ApiBearerAuth()
     @Roles(Role.USER, Role.SUPERUSER)
     @Get('myLocker')
@@ -96,14 +96,22 @@ export class LockerInstanceController {
     @ApiOperation({
         title: 'Create instance of locker when user start using locker',
     })
+    @Roles(Role.USER, Role.SUPERUSER)
     @Post('createInstance')
     async createInstance(@User() user: JwtToken, @Body() body: LockerInstanceDto): Promise<LockerInstance> {
         return await this.lockerInstanceService.create(body.accessCode, user.nationalID);
     }
 
+    @Roles(Role.USER, Role.SUPERUSER)
     @Post('return')
     async returnInstance(@User() user: JwtToken, @Body() body: LockerInstanceDto) {
         await this.lockerInstanceService.returnInstance(user.nationalID, body.accessCode);
+    }
+
+    @Roles(Role.USER, Role.SUPERUSER)
+    @Post('returnByID')
+    async returnInstanceByLockerID(@User() user: JwtToken, @Body() body: AccessibleLockerDto) {
+        await this.lockerInstanceService.returnInstanceByID(user.nationalID, body.lockerID);
     }
 
     @ApiBearerAuth()

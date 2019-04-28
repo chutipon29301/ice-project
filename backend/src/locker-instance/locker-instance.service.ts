@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException, ConflictException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException, ConflictException, BadRequestException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { LockerInstanceRepositoryToken, CanAccessRelationRepositoryToken } from '../constant';
 import { CanAccessRelation } from '../entities/can-access.entity';
@@ -23,7 +23,7 @@ export class LockerInstanceService {
         private readonly creditUsageService: CreditUsageService,
         @Inject(CanAccessRelationRepositoryToken)
         private readonly canAccessRelationRepository: Repository<CanAccessRelation>,
-    ) {}
+    ) { }
 
     public async create(accessCode: string, nationalID: string): Promise<LockerInstance> {
         try {
@@ -285,10 +285,30 @@ export class LockerInstanceService {
             if (error instanceof HttpException) {
                 throw error;
             } else {
-                throw new NotFoundException(error.message);
+                throw new BadRequestException(error.message);
             }
         }
     }
+
+    public async returnInstanceByID(nationalID: string, lockerID: number) {
+        try {
+            const lockerInstance = await this.findInstance({ key: { inUsedLockerID: lockerID } });
+            if (lockerInstance.userID !== nationalID) {
+                throw new UnauthorizedException('Not owner of in used locker instance');
+            }
+            lockerInstance.endTime = new Date();
+            lockerInstance.inUsed = false;
+            await this.lockerInstanceRepository.save(lockerInstance);
+            await this.creditUsageService.deductCreditByTime(lockerInstance.startTime, lockerInstance.endTime, nationalID);
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new BadRequestException(error.message);
+            }
+        }
+    }
+
     public async lockerIsInUsed(accessCode: string): Promise<boolean> {
         const qrCode = await this.qrService.findQRCode({ key: { accessCode } });
         const activeLocker = await this.lockerService.findLocker({ key: { activeLockerID: qrCode.lockerID } });
