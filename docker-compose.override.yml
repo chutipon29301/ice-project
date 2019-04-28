@@ -3,8 +3,6 @@ version: "3.2"
 services:
   backend:
     image: node:10
-    ports:
-      - 3000:3000
     volumes:
       - ./backend:/server
     command: sh -c 'cd /server && yarn && yarn start:dev'
