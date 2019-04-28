@@ -11,20 +11,24 @@ import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 @ApiUseTags('Credit Usage')
 @Controller('credit-usage')
 export class CreditUsageController {
+
     constructor(private readonly creditUsageService: CreditUsageService) {}
+
     @ApiBearerAuth()
     @Get('myCredit')
     @Roles(Role.USER, Role.SUPERUSER)
     async getMyCredit(@User() user: JwtToken): Promise<CreditSummary> {
         return await this.creditUsageService.currentCredit(user.nationalID);
     }
+
     @ApiBearerAuth()
     @Post('addCredit')
-    @Roles(Role.USER, Role.ADMIN, Role.SUPERUSER)
-    async addCredit(@User() user: JwtToken, @Body() body: CreditUsageTopUpDto) {
-        const myAddedCredit = await this.creditUsageService.addCredit(body.amount, user.nationalID);
+    @Roles(Role.ADMIN, Role.SUPERUSER)
+    async addCredit(@Body() body: CreditUsageTopUpDto) {
+        const myAddedCredit = await this.creditUsageService.addCredit(body.amount, body.userID);
         return {
             totalCredit: myAddedCredit.amount,
         };
     }
+
 }
