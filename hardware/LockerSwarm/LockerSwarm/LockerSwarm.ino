@@ -36,16 +36,16 @@ GxIO_Class io(SPI, /*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16);   // arbitrary selecti
 GxEPD_Class display(io, /*RST=*/ 16, /*BUSY=*/ 4);          // arbitrary selection of (16), 4
 
 //Set Username-Password WiFi
-//const char* ssid = "CTiPhone";
-//const char* password = "00000000";
+const char* ssid = "CTiPhone";
+const char* password = "00000000";
 //const char* ssid = "true_home2G_Up7";
 //const char* password = "vDcqdQQq";
 //const char* ssid = "Chutipon's Wi-Fi Network";
 //const char* password = "Non29301";
 //const char* ssid = "APPLESUCKS";
 //const char* password = "mynameistai";
-const char* ssid = "prial";
-const char* password = "mynameisp";
+//const char* ssid = "prial";
+//const char* password = "mynameisp";
 
 QRCode qrcode;
 int counter = 0;
@@ -69,7 +69,7 @@ boolean isRegister = false;
 const char* generatedLink = "www.google.com";
 int wakeUpReason;
 
-String baseURL = "https://10e2f066.ngrok.io";
+String baseURL = "https://a15ac61f.ngrok.io";
 
 //--------------------------------------------------------------------------Void Setup-----------------------------------------------------------------------------//
 
@@ -91,7 +91,7 @@ void setup()
 
   wakeUpReason = readWakeUpReason();
 
-  //  clearEEPROM();
+//    clearEEPROM();
 
   wifiConnection();
 
@@ -162,46 +162,14 @@ void loop() {
       showText("Scan me!", &FreeSansBold9pt7b, 25, 160);
       Display_QRcode(8, 165, url);
 
-      while (counter < 7) {
+      while (counter < 5) {
         doorLock();
-
-//        isLockBySwitch = !digitalRead(DOOR_LOCK_SWITCH);
-//        if (!isLockBySwitch) {
-//          isUnlockBySwitch = true;
-//        }
-//
-//        Serial.println("isLock status :");
-//        Serial.print(isLockBySwitch);
-//        Serial.println(isUnlockBySwitch);
-//
-//        if (isLockBySwitch && isUnlockBySwitch) {
-//          doorLockSwitch();
-//          // Initial partial update
-//          display.updateWindow(0, 0, 128, 296, false);
-//          display.fillRect(0, 120, 128, 176, GxEPD_WHITE);
-//          // Set Content in partial update
-//          display.fillScreen(GxEPD_WHITE);
-//          display.drawBitmap(gImage_LS01, 10, 15, 108, 104, GxEPD_BLACK);
-//          display.drawBitmap(gImage_Line, 10, 140, 108, 5, GxEPD_BLACK);
-//          showText("Number", &FreeSans12pt7b, 25, 170);
-//          showText(string2char(getLockerNumber()), &FreeSansBold24pt7b, 37, 220);
-//          display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
-//          //     display.update();
-//          display.updateWindow(0, 120, 128, 176, true);
-//          digitalWrite(DOOR_LOCK,HIGH);
-//          deepSleep();
-//        }
-
 
         if (counter == 0) {
           display.update();
-        } else if (counter > 0 && counter < 6) {
+        } else if (counter > 0 && counter < 4) {
           Serial.println("Showing QRcode for scanning...");
-//          isLockBySwitch = !digitalRead(DOOR_LOCK_SWITCH);
-//          if (!isLockBySwitch) {
-//            isUnlockBySwitch = true;
-//          }
-        } else if (counter == 6) {
+        } else if (counter == 4) {
           // Initial partial update
           doorLockSwitch();
           delay(100);
@@ -217,25 +185,8 @@ void loop() {
           display.drawBitmap(gImage_Line, 10, 235, 108, 5, GxEPD_BLACK);
           display.updateWindow(0, 120, 128, 176, true);
           delay(100);
-          deepSleep();
-          
-//          isLockBySwitch = !digitalRead(DOOR_LOCK_SWITCH);
-//          if (!isLockBySwitch) {
-//            isUnlockBySwitch = true;
-//          }
-          
+          deepSleep();      
         } 
-//          else if (counter > 4) {
-//          Serial.println("Nothing to do");
-////          isLockBySwitch = !digitalRead(DOOR_LOCK_SWITCH);
-////          if (!isLockBySwitch) {
-////            isUnlockBySwitch = true;
-////          }
-//
-//        } else if (counter > 10) {
-//          doorLockSwitch();
-//          deepSleep();
-//        }
         counter++;
         delay(1000);
       }
