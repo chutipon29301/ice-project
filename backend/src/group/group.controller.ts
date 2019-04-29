@@ -27,7 +27,7 @@ export class GroupController {
 
     @Get('/:id')
     async detail(@Param('id', new ParseIntPipe()) id: number): Promise<Group> {
-        return await this.groupService.findGroup({ key: { groupID: id }, joinWith: ['users'] });
+        return await this.groupService.findGroup({ key: { groupID: id }, joinWith: ['users', 'lockers'] });
     }
 
     @Post()
