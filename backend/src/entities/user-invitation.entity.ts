@@ -17,8 +17,11 @@ export class UserInvitation {
     @Column()
     lockerID: number;
 
+    @Column()
+    startTime: Date;
+
     @ManyToOne(type => LockerInstance, lockerInstance => lockerInstance.userInvitations)
-    @JoinColumn([{ name: 'lockerID', referencedColumnName: 'lockerID' }])
+    @JoinColumn([{ name: 'lockerID', referencedColumnName: 'lockerID' }, { name: 'startTime', referencedColumnName: 'startTime' }])
     lockerInstance: LockerInstance;
 
     @Column()
