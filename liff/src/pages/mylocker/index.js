@@ -74,7 +74,9 @@ const MyLocker = ({
                 {myLockersInstances.length + sharedLockersInstances.length}{" "}
               </span>{" "}
             </p>
-            <p style={{ marginBottom: 2 }}>Credits: {" " + userCredit ? userCredit : 0}</p>
+            <p style={{ marginBottom: 2 }}>
+              Credits: {" " + userCredit === null ? userCredit : 0}
+            </p>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <button
                 className="bg-success"
