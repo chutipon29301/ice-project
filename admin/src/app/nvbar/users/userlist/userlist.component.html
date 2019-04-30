@@ -10,7 +10,7 @@
       <div id = "icontainer">
           <div *ngFor="let user of users; let i = index" class = "item">
               <div id = "user">
-                <div id = "puser"></div>
+                <div id = "puser" [ngStyle]="{'background-image':'url(' + user.profileImage + ')'}"></div>
                 <div id = "nameuser">{{user.firstName}} {{user.lastName}}</div>
                 <div id = "nationalId">National ID: {{user.nationalID}}</div>
                 <div id = "phoneNo" >Phone no: {{user.phone}}</div>
