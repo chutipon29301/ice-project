@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { NavBar, InputItem, WhiteSpace } from "antd-mobile";
 import Swarm from "../../assets/swarm.png";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
 import Axios from "axios";
 
 const Registration = ({ idToken, history }) => {
@@ -10,9 +9,6 @@ const Registration = ({ idToken, history }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
-  if (idToken === "") {
-    return <Redirect to="/" />;
-  }
   const onSubmit = async function() {
     const res = await Axios.post("/user/register", {
       nationalID,
