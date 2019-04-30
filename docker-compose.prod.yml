@@ -44,8 +44,10 @@ services:
       BACKEND_VIRTUAL_HOST:
       LIFF_VIRTUAL_HOST:
       ADMIN_VIRTUAL_HOST:
+      GRAFANA_VIRTUAL_HOST:
     depends_on:
       - backend
+      - grafana
     command: "/bin/sh -c 'sh /run-nginx.sh && while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     # command: "/bin/sh -c 'sh /run-nginx.sh && ls /etc/nginx/sites-enabled && cat /etc/nginx/sites-enabled/server.conf'"
   certbot:

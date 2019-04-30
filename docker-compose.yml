@@ -26,7 +26,7 @@ services:
     environment: 
       GF_INSTALL_PLUGINS: grafana-worldmap-panel, grafana-piechart-panel, grafana-clock-panel, satellogic-3d-globe-panel
     volumes: 
-      - ./volumes/grafana:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
   db:
     image: mysql:5.7
     container_name: ice-project-db
@@ -38,3 +38,6 @@ services:
       MYSQL_USER:
       MYSQL_PASSWORD:
       MYSQL_ROOT_PASSWORD:
+
+volumes:
+  grafana-data:
