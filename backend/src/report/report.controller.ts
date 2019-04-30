@@ -21,7 +21,7 @@ export class ReportController {
     @Roles(Role.SUPERUSER, Role.ADMIN, Role.USER)
     @Get()
     async list(): Promise<ReportsDto> {
-        const reports = await this.reportService.findReports({});
+        const reports = await this.reportService.findReports({ joinWith: ['locker'] });
         return { reports };
     }
 
