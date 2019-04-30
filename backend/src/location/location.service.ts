@@ -107,11 +107,15 @@ export class LocationService {
             location.inUsedLocker = location.inUsedLocker || 0;
             location.totalLocker = location.totalLocker || 0;
         });
-        return locations.sort((firstLocation, secondLocation) => {
-            const firstDist = this.calculateDist(firstLocation.lat, firstLocation.lng, lat, lng);
-            const secondDist = this.calculateDist(secondLocation.lat, secondLocation.lng, lat, lng);
-            return firstDist - secondDist;
-        });
+        if (lat && lng) {
+            return locations.sort((firstLocation, secondLocation) => {
+                const firstDist = this.calculateDist(firstLocation.lat, firstLocation.lng, lat, lng);
+                const secondDist = this.calculateDist(secondLocation.lat, secondLocation.lng, lat, lng);
+                return firstDist - secondDist;
+            });
+        } else {
+            return locations;
+        }
     }
 
     public async update(id: number, value: Partial<Location>) {
