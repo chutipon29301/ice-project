@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { RegisTokenService } from './regis-token.service';
-import { Settings } from './settings';
 import { environment } from '../../environments/environment';
+
 
 @Injectable()
 export class AuthServerService {

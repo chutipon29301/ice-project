@@ -1,0 +1,28 @@
+#top{
+    height: 30px;
+    width: 100%;
+}
+
+#cgroups{
+    position: absolute;
+    left: 286px;
+}
+
+#caddusers{
+    position: absolute;
+    left: calc(57.3vw + 30px);
+}
+
+#caddlockers{
+    position: absolute;
+    left: calc(57.3vw + 30px);
+    top: 52vh;
+}
+
+.hide {
+    display: none !important;
+  }
+  
+  .display {
+    display: inline-block !important;
+  }

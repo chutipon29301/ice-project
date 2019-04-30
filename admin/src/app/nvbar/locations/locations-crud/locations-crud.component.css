@@ -11,14 +11,14 @@
     margin-left: 20px;
     margin-right: 20px; 
     background: #F0F7FF;
-/* card shadow */
-box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
-border-radius: 4px;
-height: calc(92vh - 113.6px);
+    /* card shadow */
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    height: calc(92vh - 113.6px);
 }
 
 #ilocontainer{
-    overflow-y: scroll;
+    overflow-y: auto;
     margin-left: 8px;
     margin-right: 20px; 
     height: calc(89vh - 133.6px);
@@ -52,10 +52,10 @@ height: calc(92vh - 113.6px);
     margin-right: 10px;
     left: 20px;
     top: 12px;
+    background: url(./../../../../resources/plocation.png);
     background-size: contain;
     background-size: cover;
     vertical-align: middle;
-    background: url(./../../../../resources/plocation.png);
 }
 
 #location{
@@ -71,7 +71,7 @@ height: calc(92vh - 113.6px);
 
 #namelocation{
     position: absolute;
-    top: 12px;
+    top: 20px;
     left: 80px;
     font-style: normal;
     font-weight: 500;
@@ -84,7 +84,7 @@ height: calc(92vh - 113.6px);
 
 #lat{
     left: 80px;
-    top: 40px;
+    top: 47px;
     position: absolute;
     font-style: normal;
     font-weight: 500;
@@ -96,8 +96,8 @@ height: calc(92vh - 113.6px);
 }
 
 #lng{
-    left: 230px;
-    top: 40px;
+    left: 300px;
+    top: 47px;
     position: absolute;
     font-style: normal;
     font-weight: 500;
@@ -109,8 +109,8 @@ height: calc(92vh - 113.6px);
 }
 
 #id{
-    left: 380px;
-    top: 40px;
+    left: 530px;
+    top: 47px;
     position: absolute;
     font-style: normal;
     font-weight: 500;
@@ -124,7 +124,7 @@ height: calc(92vh - 113.6px);
 
 #remove{
     position: absolute;
-    top: 40px;
+    top: 44px;
     right: 20px;
     height: 28px;
     width: 62px;
@@ -143,8 +143,8 @@ height: calc(92vh - 113.6px);
 
 #edit{
     position: absolute;
-    top: 40px;
-    right: 90px;
+    top: 44px;
+    right: 100px;
     height: 28px;
     width: 62px;
     background: #66A4EC;
@@ -187,13 +187,13 @@ height: calc(92vh - 113.6px);
   /* Modal Content/Box */
   .modal-content {
     background-color: #fefefe;
-    margin: 5% auto; /* 15% from the top and centered */
+    margin: 2% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid 
     #888;
     text-align: center;
     position: relative;
-    height: 350px;
+    height: 640px;
     width: 700px;
     box-shadow: 0px 6px 18px rgba(216, 216, 216, 0.109);
     border-radius: 8px;
@@ -221,11 +221,11 @@ height: calc(92vh - 113.6px);
 
   #madd{
     position: absolute;
-    bottom: 40px;
-    right: 90px;
+    bottom: 20px;
+    right: 60px;
     height: 48px;
     width: 92px;
-    background: rgb(65, 248, 37);
+    background: #2fc711;
     color: #FFFFFF;
     border: 0;
     border-radius: 20px;
@@ -240,8 +240,8 @@ height: calc(92vh - 113.6px);
 
 #medit{
     position: absolute;
-    bottom: 40px;
-    right: 90px;
+    bottom: 20px;
+    right: 60px;
     height: 48px;
     width: 92px;
     background: rgb(44, 136, 228);
@@ -256,5 +256,71 @@ height: calc(92vh - 113.6px);
     letter-spacing: 0.154353px;
     text-decoration-line: underline;
 }
+
+.cd-popup {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s 0s, visibility 0s 0.3s;
+  }
   
+  .cd-popup.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s 0s, visibility 0s 0s;
+  }
+  
+  .cd-popup-container {
+    transform: translateY(-40px);
+    transition-property: transform;
+    transition-duration: 0.3s;
+  }
+  
+  .is-visible .cd-popup-container {
+    transform: translateY(0);
+  }
+
+  .confirm_modal {
+    background-color: #fefefe;
+    margin: 17% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid 
+    #888;
+    text-align: center;
+    position: relative;
+    height: 130px;
+    width: 650px;
+    box-shadow: 0px 6px 18px rgba(216, 216, 216, 0.109);
+    border-radius: 8px;
+  }
+
+  #mConfirm {
+    position: absolute;
+    bottom: 30px;
+    right: 60px;
+    height: 40px;
+    width: 120px;
+  }
+
+  #mCancel{
+    position: absolute;
+    bottom: 30px;
+    right: 200px;
+    height: 40px;
+    width: 120px;
+  }
+
+.item{
+ min-width: 750px;
+}
+
+#emap {
+    width: 100%;
+    height: 380px;
+}
+
+#amap {
+    width: 100%;
+    height: 380px;
+}
+
 

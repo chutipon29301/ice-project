@@ -9,17 +9,18 @@
 
     <div class="top"></div>
       <div id = "ilcontainer">
-          <div *ngFor="let locker of registered; let i = index">
+          <div *ngFor="let locker of registered; let i = index" class = "item">
             <div id = "locker">
             <div id = "plockers"></div>
             <div id = "namelock">{{locker.name}}</div>
             <div id = "numlock">No. {{locker.number}}</div>
-            <div id = "avalock" *ngIf= "locker.availability == 'AVAILABLE'; else unavailable" >Available</div>
-            <ng-template #unavailable>
-              <div id = "unavalock" >Unavailable</div>
-            </ng-template>
+            <div id = "avalock" *ngIf= "locker.availability == 'AVAILABLE'" >Available</div>
+            <div id = "unavalock" *ngIf= "locker.availability == 'MAINTENANCE'" >Maintenance</div>
+            <div id = "warnlock" *ngIf= "locker.availability == 'WARNING'" >Warning</div>
+            <div id = "isused" *ngIf= "locker.instance !== undefined" > Occupied by: {{locker.instance.ownerUser.firstName}} {{locker.instance.ownerUser.lastName}}</div>
+            <div id = "isfree" *ngIf= "locker.instance === undefined" > Unoccupied </div>
             <button id = "edit" (click)="openedit(f,locker.id)"> Edit </button>
-            <button id = "remove" (click)="onRemove(locker.id)" > Remove </button>
+            <button id = "remove" (click)="onConfirm(locker.id)" > Remove </button>
             <hr id = "bottomhr">
           </div>
       </div>
@@ -33,7 +34,7 @@
 
     <!-- Modal content -->
     <div class="modal-content">
-      <span class="close" (click)="closeedit($event)">&times;</span>
+      <span class="close" (click)="closeedit(f)">&times;</span>
       <div class="mtitle">Edit Locker</div>
       <form (ngSubmit)="onEdit(f)" #f="ngForm">
       <div id = "i1">
@@ -55,11 +56,32 @@
         <div id = "i3">
           <mat-form-field appearance="legacy">
             <mat-label>Number</mat-label>
-            <input matInput required ngModel name="number" minlength="3" maxlength="3">
+            <input matInput required ngModel name="number" minlength="2" maxlength="2">
           </mat-form-field>
         </div>
-        <button id = "medit" [disabled]="!f.valid"> Edit </button>
+        <div id = "i4">
+          <mat-form-field appearance="legacy">
+            <mat-label>Status</mat-label>
+            <mat-select required ngModel name="availability">
+                <mat-option value="AVAILABLE"> AVAILABLE </mat-option>
+                <mat-option value="MAINTENANCE"> MAINTENANCE </mat-option>
+                <mat-option value="WARNING"> WARNING </mat-option>
+              </mat-select>
+          </mat-form-field>
+        </div>
+        <button id = "medit" [disabled]="!f.valid"> Done </button>
      </form>
+    </div>
+  
+  </div>
+
+  <div id="confirmModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="confirm_modal">
+      <div class="mtitle">Are you sure you want to delete the locker?</div>
+        <button id = "mConfirm" class = "btn" (click)="cConfirm()"> Confirm </button>
+        <button id = "mCancel" class = "btn-red" (click)="cCancel()"> Cancel </button>
     </div>
   
   </div>

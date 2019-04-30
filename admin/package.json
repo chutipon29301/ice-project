@@ -23,8 +23,10 @@
     "@angular/platform-browser-dynamic": "^7.2.11",
     "@angular/platform-server": "^7.2.11",
     "@angular/router": "^7.2.11",
+    "@types/googlemaps": "^3.30.19",
     "core-js": "^3.0.0",
     "hammerjs": "^2.0.8",
+    "location-picker": "^1.1.1",
     "rxjs": "^6.4.0",
     "rxjs-compat": "^6.4.0",
     "zone.js": "^0.9.0"

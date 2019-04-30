@@ -25,6 +25,14 @@ import { AuthLandComponent } from './auth-land/auth-land.component';
 import { AuthRegisterComponent } from './auth-register/auth-register.component';
 import { AuthGuard } from './shared/auth-guard.service';
 import {MatSelectModule} from '@angular/material/select';
+import { GroupingComponent } from './nvbar/grouping/grouping.component';
+import { GroupsComponent } from './nvbar/grouping/groups/groups.component';
+import { AddusersComponent } from './nvbar/grouping/addusers/addusers.component';
+import { UserlistComponent } from './nvbar/users/userlist/userlist.component';
+import { ReportsComponent } from './nvbar/reports/reports.component';
+import { ReportlistComponent } from './nvbar/reports/reportlist/reportlist.component';
+import { GroupService } from './shared/group.service';
+import { AddlockersComponent } from './nvbar/grouping/addlockers/addlockers.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +45,14 @@ import {MatSelectModule} from '@angular/material/select';
     LocationsComponent,
     LocationsCrudComponent,
     AuthLandComponent,
-    AuthRegisterComponent
+    AuthRegisterComponent,
+    GroupingComponent,
+    GroupsComponent,
+    AddusersComponent,
+    UserlistComponent,
+    ReportsComponent,
+    ReportlistComponent,
+    AddlockersComponent
   ],
   imports: [
     BrowserModule,
@@ -50,9 +65,10 @@ import {MatSelectModule} from '@angular/material/select';
     HttpClientModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
   ],
-  providers: [LocationService, LockerService, LocationServerService, LockerServerService, AuthServerService, AuthGuard],
-  bootstrap: [AppComponent]
+  providers: [LocationService, LockerService, LocationServerService, LockerServerService
+    , AuthServerService, AuthGuard, GroupService],
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

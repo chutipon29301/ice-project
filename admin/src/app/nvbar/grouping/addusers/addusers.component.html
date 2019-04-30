@@ -1,0 +1,55 @@
+<div id = "component" >
+
+  <div class="top"></div>
+  <div id="add" (click)="openadduser($event)" style="cursor: pointer;"></div>
+    <div id = "title">
+      Users in the Group
+    </div>
+    <hr id = "bottommar">
+
+    <div id = "container">
+
+        <div class="top"></div>
+          <div id = "icontainer" >
+              <div  *ngFor="let user of users; let i = index" class = "item">
+                  <div id = "user">
+                  <div id = "puser"></div>
+                  <div id = "nameuser">{{user.firstName}} {{user.lastName}}</div>
+                   <div id = "nationalId">National ID: {{user.nationalID}}</div> 
+                  <button id = "remove" (click)="onConfirm(user.nationalID)"> Remove </button>
+                  <hr id = "bottomhr">
+                </div>
+            </div>
+
+          </div>
+    
+      </div>
+
+      <div id="addModalUser" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close" (click)="closeadd(f)">&times;</span>
+          <div class="mtitle">Add User To The Group</div>
+          <form (ngSubmit)="onAdd(f)" #f="ngForm">
+          <div id = "i1">
+            <mat-form-field appearance="legacy">
+              <mat-label>User National ID</mat-label>
+              <input matInput required ngModel name="id">
+            </mat-form-field>
+          </div>
+            <button id = "madd" [disabled]="!f.valid"> Add </button>
+         </form>
+        </div>
+      
+      </div>
+
+      
+<div id="confirmModalUser" class="modal">
+
+  <!-- Modal content -->
+  <div class="confirm_modal">
+    <div class="mtitle">Are you sure you want to delete the user?</div>
+      <button id = "mConfirm" class = "btn" (click)="cConfirm()"> Confirm </button>
+      <button id = "mCancel" class = "btn-red" (click)="cCancel()"> Cancel </button>
+  </div>

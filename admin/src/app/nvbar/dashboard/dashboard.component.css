@@ -45,9 +45,5 @@ input::placeholder{
 
 .cnoti{
     position: absolute;
-    left: 951px;
+    left: calc(57.3vw + 30px);
 }
-
-@media screen and (max-width: 1405px) {
-    .cnoti {display: none;}
-  }

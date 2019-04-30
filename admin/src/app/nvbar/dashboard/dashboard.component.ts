@@ -29,7 +29,7 @@ export class DashboardComponent implements OnInit {
       this.registered = [];
       this.unregistered = [];
       for (let i = 0; i < lockers.length; i++) {
-        if ('AVAILABLE' === lockers[i].availability) {
+        if ('AVAILABLE' === lockers[i].availability || 'MAINTENANCE' === lockers[i].availability || 'WARNING' === lockers[i].availability) {
           this.registered.push(lockers[i]);
         } else if ('UNREGISTERED' === lockers[i].availability) {
         this.unregistered.push(lockers[i]);

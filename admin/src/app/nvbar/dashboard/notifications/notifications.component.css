@@ -1,6 +1,6 @@
 #ncomponent{
-    width: 445px;
-    height: 560px;
+    width: calc(57.4vw - 286px);
+    height: calc(96vh - 30px);
     background: #FFFFFF;
     box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
     border-radius: 4px;
@@ -33,14 +33,14 @@
     background: #F0F7FF;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
     border-radius: 4px;
-    height: 455px;
+    height: calc(92vh - 113.6px);
 }
 
 #incontainer{
-    overflow-y: scroll;
+    overflow-y: auto;
     margin-left: 10px;
     margin-right: 20px; 
-    height: 420px;
+    height: calc(89vh - 133.6px);
 }
 
 #plockers{
@@ -67,11 +67,11 @@
 
 #seriallock{
     position: absolute;
-    top: 12px;
+    top: 16px;
     left: 80px;
     font-style: normal;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 16px;
     line-height: normal;
     letter-spacing: 0.154353px;
     
@@ -80,7 +80,7 @@
 
 #idlock{
     left: 80px;
-    top: 53px;
+    top: 45px;
     position: absolute;
     font-style: normal;
     font-weight: 500;
@@ -128,7 +128,7 @@
   /* Modal Content/Box */
   .modal-content {
     background-color: #fefefe;
-    margin: 5% auto; /* 15% from the top and centered */
+    margin: 10% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid 
     #888;
@@ -161,7 +161,7 @@
     right: 90px;
     height: 48px;
     width: 92px;
-    background: rgb(65, 248, 37);
+    background: #2fc711;
     color: #FFFFFF;
     border: 0;
     border-radius: 20px;
@@ -179,19 +179,8 @@
         font-size: 20px;
     }
 
-
-
-
-
-
-@media screen and (max-height: 652px) {
-    #ncomponent {
-        height: 75vh;
+    .item{
+        min-width: 450px;
     }
-    #ncontainer {
-        height: 75%;
-    }
-    #incontainer{
-        height: 85%;
-    }
-}
+
+

@@ -1,25 +1,25 @@
 <div id = "locomponent">
 
-  <div class="top"></div>
+<div class="top"></div>
       <div id = "title">Locations
       </div>
-      <div id="add" (click)="openadd($event)"></div>
+      <div id="add" (click)="openadd($event)" style="cursor: pointer;"></div>
             <hr id = "bottommar">
 
     <div id = "locontainer">
 
     <div class="top"></div>
       <div id = "ilocontainer">
-          <div *ngFor="let location of locations; let i = index">
+          <div *ngFor="let location of locations; let i = index" class = "item">
               <div id = "location">
 
                 <div id = "plocation"></div>
                 <div id = "namelocation">{{location.description}}</div>
                 <div id = "lat">Lat. {{location.lat}}</div>
                 <div id = "lng">Lng. {{location.lng}}</div>
-                <div id = "id">id. {{location.id}}</div>
+                <div id = "id">ID. {{location.id}}</div>
                 <button id = "edit" (click)="openedit(fe,location.id)"> Edit </button>
-                <button id = "remove" (click)="onRemove(location.id)"> Remove </button>
+                <button id = "remove" (click)="onConfirm(location.id)"> Remove </button>
                 <hr id = "bottomhr">
                 
             </div>
@@ -31,7 +31,7 @@
 
   <!-- Modal content -->
   <div class="modal-content">
-    <span class="close" (click)="closeadd($event)">&times;</span>
+    <span class="close" (click)="closeadd(f)">&times;</span>
     <div class="mtitle">Add Location</div>
     <form (ngSubmit)="onAdd(f)" #f="ngForm">
     <div id = "i1">
@@ -40,7 +40,14 @@
         <input matInput required ngModel name="dis">
       </mat-form-field>
     </div>
-    <div id = "i2">
+    <div id = "i4">
+      <mat-form-field appearance="legacy">
+        <mat-label>Image</mat-label>
+        <input matInput required ngModel name="image">
+      </mat-form-field>
+    </div>
+    <div id="amap"></div>
+    <!-- <div id = "i2">
         <mat-form-field appearance="legacy">
           <mat-label>Latitude</mat-label>
           <input  matInput required ngModel type="number" name="lat">
@@ -51,7 +58,7 @@
           <mat-label>Longitude</mat-label>
           <input matInput required ngModel type="number" name="lng">
         </mat-form-field>
-      </div>
+      </div> -->
       <button id = "madd" [disabled]="!f.valid"> Add </button>
    </form>
   </div>
@@ -62,7 +69,7 @@
 
   <!-- Modal content -->
   <div class="modal-content">
-    <span class="close" (click)="closeedit($event)">&times;</span>
+    <span class="close" (click)="closeedit(fe)">&times;</span>
     <div class="mtitle">Edit Location</div>
     <form (ngSubmit)="onEdit(fe)" #fe="ngForm">
     <div id = "i1">
@@ -71,7 +78,14 @@
         <input matInput required ngModel name="dis">
       </mat-form-field>
     </div>
-    <div id = "i2">
+    <div id = "i4">
+      <mat-form-field appearance="legacy">
+        <mat-label>Image</mat-label>
+        <input matInput required ngModel name="image">
+      </mat-form-field>
+    </div>
+    <div id="emap"></div>
+    <!-- <div id = "i2">
         <mat-form-field appearance="legacy">
           <mat-label>Latitude</mat-label>
           <input  matInput required ngModel type="number" name="lat">
@@ -82,9 +96,22 @@
           <mat-label>Longitude</mat-label>
           <input matInput required ngModel type="number" name="lng">
         </mat-form-field>
-      </div>
-      <button id = "medit" [disabled]="!fe.valid"> Edit </button>
+      </div> -->
+      <button id = "medit" [disabled]="!fe.valid"> Done </button>
    </form>
   </div>
 
 </div>
+
+<div id="confirmModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="confirm_modal">
+    <div class="mtitle">Are you sure you want to delete the location?</div>
+      <button id = "mConfirm" class = "btn" (click)="cConfirm()"> Confirm </button>
+      <button id = "mCancel" class = "btn-red" (click)="cCancel()"> Cancel </button>
+  </div>
+
+</div>
+
+
