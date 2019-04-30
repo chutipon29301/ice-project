@@ -1,5 +1,5 @@
 import { Controller, Post, Res, Req } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { WebhookClient } from 'dialogflow-fulfillment';
 
 // See https://github.com/dialogflow/dialogflow-fulfillment-nodejs
