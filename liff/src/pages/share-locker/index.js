@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Modal } from "antd";
 import Axios from "axios";
 import { connect } from "react-redux";
-import { liffHelper } from "../../App";
 
 const confirm = Modal.confirm;
 
@@ -33,7 +32,7 @@ const ShareLockerLanding = ({ history, liffData }) => {
       setAccessCode(code);
       showConfirm(code, history);
     }
-  }, []);
+  }, [history]);
   console.log(accessCode, "accessCode");
   return <h1> Sharing Locker ....</h1>;
 };
