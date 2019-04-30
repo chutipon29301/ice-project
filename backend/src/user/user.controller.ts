@@ -7,17 +7,27 @@ import { Roles } from '../guard/role.decorator';
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { User as UserDecorator } from '../decorator/user.decorator';
 import { JwtToken } from '../jwt-auth/dto/jwt-token.dto';
+import { UserArrayDto } from './dto/user-array.dto';
+import { UserWithCreditArrayDto } from './dto/user-with-credit-array.dto';
 
 @ApiUseTags('User')
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) { }
 
     @ApiBearerAuth()
     @Roles(Role.SUPERUSER, Role.ADMIN)
     @Get()
-    async list(): Promise<{ users: User[] }> {
-        const users = await this.userService.listUser();
+    async list(): Promise<UserArrayDto> {
+        const users = await this.userService.findUsers({});
+        return { users };
+    }
+
+    @ApiBearerAuth()
+    @Roles(Role.SUPERUSER, Role.ADMIN)
+    @Get('credit')
+    async listUserWithCredit(): Promise<UserWithCreditArrayDto> {
+        const users = await this.userService.findUsersWithCredit();
         return { users };
     }
 

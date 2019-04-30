@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { UserRepositoryToken } from '../constant';
 import { AuthenticationType, Role, User, UserStatus } from '../entities/user.entity';
 import { LineAuthService } from '../line-auth/line-auth.service';
+import { UserWithCreditDto } from './dto/user-with-credit.dto';
 
 @Injectable()
 export class UserService {
@@ -10,12 +11,7 @@ export class UserService {
         @Inject(UserRepositoryToken)
         private readonly userRepository: Repository<User>,
         private readonly lineAuthService: LineAuthService,
-    ) {}
-
-    public async listUser(): Promise<User[]> {
-        const users = await this.userRepository.find();
-        return users;
-    }
+    ) { }
 
     public async create(nationalID: string, firstName: string, lastName: string, phone: string, authenticationID: string): Promise<User> {
         const existingUser = await this.findUser({ key: { nationalID }, throwError: false });
@@ -68,6 +64,45 @@ export class UserService {
         } else {
             return await this.userRepository.findOne({ where, relations });
         }
+    }
+
+    public async findUsers({
+        key = {},
+        joinWith = [],
+        nestedJoin = [],
+    }: {
+        key?: {};
+        joinWith?: Array<keyof User>;
+        nestedJoin?: string[];
+    }): Promise<User[]> {
+        const relations = [...joinWith, ...nestedJoin];
+        let where: Partial<User> = {};
+        return await this.userRepository.find({ where, relations });
+    }
+
+    public async findUsersWithCredit(): Promise<UserWithCreditDto[]>{
+        const users: UserWithCreditDto[] = await this.userRepository.query(`
+            SELECT
+                user.nationalID,
+                user.firstName,
+                user.lastName,
+                user.role,
+                user.authenticationID,
+                user.authenticationType,
+                user.phone,
+                user.status,
+                user.profileImage,
+                SUM(credit_usage.amount) AS totalCredit
+            FROM
+                user
+                    LEFT JOIN
+                credit_usage ON credit_usage.nationalID = user.nationalID
+            GROUP BY user.nationalID;
+        `);
+        users.forEach((user) => {
+            user.totalCredit = +user.totalCredit || 0;
+        });
+        return users;
     }
 
     public async canUserActivateRole(nationalID: string, ...roles: Role[]): Promise<boolean> {
