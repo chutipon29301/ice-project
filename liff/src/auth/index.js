@@ -11,7 +11,7 @@ import { END_POINT } from "../index";
 class Auth extends React.Component {
   async componentDidMount() {
     const { setAuthentication, setTokenAndExpiration } = this.props;
-    initAxiosErrorHandling(deleteTokenAndExpiration, this.props.history);
+    initAxiosErrorHandling(deleteTokenAndExpiration);
     const idToken = localStorage.getItem("idToken");
     const expireIn = localStorage.getItem("expireIn");
     if (idToken) {
@@ -27,8 +27,11 @@ class Auth extends React.Component {
             "Bearer " + res.data.token;
         }
       } catch (error) {
-        console.log(error);
-        throw error;
+        console.log("AN ERROR HAS OCCURED");
+        if (error.response.status === 400) {
+          console.log("REGISTRATION NEEDED");
+          this.props.history.push("/auth/registration");
+        }
       }
     } else {
       window.location.href = END_POINT + "/auth/lineLoginPage";
@@ -76,18 +79,16 @@ export default connect(
   mapDispatchToProps
 )(Auth);
 
-const initAxiosErrorHandling = (callback, history) => {
+const initAxiosErrorHandling = callback => {
   Axios.interceptors.response.use(
     response => {
       return response;
     },
     error => {
       if (error.response.status === 401) {
-        console.log("eiei");
+        console.log("TIMEOUT!");
         callback();
         window.location.href = END_POINT + "/auth/lineLoginPage";
-      } else if (error.response.status === 400) {
-        history.push("/auth/registration");
       }
       return Promise.reject(error);
     }
