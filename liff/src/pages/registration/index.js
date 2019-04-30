@@ -10,12 +10,16 @@ const Registration = ({ idToken, history }) => {
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const onSubmit = async function() {
+    let authenticationID = idToken;
+    if (!idToken) {
+      authenticationID = localStorage.getItem("idToken");
+    }
     const res = await Axios.post("/user/register", {
       nationalID,
       firstName,
       lastName,
       phone,
-      authenticationID: idToken
+      authenticationID
     });
     if (res.data) {
       history.push("/my-locker");
