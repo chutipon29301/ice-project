@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthServerService } from './../shared/auth.server.service';
 import { Router } from '@angular/router';
-import { Settings } from './../shared/settings';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +19,6 @@ export class LoginComponent implements OnInit {
   }
 
   onSignin(form: NgForm) {
-    window.location.replace(Settings.server + '/auth/lineLoginPageAdmin');
+    window.location.replace(environment.serverURL + '/auth/lineLoginPageAdmin');
   }
 }
