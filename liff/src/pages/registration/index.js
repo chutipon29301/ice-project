@@ -11,7 +11,7 @@ const Registration = ({ idToken, history }) => {
   const [phone, setPhone] = useState("");
   const onSubmit = async function() {
     let authenticationID = idToken;
-    if (!idToken) {
+    if (!idToken || idToken === "") {
       authenticationID = localStorage.getItem("idToken");
     }
     const res = await Axios.post("/user/register", {
