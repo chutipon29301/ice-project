@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LockerService } from './locker.service';
 import { catchError, map } from 'rxjs/operators';
-import { Settings } from './settings';
 import { environment } from '../../environments/environment';
-
 
 @Injectable()
 export class LockerServerService {
@@ -61,7 +59,7 @@ deletelocker(id: number) {
   );
  }
 
- patchlocker(name: string, number: string , loID: number, id: number) {
+ patchlocker(name: string, number: string , loID: number, id: number, availability: string) {
   const token = localStorage.getItem('LineToken');
   const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
   console.log(name);
@@ -70,7 +68,8 @@ deletelocker(id: number) {
   this.httpClient.patch(this.server + '/locker/' + id, {
     'name':  name,
     'number':  number,
-    'locationID':  loID
+    'locationID':  loID,
+    'availability': availability
     }, { headers: headers
     })
    .subscribe(

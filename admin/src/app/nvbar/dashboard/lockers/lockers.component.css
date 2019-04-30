@@ -1,6 +1,6 @@
 #lcomponent{
-    width: 635px;
-    height: 605px;
+    width: calc(57.4vw - 286px);
+    height: calc(96vh - 30px);
     background: #FFFFFF;
     box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
     border-radius: 4px;
@@ -14,7 +14,7 @@
     margin-top: 3px;
     margin-right: 5px;
     left: 20px;
-    top: 12px;
+    top: 16px;
     background: url(./../../../../resources/lockers.png);
 }
 
@@ -41,14 +41,14 @@
 /* card shadow */
 box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
 border-radius: 4px;
-height: 490px;
+height: calc(92vh - 113.6px);
 }
 
 #ilcontainer{
-    overflow-y: scroll;
+    overflow-y: auto;
     margin-left: 10px;
     margin-right: 20px; 
-    height: 450px;
+    height: calc(89vh - 133.6px);
 }
 
 #bottommar{
@@ -58,7 +58,7 @@ height: 490px;
 
 #locker{
     width: 100%;
-    height: 83px;
+    height: 92px;
     position: relative;
 }
 
@@ -69,7 +69,7 @@ height: 490px;
 
 #namelock{
     position: absolute;
-    top: 12px;
+    top: 18px;
     left: 80px;
     font-style: normal;
     font-weight: 500;
@@ -82,7 +82,7 @@ height: 490px;
 
 #numlock{
     left: 80px;
-    top: 40px;
+    top: 44px;
     position: absolute;
     font-style: normal;
     font-weight: 500;
@@ -94,8 +94,8 @@ height: 490px;
 }
 
 #avalock{
-    left: 150px;
-    top: 40px;
+    left: 145px;
+    top: 44px;
     position: absolute;
     font-style: normal;
     font-weight: 500;
@@ -107,8 +107,8 @@ height: 490px;
 }
 
 #unavalock{
-    left: 130px;
-    top: 40px;
+    left: 145px;
+    top: 44px;
     position: absolute;
     font-style: normal;
     font-weight: 500;
@@ -118,6 +118,46 @@ height: 490px;
     
     color: #FF0000;;
 }
+
+#warnlock{
+    left: 145px;
+    top: 44px;
+    position: absolute;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: normal;
+    letter-spacing: 0.154353px;
+    
+    color: rgb(238, 228, 82);
+}
+
+#isused{
+    left: 145px;
+    top: 67px;
+    position: absolute;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: normal;
+    letter-spacing: 0.154353px;
+    
+    color: rgb(255, 132, 0);
+}
+
+#isfree{
+    left: 145px;
+    top: 67px;
+    position: absolute;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: normal;
+    letter-spacing: 0.154353px;
+    
+    color: rgb(0, 208, 255);
+}
+
 
 #remove{
     position: absolute;
@@ -141,7 +181,7 @@ height: 490px;
 #edit{
     position: absolute;
     top: 40px;
-    right: 90px;
+    right: 100px;
     height: 28px;
     width: 62px;
     background: #66A4EC;
@@ -174,13 +214,13 @@ height: 490px;
   /* Modal Content/Box */
   .modal-content {
     background-color: #fefefe;
-    margin: 5% auto; /* 15% from the top and centered */
+    margin: 8% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid 
     #888;
     text-align: center;
     position: relative;
-    height: 350px;
+    height: 430px;
     width: 700px;
     box-shadow: 0px 6px 18px rgba(216, 216, 216, 0.109);
     border-radius: 8px;
@@ -207,7 +247,7 @@ height: 490px;
     right: 90px;
     height: 48px;
     width: 92px;
-    background: rgb(65, 248, 37);
+    background: rgb(44, 136, 228);
     color: #FFFFFF;
     border: 0;
     border-radius: 20px;
@@ -225,17 +265,40 @@ height: 490px;
         font-size: 20px;
     }
 
+    .confirm_modal {
+        background-color: #fefefe;
+        margin: 17% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid 
+        #888;
+        text-align: center;
+        position: relative;
+        height: 130px;
+        width: 650px;
+        box-shadow: 0px 6px 18px rgba(216, 216, 216, 0.109);
+        border-radius: 8px;
+      }
+    
+      #mConfirm {
+        position: absolute;
+        bottom: 30px;
+        right: 60px;
+        height: 40px;
+        width: 120px;
+      }
+    
+      #mCancel{
+        position: absolute;
+        bottom: 30px;
+        right: 200px;
+        height: 40px;
+        width: 120px;
+      }
+      .item{
+        min-width: 420px;
+    }
 
 
-@media screen and (max-height: 697px) {
-    #lcomponent {
-        height: 80vh;
-    }
-    #lcontainer {
-        height: 77%;
-    }
-    #ilcontainer{
-        height: 87%;
-    }
-}
+
+
   

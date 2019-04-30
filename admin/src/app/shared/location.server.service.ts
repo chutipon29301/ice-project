@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { LocationService } from './location.service';
 import { catchError, map } from 'rxjs/operators';
-import { Settings } from './settings';
 import { environment } from '../../environments/environment';
 
 @Injectable()
 export class LocationServerService {
 
   constructor(private httpClient: HttpClient, private locationService: LocationService) { }
-  server = environment;
+  server = environment.serverURL;
 
   getlocations() {
     const token = localStorage.getItem('LineToken');
@@ -26,13 +25,14 @@ export class LocationServerService {
       );
   }
 
-  postlocation(dis: string, lat: number , lng: number) {
+  postlocation(dis: string, lat: number , lng: number, image: string) {
     const token = localStorage.getItem('LineToken');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
     this.httpClient.post(this.server + '/location', {
       'description':  dis,
       'lat':  lat,
-      'lng':  lng
+      'lng':  lng,
+      'imageURL': image
       }, { headers: headers
       })
      .subscribe(
@@ -60,13 +60,14 @@ export class LocationServerService {
   );
  }
 
- patchlocation(id: number, dis: string, lat: number , lng: number) {
+ patchlocation(id: number, dis: string, lat: number , lng: number, image: string) {
   const token = localStorage.getItem('LineToken');
   const headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
   this.httpClient.patch(this.server + '/location/' + id, {
     'description':  dis,
     'lat':  lat,
-    'lng':  lng
+    'lng':  lng,
+    'imageURL': image
     }, { headers: headers
     })
    .subscribe(

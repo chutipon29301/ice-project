@@ -12,7 +12,7 @@ export class LockerService {
   getdata() {
     return this.lockers.slice();
   }
-  setLockers(lockers) {
+  setLockers(lockers: Locker[]) {
   this.lockers = lockers;
   this.dataChanged.next(this.lockers.slice());
   }

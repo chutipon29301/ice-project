@@ -1,0 +1,298 @@
+#component{
+    width: calc(57.4vw - 286px);
+    height: calc(96vh - 30px);
+    background: #FFFFFF;
+    box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
+    border-radius: 4px;
+    position: relative;
+}
+#pgroup{
+    position: absolute;
+    width: 53px;
+    height: 53px;
+    margin-top: 3px;
+    margin-right: 5px;
+    left: 20px;
+    top: 12px;
+    background: url(./../../../../resources/pgroup.png);
+    background-size: contain;
+    background-size: cover;
+    vertical-align: middle;
+}
+#title{
+    font-style: normal;
+    font-weight: 550;
+    font-size: 18px;
+    line-height: normal;
+    letter-spacing: 0.01em;
+    margin-left: 30px;
+    margin-bottom: 20px;
+    color: #334D6E;
+}
+
+.top{
+    width: 100%;
+    height: 20px;
+}
+
+#container{
+    margin-left: 20px;
+    margin-right: 20px; 
+    background: #F0F7FF;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    height: calc(92vh - 113.6px);
+}
+
+#icontainer{
+    overflow-y: auto;
+    margin-left: 10px;
+    margin-right: 10px; 
+    height: calc(89vh - 133.6px);
+}
+
+#bottommar{
+    margin-bottom: 20px;
+}
+
+
+#group{
+    width: 100%;
+    height: 83px;
+    position: relative;
+}
+
+#bottomhr{
+    position: absolute;
+    bottom: 0px;
+}
+
+#namegroup{
+    position: absolute;
+    top: 18px;
+    left: 80px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: normal;
+    letter-spacing: 0.154353px;
+    
+    color: #000000;
+}
+#id{
+    left: 80px;
+    top: 44px;
+    position: absolute;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: normal;
+    letter-spacing: 0.123482px;
+    
+    color: #706A6A;
+}
+#remove{
+    position: absolute;
+    top: 40px;
+    right: 20px;
+    height: 28px;
+    width: 62px;
+    background: #FF5A5A;
+    color: #FFFFFF;
+    border: 0;
+    border-radius: 20px;
+    font-style: normal;
+    font-weight: 550;
+    font-size: 12px;
+    line-height: normal;
+    text-align: center;
+    letter-spacing: 0.154353px;
+    text-decoration-line: underline;
+}
+
+#edit{
+    position: absolute;
+    top: 40px;
+    right: 100px;
+    height: 28px;
+    width: 62px;
+    background: #66A4EC;
+    color: #FFFFFF;
+    border: 0;
+    border-radius: 20px;
+    font-style: normal;
+    font-weight: 550;
+    font-size: 12px;
+    line-height: normal;
+    text-align: center;
+    letter-spacing: 0.154353px;
+    text-decoration-line: underline;
+    z-index: 1;
+}
+
+.item-click{
+    min-width: 300px;
+    cursor: pointer;
+    border-radius: 12px;
+}
+
+.item-click:hover{
+    background: rgb(202, 225, 251);
+  }
+
+#add{   
+    display: inline-block;
+    position: absolute;
+    right: 30px;
+    top: 15px;
+    width: 32px;
+    height: 32px;
+    background: url(./../../../../resources/add.png);
+    z-index: 1;
+}
+
+.item-click-selected{
+    min-width: 300px;
+    background: rgb(155, 202, 255);
+    cursor: pointer;
+    border-radius: 12px;
+  }
+
+  /* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid 
+    #888;
+    text-align: center;
+    position: relative;
+    height: 180px;
+    width: 700px;
+    box-shadow: 0px 6px 18px rgba(216, 216, 216, 0.109);
+    border-radius: 8px;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  mat-form-field{
+      width: 80%;
+      font-size: 20px;
+  }
+
+  #madd{
+    position: absolute;
+    bottom: 20px;
+    right: 60px;
+    height: 48px;
+    width: 92px;
+    background: #2fc711;
+    color: #FFFFFF;
+    border: 0;
+    border-radius: 20px;
+    font-style: normal;
+    font-weight: 550;
+    font-size: 16px;
+    line-height: normal;
+    text-align: center;
+    letter-spacing: 0.154353px;
+    text-decoration-line: underline;
+}
+
+#medit{
+    position: absolute;
+    bottom: 20px;
+    right: 60px;
+    height: 48px;
+    width: 92px;
+    background: rgb(44, 136, 228);
+    color: #FFFFFF;
+    border: 0;
+    border-radius: 20px;
+    font-style: normal;
+    font-weight: 550;
+    font-size: 16px;
+    line-height: normal;
+    text-align: center;
+    letter-spacing: 0.154353px;
+    text-decoration-line: underline;
+}
+
+.cd-popup {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s 0s, visibility 0s 0.3s;
+  }
+  
+  .cd-popup.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s 0s, visibility 0s 0s;
+  }
+  
+  .cd-popup-container {
+    transform: translateY(-40px);
+    transition-property: transform;
+    transition-duration: 0.3s;
+  }
+  
+  .is-visible .cd-popup-container {
+    transform: translateY(0);
+  }
+
+  .confirm_modal {
+    background-color: #fefefe;
+    margin: 17% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid 
+    #888;
+    text-align: center;
+    position: relative;
+    height: 130px;
+    width: 650px;
+    box-shadow: 0px 6px 18px rgba(216, 216, 216, 0.109);
+    border-radius: 8px;
+  }
+
+  #mConfirm {
+    position: absolute;
+    bottom: 30px;
+    right: 60px;
+    height: 40px;
+    width: 120px;
+  }
+
+  #mCancel{
+    position: absolute;
+    bottom: 30px;
+    right: 200px;
+    height: 40px;
+    width: 120px;
+  }

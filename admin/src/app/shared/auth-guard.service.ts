@@ -3,9 +3,8 @@ import { Injectable } from '@angular/core';
 import { AuthServerService } from './auth.server.service';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Settings } from './settings';
-import { throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { throwError } from 'rxjs';
 
 
 @Injectable()

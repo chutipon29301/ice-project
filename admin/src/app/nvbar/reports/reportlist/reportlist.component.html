@@ -1,0 +1,46 @@
+<div id = "component">
+  <div class="top"></div>
+        <div id = "title">Reports
+        </div>
+              <hr id = "bottommar">
+  
+      <div id = "container">
+  
+      <div class="top"></div>
+        <div id = "icontainer">
+            <div  *ngFor="let report of reports; let i = index"  class = "item">
+                <div id = "report">
+                  <div id = "preport"></div>
+                  <div id = "namelocker">{{report.locker.name}}</div>
+                  <div id = "lockerID"> Locker ID: {{report.lockerID}} </div>
+                  <div id = "reportdetails">
+                    <p id = "text"> {{report.message}} </p> </div>    
+                    <div id = "reportID"> Report ID: {{report.id}} </div>
+                  <div id = "time"> Created: {{report.createdDate}} </div>
+                  <!-- <button id = "edit" > Edit </button>  -->
+                  <button id = "resolved" (click)="onConfirm(report.id)"> Resolved </button>
+                  <hr id = "bottomhr">
+                  
+              </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div id="confirmModalResolved" class="modal">
+
+    <!-- Modal content -->
+    <div class="confirm_modal">
+      <div class="mtitle">Are you sure the problem is resolved?</div>
+        <button id = "mConfirm" class = "btn" (click)="cConfirm()"> Confirm </button>
+        <button id = "mCancel" class = "btn-red" (click)="cCancel()"> Cancel </button>
+    </div>
+  
+    <!-- <div id="confirmModalDelete" class="modal">
+
+      Modal content
+      <div class="confirm_modal">
+        <div class="mtitle">Are you sure you want to delete the report?</div>
+          <button id = "mConfirm" class = "btn" (click)="cDeConfirm()"> Confirm </button>
+          <button id = "mCancel" class = "btn-red" (click)="cDeCancel()"> Cancel </button>
+      </div> -->

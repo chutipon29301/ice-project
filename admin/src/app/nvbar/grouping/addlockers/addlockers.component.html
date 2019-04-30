@@ -1,0 +1,55 @@
+<div id = "component">
+
+  <div class="top"></div>
+  <div id="add" (click)="openaddlocker($event)" style="cursor: pointer;"></div>
+    <div id = "title">
+      Lockers in the Group
+    </div>
+    <hr id = "bottommar">
+
+    <div id = "container">
+
+        <div class="top"></div>
+          <div id = "icontainer" >
+              <div *ngFor="let locker of lockers; let i = index" class = "item">
+                  <div id = "locker">
+                  <div id = "plocker"></div>
+                  <div id = "namelocker">{{locker.name}}</div>
+                  <div id = "lockerID">ID: {{locker.id}}</div>
+                  <button id = "remove" (click)="onConfirm(locker.id)"> Remove </button>
+                  <hr id = "bottomhr">
+                </div>
+            </div>
+
+          </div>
+    
+      </div>
+
+      <div id="addModalLocker" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close" (click)="closeadd(f)">&times;</span>
+          <div class="mtitle">Add Locker To The Group</div>
+          <form (ngSubmit)="onAdd(f)" #f="ngForm">
+          <div id = "i1">
+            <mat-form-field appearance="legacy">
+              <mat-label>Locker ID</mat-label>
+              <input matInput required type = "number" ngModel name="id">
+            </mat-form-field>
+          </div>
+            <button id = "madd" [disabled]="!f.valid"> Add </button>
+         </form>
+        </div>
+      
+      </div>
+
+      
+<div id="confirmModalLocker" class="modal">
+
+  <!-- Modal content -->
+  <div class="confirm_modal">
+    <div class="mtitle">Are you sure you want to delete the locker?</div>
+      <button id = "mConfirm" class = "btn" (click)="cConfirm()"> Confirm </button>
+      <button id = "mCancel" class = "btn-red" (click)="cCancel()"> Cancel </button>
+  </div>

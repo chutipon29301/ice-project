@@ -22,11 +22,12 @@ export class NotificationsComponent implements OnInit {
  this.span = document.getElementsByClassName('close')[0];
  }
 
- closeadd(e) {
+ closeadd(form: NgForm) {
    this.modal.style.display = 'none';
    this.id = undefined;
+   form.resetForm();
  }
- openadd(e, id) {
+ openadd(form: NgForm, id) {
    this.modal.style.display = 'block';
    this.id = id;
  }

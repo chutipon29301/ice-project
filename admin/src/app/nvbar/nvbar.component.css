@@ -52,15 +52,19 @@
   }
 
   #admindt{
-    margin-top: 80px; 
+    position: relative;
+    margin-top: 60px; 
+    height: 100px;
   }
 
   #tab{
-    margin-top: 30px; 
+    margin-top: 5px; 
   }
 
   #adname{
-    padding-left: 40px;
+    position: absolute;
+    top: 30px;
+    left: 96px;
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -71,7 +75,9 @@
   }
 
   #addetails{
-    padding-left: 40px;
+    position: absolute;
+    top: 50px;
+    left: 96px;
     font-style: normal;
     font-weight: 500;
     font-size: 11px;
@@ -101,12 +107,14 @@
   }
 
   #v1{
-      width: 15.5px;
-      height: 15px;
-      margin-top: 3px;
+    width: 15.5px;
+    height: 15px;
+    margin-top: 3px;
     margin-right: 5px;
-      display: inline-block;
-    background: url(./../../resources/v1.png);
+    display: inline-block;
+    background: url(./../../resources/locker.png);
+    position: relative;
+    top: 1px;
   }
 
   #v2{
@@ -115,6 +123,41 @@
     margin-right: 5px;
     display: inline-block;                
     background: url(./../../resources/location.png);
+    position: relative;
+    top: 1px;
+  }
+
+  #v3{
+    width: 15.5px;
+    height: 15.5px;
+    margin-right: 5px;
+    display: inline-block;                
+    background: url(./../../resources/user.png);
+    position: relative;
+    top: 1px;
+  }
+
+  #v4{
+    width: 15.5px;
+    height: 15.5px;
+    margin-right: 5px;
+    display: inline-block;                
+    background: url(./../../resources/group.png);
+    position: relative;
+    top: 1px;
+  }
+
+  #v5{
+    width: 15.5px;
+    height: 15.5px;
+    margin-right: 5px;
+    display: inline-block;                
+    background: url(./../../resources/report.png);
+    position: relative;
+    bottom: 2.5px;
+    background-size: contain;
+    background-size: cover;
+    vertical-align: middle;
   }
 
   #close{
@@ -134,4 +177,16 @@
   }
   .active{
     color: #109CF1 !important;
+  }
+
+  #img_admin{
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    width: 76px;
+    height: 76px;
+    background-size: contain;
+    background-size: cover;
+    vertical-align: middle;
+    border-radius: 50%;
   }

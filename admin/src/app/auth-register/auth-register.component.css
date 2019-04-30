@@ -4,7 +4,7 @@
     right: 90px;
     height: 48px;
     width: 92px;
-    background: rgb(65, 248, 37);
+    background: rgb(86, 228, 64);
     color: #FFFFFF;
     border: 0;
     border-radius: 20px;
@@ -22,7 +22,7 @@
         position: absolute;
         background-color: #fefefe;
         margin: 0% auto; /* 15% from the top and centered */
-        top: 5%;
+        top: 14%;
         padding: 20px;
         border: 1px solid 
         #888;
@@ -42,6 +42,8 @@
 
       .blue-back{
         background-color: #66A4EC;
+        background: -webkit-linear-gradient(to right, #7f7fd5, #66A4EC, #91eae4); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #7f7fd5, #66A4EC, #91eae4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         width: 100%;
         height: 100%;
       }
