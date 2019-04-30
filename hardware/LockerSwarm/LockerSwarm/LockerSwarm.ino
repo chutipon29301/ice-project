@@ -36,16 +36,16 @@ GxIO_Class io(SPI, /*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16);   // arbitrary selecti
 GxEPD_Class display(io, /*RST=*/ 16, /*BUSY=*/ 4);          // arbitrary selection of (16), 4
 
 //Set Username-Password WiFi
-const char* ssid = "CTiPhone";
-const char* password = "00000000";
+//const char* ssid = "CTiPhone";
+//const char* password = "00000000";
 //const char* ssid = "true_home2G_Up7";
 //const char* password = "vDcqdQQq";
 //const char* ssid = "Chutipon's Wi-Fi Network";
 //const char* password = "Non29301";
 //const char* ssid = "APPLESUCKS";
 //const char* password = "mynameistai";
-//const char* ssid = "prial";
-//const char* password = "mynameisp";
+const char* ssid = "prial";
+const char* password = "mynameisp";
 
 QRCode qrcode;
 int counter = 0;
@@ -69,7 +69,7 @@ boolean isRegister = false;
 const char* generatedLink = "www.google.com";
 int wakeUpReason;
 
-String baseURL = "https://a15ac61f.ngrok.io";
+String baseURL = "https://0a35c1a7.ngrok.io";
 
 //--------------------------------------------------------------------------Void Setup-----------------------------------------------------------------------------//
 
