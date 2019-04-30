@@ -1,9 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { WhiteSpace, NavBar } from "antd-mobile";
 import { Row, Col } from "antd";
 import LockerCard from "./components/LockerCard";
 import { connect } from "react-redux";
-import { fetchMyLockers, fetchSharedLockers, fetchUserProfile } from "./ducks";
+import {
+  fetchMyLockers,
+  fetchSharedLockers,
+  fetchUserProfile,
+  removeLockerByID
+} from "./ducks";
+import Axios from "axios";
 
 // const Alert = Modal.alert;
 const MyLocker = ({
@@ -13,12 +19,24 @@ const MyLocker = ({
   fetchSharedLockers,
   sharedLockersInstances,
   fetchUserProfile,
-  userProfile
+  userProfile,
+  removeLockerByID
 }) => {
+  const [userCredit, setUserCredit] = useState(0);
+  const fetchUserCreditUsage = async () => {
+    try {
+      const res = await Axios.get("/credit-usage/myCredit");
+      setUserCredit(res.data.totalCredit);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
   useEffect(() => {
     fetchUserProfile();
     fetchMyLockers();
     fetchSharedLockers();
+    fetchUserCreditUsage();
     document.body.style.backgroundColor = "#EEF4FB";
     return () => {
       document.body.style.backgroundColor = "";
@@ -26,7 +44,7 @@ const MyLocker = ({
   }, []);
   return (
     <div className="bg-primary">
-      <NavBar mode="dark"> Accessible Lockers </NavBar>
+      <NavBar mode="dark"> Accessible Lockers</NavBar>
       <div style={{ backgroundColor: "#2979FF" }}>
         <Row type="flex" align="middle">
           <Col span={8} style={{ padding: 12 }}>
@@ -56,6 +74,24 @@ const MyLocker = ({
                 {myLockersInstances.length + sharedLockersInstances.length}{" "}
               </span>{" "}
             </p>
+            <p style={{ marginBottom: 2 }}>Credits: {" " + userCredit || 0}</p>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button
+                className="bg-success"
+                style={{
+                  marginTop: 2,
+                  borderRadius: 4,
+                  borderWidth: 0,
+                  borderColor: "transparent",
+                  display: "absolute",
+                  right: 12
+                }}
+                onClick={() => history.push("/my-credit-history")}
+              >
+                {" "}
+                Credit History{" "}
+              </button>
+            </div>
           </Col>
         </Row>
       </div>
@@ -83,6 +119,8 @@ const MyLocker = ({
               startTime={startTime}
               number={locker.number}
               isMine={true}
+              removeLockerByID={removeLockerByID}
+              fetchUserCreditUsage={fetchUserCreditUsage}
             />
             <WhiteSpace size="lg" />
           </React.Fragment>
@@ -134,5 +172,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { fetchMyLockers, fetchSharedLockers, fetchUserProfile }
+  { fetchMyLockers, fetchSharedLockers, fetchUserProfile, removeLockerByID }
 )(MyLocker);

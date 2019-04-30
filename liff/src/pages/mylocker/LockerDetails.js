@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Icon, Timeline } from "antd";
-import { NavBar } from "antd-mobile";
+import { NavBar, Modal } from "antd-mobile";
 import { connect } from "react-redux";
 import Axios from "axios";
-// const prompt = Modal.prompt;
+const prompt = Modal.prompt;
 
 const LockerDetails = ({
   match,
@@ -13,12 +13,14 @@ const LockerDetails = ({
 }) => {
   const [lockerDetails, setLockerDetails] = useState({});
   const [lockerHistory, setLockerHistory] = useState([]);
-  const getLockerInstanceHistory = async () => {
-    const res = await Axios.get("/locker-instance/history/" + match.params.id);
-    console.log(res, "res");
-    setLockerHistory(res.data.lockerUsages);
-  };
+
   useEffect(() => {
+    const getLockerInstanceHistory = async () => {
+      const res = await Axios.get(
+        "/locker-instance/history/" + match.params.id
+      );
+      setLockerHistory(res.data.lockerUsages);
+    };
     const index = myLockersInstances.findIndex(lockerInstance => {
       return parseInt(match.params.id) === parseInt(lockerInstance.lockerID);
     });
@@ -41,19 +43,21 @@ const LockerDetails = ({
       document.body.style.backgroundColor = "";
     };
   }, []);
-  // const reportProblem = () => {
-  //   prompt("Report Problem", "Please input your problem", [
-  //     { text: "Cancel" },
-  //     {
-  //       text: "Submit",
-  //       onPress: value =>
-  //         new Promise(resolve => {
-  //           console.log(value);
-  //           resolve();
-  //         })
-  //     }
-  //   ]);
-  // };
+  const reportProblem = () => {
+    prompt("Report Problem", "Please input your problem", [
+      { text: "Cancel" },
+      {
+        text: "Submit",
+        onPress: async value => {
+          const res = await Axios.post("/report", {
+            message: value,
+            lockerID: match.params.id
+          });
+          console.log(res, "Submitted");
+        }
+      }
+    ]);
+  };
   return (
     <div className="locker-details">
       <NavBar
@@ -118,12 +122,11 @@ const LockerDetails = ({
             </Timeline.Item> */}
           </Timeline>
         </div>
-        {/* <div className="center-only-child">
+        <div className="center-only-child">
           <button className="report" onClick={() => reportProblem()}>
-            {" "}
-            Report Problems{" "}
+            Report Problems
           </button>
-        </div> */}
+        </div>
       </div>
     </div>
   );

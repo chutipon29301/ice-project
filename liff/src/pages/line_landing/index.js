@@ -8,15 +8,22 @@ class LineLanding extends React.Component {
     const { history, setTokenAndExpiration, initialURL } = this.props;
     initAxiosLineErrorHandling(history);
     const location = window.location.href;
-    const indexOfEqual = location.indexOf("=");
-    const code = location.substring(indexOfEqual + 1);
-    const {
-      data: { idToken, expireIn }
-    } = await Axios.post("/auth/lineToken", { code });
-    setTokenAndExpiration(idToken, expireIn);
+    const indexOfCode = location.indexOf("code=") + 5;
+    const indexOfLocation = location.indexOf("redirect=");
+    const code = location.substring(indexOfCode, indexOfLocation - 1);
+    let lineToken;
+    try {
+      const {
+        data: { idToken, expireIn }
+      } = await Axios.post("/auth/lineToken", { code });
+      lineToken = idToken;
+      setTokenAndExpiration(idToken, expireIn);
+    } catch (error) {
+      console.log(error.response.status);
+    }
     try {
       const res = await Axios.post("/auth/myToken/line", {
-        lineToken: idToken
+        lineToken
       });
       if (res.data) {
         setAuthentication(true);
@@ -31,7 +38,29 @@ class LineLanding extends React.Component {
     }
   }
   render() {
-    return <p>Loading....</p>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#2979ff",
+          width: "100vw",
+          height: "100vh"
+        }}
+      >
+        <div className="lds-roller">
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
+      </div>
+    );
   }
 }
 

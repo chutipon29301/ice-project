@@ -4,10 +4,10 @@ import { liffHelper } from "../../App";
 import { Redirect as ReactRedirect } from "react-router-dom";
 
 const Redirect = ({ liffData }) => {
-  if (liffData === null) return <ReactRedirect to="/open-locker" />;
+  if (liffData === null) return <ReactRedirect to="/find-lockers" />;
   else {
     liffHelper.openExternal(
-      "https://ice-project-liff.herokuapp.com/open-locker",
+      "https://ice-project-liff.herokuapp.com/find-lockers",
       true
     );
     return (
