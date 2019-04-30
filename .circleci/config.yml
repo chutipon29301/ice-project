@@ -72,8 +72,8 @@ jobs:
             gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
             gcloud compute ssh --quiet --project $GCP_PROJECT_ID --zone $GCP_ZONE instance-1 -- \
             "([ -d ice-project ] && \
-            (cd ice-project && git fetch --all && git reset --hard origin/develop) || \
-            (git clone https://github.com/${GIT_USERNAME}/ice-project.git -b develop))"
+            (cd ice-project && git fetch --all && git reset --hard origin/master) || \
+            (git clone https://github.com/${GIT_USERNAME}/ice-project.git -b master))"
       - run:
           name: Create and transfer .env over scp
           command: |
