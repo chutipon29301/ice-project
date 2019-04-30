@@ -19,6 +19,7 @@
             <div id = "warnlock" *ngIf= "locker.availability == 'WARNING'" >Warning</div>
             <div id = "isused" *ngIf= "locker.instance !== undefined" > Occupied by: {{locker.instance.ownerUser.firstName}} {{locker.instance.ownerUser.lastName}}</div>
             <div id = "isfree" *ngIf= "locker.instance === undefined" > Unoccupied </div>
+            <div id = "lockerID">ID. {{locker.id}}</div>
             <button id = "edit" (click)="openedit(f,locker.id)"> Edit </button>
             <button id = "remove" (click)="onConfirm(locker.id)" > Remove </button>
             <hr id = "bottomhr">

@@ -93,8 +93,21 @@ height: calc(92vh - 113.6px);
     color: #706A6A;
 }
 
+#lockerID{
+    left: 135px;
+    top: 44px;
+    position: absolute;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: normal;
+    letter-spacing: 0.123482px;
+    
+    color: #706A6A;
+}
+
 #avalock{
-    left: 145px;
+    left: 190px;
     top: 44px;
     position: absolute;
     font-style: normal;
@@ -107,7 +120,7 @@ height: calc(92vh - 113.6px);
 }
 
 #unavalock{
-    left: 145px;
+    left: 190px;
     top: 44px;
     position: absolute;
     font-style: normal;
@@ -120,7 +133,7 @@ height: calc(92vh - 113.6px);
 }
 
 #warnlock{
-    left: 145px;
+    left: 190px;
     top: 44px;
     position: absolute;
     font-style: normal;
@@ -133,7 +146,7 @@ height: calc(92vh - 113.6px);
 }
 
 #isused{
-    left: 145px;
+    left: 190px;
     top: 67px;
     position: absolute;
     font-style: normal;
@@ -146,7 +159,7 @@ height: calc(92vh - 113.6px);
 }
 
 #isfree{
-    left: 145px;
+    left: 190px;
     top: 67px;
     position: absolute;
     font-style: normal;
@@ -295,7 +308,7 @@ height: calc(92vh - 113.6px);
         width: 120px;
       }
       .item{
-        min-width: 420px;
+        min-width: 460px;
     }
 
 
