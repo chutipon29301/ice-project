@@ -12,7 +12,9 @@ export class Report {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({
+        type: 'text',
+    })
     message: string;
 
     @CreateDateColumn()
