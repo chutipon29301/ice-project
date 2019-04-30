@@ -213,7 +213,11 @@ workflows:
             branches:
               only: 
                 - master
-      - build_admin
+      - build_admin:
+          filters:
+            branches:
+              only: 
+                - master
       - deploy_backend:
           requires:
             - build_backend
