@@ -3,6 +3,7 @@ certbot
 
 # Frontend
 public
+!backend/public
 
 # Dependency directory
 node_modules/
@@ -33,7 +34,3 @@ backend-old/*
 
 # Log
 yarn-error.log
-
-# Other files
-backend/src/bot/helpMe.jpeg
-backend/src/bot/manual.jpeg
