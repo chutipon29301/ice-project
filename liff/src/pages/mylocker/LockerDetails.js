@@ -42,7 +42,7 @@ const LockerDetails = ({
     return () => {
       document.body.style.backgroundColor = "";
     };
-  }, []);
+  }, [match.params.id, myLockersInstances, sharedLockersInstances]);
   const reportProblem = () => {
     prompt("Report Problem", "Please input your problem", [
       { text: "Cancel" },

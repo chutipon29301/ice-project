@@ -41,7 +41,7 @@ const MyLocker = ({
     return () => {
       document.body.style.backgroundColor = "";
     };
-  }, []);
+  }, [fetchMyLockers, fetchSharedLockers, fetchUserProfile]);
   return (
     <div className="bg-primary">
       <NavBar mode="dark"> Accessible Lockers</NavBar>
