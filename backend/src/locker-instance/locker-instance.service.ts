@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException, ConflictException, BadRequestException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, HttpException, ConflictException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { LockerInstanceRepositoryToken, CanAccessRelationRepositoryToken } from '../constant';
 import { CanAccessRelation } from '../entities/can-access.entity';
@@ -259,7 +259,7 @@ export class LockerInstanceService {
             if (canAccessRelation) {
                 return await this.lockerUsageService.unlock(lockerInstance, user);
             } else {
-                throw new UnauthorizedException('User is not allowed to access this locker');
+                throw new ForbiddenException('User is not allowed to access this locker');
             }
         } catch (error) {
             if (error instanceof HttpException) {
