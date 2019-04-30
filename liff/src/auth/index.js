@@ -11,7 +11,7 @@ import { END_POINT } from "../index";
 class Auth extends React.Component {
   async componentDidMount() {
     const { setAuthentication, setTokenAndExpiration } = this.props;
-    initAxiosErrorHandling(deleteTokenAndExpiration);
+    initAxiosErrorHandling(deleteTokenAndExpiration, this.props.history);
     const idToken = localStorage.getItem("idToken");
     const expireIn = localStorage.getItem("expireIn");
     if (idToken) {
@@ -76,7 +76,7 @@ export default connect(
   mapDispatchToProps
 )(Auth);
 
-const initAxiosErrorHandling = callback => {
+const initAxiosErrorHandling = (callback, history) => {
   Axios.interceptors.response.use(
     response => {
       return response;
@@ -86,6 +86,8 @@ const initAxiosErrorHandling = callback => {
         console.log("eiei");
         callback();
         window.location.href = END_POINT + "/auth/lineLoginPage";
+      } else if (error.response.status === 400) {
+        history.push("/auth/registration");
       }
       return Promise.reject(error);
     }
