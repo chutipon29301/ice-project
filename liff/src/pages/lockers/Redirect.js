@@ -7,7 +7,7 @@ const Redirect = ({ liffData }) => {
   if (liffData === null) return <ReactRedirect to="/find-lockers" />;
   else {
     liffHelper.openExternal(
-      "https://ice-project-liff.herokuapp.com/find-lockers",
+      "https://www.lockerswarm.xyz/find-lockers",
       true
     );
     return (
