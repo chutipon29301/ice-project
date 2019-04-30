@@ -4,6 +4,7 @@ import { LocationRepositoryToken } from '../constant';
 import { Location } from '../entities/location.entity';
 import { LockerAvailability } from '../entities/locker.entity';
 import { LockerService } from '../locker/locker.service';
+import { LocationEmptyLockerCountDto } from './dto/location-empty-locker-count.dto';
 
 @Injectable()
 export class LocationService {
@@ -12,7 +13,7 @@ export class LocationService {
         private readonly locationRepository: Repository<Location>,
         @Inject(forwardRef(() => LockerService))
         private readonly lockerService: LockerService,
-    ) {}
+    ) { }
 
     public async create(description: string, lat: number, lng: number, imageURL?: string): Promise<Location> {
         const location = new Location(description, lat, lng, imageURL);
@@ -71,6 +72,46 @@ export class LocationService {
             });
         }
         return await this.locationRepository.find({ where, relations });
+    }
+
+    public async findLockerAndCountEmptyLocker(lat?: number, lng?: number): Promise<LocationEmptyLockerCountDto[]> {
+        const locations: LocationEmptyLockerCountDto[] = await this.locationRepository.query(`
+            SELECT
+                location.id,
+                location.description,
+                location.lat,
+                location.lng,
+                location.imageURL,
+                SUM(instance.inUsed) AS inUsedLocker,
+                COUNT(locker.id) AS totalLocker
+            FROM
+                location
+                    LEFT JOIN
+                locker ON locker.locationID = location.id
+                    LEFT JOIN
+                (SELECT
+                    *
+                FROM
+                    locker_instance
+                WHERE
+                    locker_instance.startTIme >= ALL (SELECT 
+                            startTime
+                        FROM
+                            locker_instance i2
+                        WHERE
+                            i2.lockerID = locker_instance.lockerID)
+                ORDER BY locker_instance.startTime DESC) AS instance ON instance.lockerID = locker.id
+            GROUP BY location.id;
+        `) as LocationEmptyLockerCountDto[];
+        locations.forEach((location) => {
+            location.inUsedLocker = location.inUsedLocker || 0;
+            location.totalLocker = location.totalLocker || 0;
+        });
+        return locations.sort((firstLocation, secondLocation) => {
+            const firstDist = this.calculateDist(firstLocation.lat, firstLocation.lng, lat, lng);
+            const secondDist = this.calculateDist(secondLocation.lat, secondLocation.lng, lat, lng);
+            return firstDist - secondDist;
+        });
     }
 
     public async update(id: number, value: Partial<Location>) {

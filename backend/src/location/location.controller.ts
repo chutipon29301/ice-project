@@ -7,16 +7,25 @@ import { Role } from 'src/entities/user.entity';
 import { LocationService } from './location.service';
 import { LocationsDto } from './dto/locations.dto';
 import { LocationCoordinationDto } from './dto/location-coordinate.dto';
+import { LocationEmptyLockerCountArrayDto } from './dto/location-empty-locker-count-array.dto';
 
 @ApiUseTags('Location')
 @Controller('location')
 export class LocationController {
-    constructor(private readonly locationService: LocationService) {}
+    constructor(private readonly locationService: LocationService) { }
     @ApiBearerAuth()
     @Roles(Role.SUPERUSER, Role.ADMIN, Role.USER)
     @Get()
     async list(@Query() query: LocationCoordinationDto): Promise<LocationsDto> {
         const locations = await this.locationService.findLocations({ key: { sortFrom: { lat: query.lat, lng: query.lng } } });
+        return { locations };
+    }
+
+    @ApiBearerAuth()
+    @Roles(Role.SUPERUSER, Role.ADMIN, Role.USER)
+    @Get('emptyLockerCount')
+    async listLocationWithEmptyLocker(@Query() query: LocationCoordinationDto): Promise<LocationEmptyLockerCountArrayDto> {
+        const locations = await this.locationService.findLockerAndCountEmptyLocker(query.lat, query.lng);
         return { locations };
     }
 
