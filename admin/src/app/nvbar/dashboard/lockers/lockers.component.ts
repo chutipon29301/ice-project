@@ -7,7 +7,7 @@ import { LockerInstances } from './../../../shared/locker-instances.model';
 import { LockerInstancesService } from './../../../shared/locker-instances.service';
 import { LockerInstancesServerService } from './../../../shared/locker-instances.server.service';
 import { Subscription } from 'rxjs/Subscription';
-
+import { LockersService } from './../lockers.service';
 @Component({
   selector: 'app-lockers',
   templateUrl: './lockers.component.html',
@@ -16,8 +16,8 @@ import { Subscription } from 'rxjs/Subscription';
 
 export class LockersComponent implements OnInit {
   constructor(private lockerServerService: LockerServerService, private lockerInstancesService: LockerInstancesService,
-     private lockerInstancesServerService: LockerInstancesServerService) { }
-  @Input() registered: Locker[];
+     private lockerInstancesServerService: LockerInstancesServerService, private lockersService: LockersService) { }
+  registered: Locker[];
   @Input() locationsid: number[];
    private editId: number;
    modal: HTMLElement;
@@ -25,27 +25,31 @@ export class LockersComponent implements OnInit {
    span: Element;
    private deleteId: number;
    private subscription: Subscription;
-   lockerInstances: LockerInstances;
+   private subLocker: Subscription;
+
 
   ngOnInit() {
   this.modal = document.getElementById('editModal');
   this.span = document.getElementsByClassName('close')[0];
   this.confirmmodal = document.getElementById('confirmModal');
-
-  this.lockerInstancesServerService.getlockerinstances();
-  this.subscription = this.lockerInstancesService.dataChanged
-  .subscribe(
-  (lockerInstances: LockerInstances[]) => {
-  while (this.registered === undefined) {  }
-    for (let i = 0; i < lockerInstances.length; i++) {
-      for (let j = 0; j < this.registered.length; j++) {
-        if (lockerInstances[i].lockerID === this.registered[j].id) {
-        this.registered[j].instance = lockerInstances[i];
-  }
-    }
-  }
-}
+     this.subLocker = this.lockersService.dataChanged.subscribe(
+       (lockers: Locker[]) => {
+         this.registered = lockers;
+         this.lockerInstancesServerService.getlockerinstances();
+        }
      );
+     this.subscription = this.lockerInstancesService.dataChanged
+     .subscribe(
+     (lockerInstances: LockerInstances[]) => {
+       for (let i = 0; i < lockerInstances.length; i++) {
+         for (let j = 0; j < this.registered.length; j++) {
+           if (lockerInstances[i].lockerID === this.registered[j].id) {
+           this.registered[j].instance = lockerInstances[i];
+     }
+       }
+     }
+   }
+        );
   }
 
   closeedit(form: NgForm) {
@@ -90,6 +94,10 @@ export class LockersComponent implements OnInit {
   cCancel() {
     this.deleteId = undefined;
     this.confirmmodal.style.display = 'none';
+  }
+  onDestroy() {
+  this.subscription.unsubscribe();
+  this.subLocker.unsubscribe();
   }
 
 }

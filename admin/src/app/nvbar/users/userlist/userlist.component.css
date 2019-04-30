@@ -52,10 +52,10 @@
     margin-right: 10px;
     left: 20px;
     top: 12px;
-    background: url(./../../../../resources/puser.png);
     background-size: contain;
     background-size: cover;
     vertical-align: middle;
+    border-radius: 50%;
 }
 
 #user{
@@ -87,8 +87,8 @@
     position: absolute;
     top: 44px;
     right: 20px;
-    height: 28px;
-    width: 62px;
+    height: 32px;
+    width: 74px;
     background: #2fc711;
     color: #FFFFFF;
     border: 0;

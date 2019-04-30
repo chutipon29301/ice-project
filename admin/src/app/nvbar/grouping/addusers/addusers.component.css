@@ -19,6 +19,7 @@
     background-size: contain;
     background-size: cover;
     vertical-align: middle;
+    border-radius: 50%;
 }
 
 #title{
