@@ -6,10 +6,8 @@ import { Redirect as ReactRedirect } from "react-router-dom";
 const Redirect = ({ liffData }) => {
   if (liffData === null) return <ReactRedirect to="/open-locker" />;
   else {
-    liffHelper.openExternal(
-      "https://www.lockerswarm.xyz/open-locker",
-      true
-    );
+    liffHelper.openExternal("https://www.lockerswarm.xyz/open-locker", true);
+    liffHelper.closeLiff();
     return (
       <div
         style={{

@@ -22,7 +22,7 @@ const Registration = ({ idToken, history }) => {
       authenticationID: idToken
     });
     if (res.data) {
-      history.push("/");
+      history.push("/my-locker");
     }
   };
   return (
