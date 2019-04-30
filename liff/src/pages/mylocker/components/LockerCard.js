@@ -14,7 +14,9 @@ const LockerCard = ({
   startTime,
   isMine,
   number,
-  profileImage
+  fetchUserCreditUsage,
+  profileImage,
+  removeLockerByID
 }) => (
   <Card
     key={lockerID}
@@ -30,7 +32,16 @@ const LockerCard = ({
                   "Are you going to return " + location_description + " ?",
                   [
                     { text: "Cancel", onPress: () => console.log("cancel") },
-                    { text: "Ok", onPress: () => console.log("Ok") }
+                    {
+                      text: "Ok",
+                      onPress: async () => {
+                        await Axios.post("/locker-instance/returnByID", {
+                          lockerID
+                        });
+                        removeLockerByID(lockerID);
+                        fetchUserCreditUsage();
+                      }
+                    }
                   ]
                 )
               }
@@ -48,10 +59,16 @@ const LockerCard = ({
                     {
                       text: "Ok",
                       onPress: async () => {
-                        const res = await Axios.get(
-                          "/share-locker/generateLink/" + lockerID
-                        );
-                        console.log(res);
+                        try {
+                          const res = await Axios.get(
+                            "/share-locker/generateLink/" + lockerID
+                          );
+                          window.location.href =
+                            "line://msg/text/?" + res.data.link;
+                        } catch (error) {
+                          console.log(error);
+                          throw error;
+                        }
                       }
                     }
                   ]
