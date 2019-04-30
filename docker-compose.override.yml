@@ -6,15 +6,6 @@ services:
     volumes:
       - ./backend:/server
     command: sh -c 'cd /server && yarn && yarn start:dev'
-    # logging:
-    #   driver: none
-  db:
-    ports:
-      - 3306:3306
-    # volumes:
-    # - ./volumes/database:/var/lib/mysql
-    # logging:
-    #   driver: none
   grafana:
     ports: 
       - 7654:3000
