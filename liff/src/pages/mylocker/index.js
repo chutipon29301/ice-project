@@ -75,7 +75,7 @@ const MyLocker = ({
               </span>{" "}
             </p>
             <p style={{ marginBottom: 2 }}>
-              Credits: {" " + userCredit === null ? 0 : userCredit}
+              Credits: {userCredit === null ? 0 : userCredit}
             </p>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <button
