@@ -33,7 +33,6 @@ export class LocationsCrudComponent implements OnInit {
   this.spanadd = document.getElementsByClassName('close')[0];
   this.spanedit = document.getElementsByClassName('close')[1];
   this.confirmmodal = document.getElementById('confirmModal');
-  this.locationServerService.getlocations();
   this.subscription = this.locationService.dataChanged
     .subscribe(
     (locations: Location[]) => {
@@ -41,6 +40,7 @@ export class LocationsCrudComponent implements OnInit {
      );
   this.alp = new LocationPicker('amap');
   this.elp = new LocationPicker('emap');
+  this.locationServerService.getlocations();
     }
 
   closeadd(form: NgForm) {

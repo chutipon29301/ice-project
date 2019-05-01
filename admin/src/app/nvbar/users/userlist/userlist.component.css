@@ -122,7 +122,7 @@
 }
 
 .item{
-    min-width: 620px;
+    min-width: 870px;
 }
 
 .modal {
@@ -219,7 +219,7 @@
 }
 
 #credits{
-    left: 500px;
+    left: 520px;
     top: 44px;
     position: absolute;
     font-style: normal;
