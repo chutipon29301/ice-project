@@ -43,7 +43,6 @@ export class DashboardComponent implements OnInit {
     this.lockersService.setLockers(this.tempRegis);
        }
      );
-     this.locationServerService.getlocations();
     this.subscription2 = this.locationService.dataChanged.subscribe(
       (locations: Location[]) => {
         this.locationsid = [];
@@ -51,6 +50,7 @@ export class DashboardComponent implements OnInit {
       this.locationsid.push(locations[i].id);
     }
   });
+  this.locationServerService.getlocations();
 }
   OnDestroy() {
     this.subscription.unsubscribe();
